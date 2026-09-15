@@ -1,0 +1,156 @@
+package com.kairos.service;
+
+import com.kairos.dao.UsuarioDAO;
+import com.kairos.model.TipoUsuario;
+import com.kairos.model.Usuario;
+import com.kairos.utils.AuthorizationValidator;
+import com.kairos.utils.exceptions.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+public class UsuarioService {
+
+//    Atributos
+
+    private final UsuarioDAO usuarioDAO;
+
+//    Construtor
+
+    public UsuarioService() {
+        this.usuarioDAO = new UsuarioDAO();
+    }
+
+//    Metodo que faz as validacoes para o cadastro de usuario
+    public void cadastrar(Usuario usuario) {
+
+//        AuthorizationValidator.validarAdmin(usuarioAtual);
+
+        validarCampos(usuario);
+
+        if (usuarioDAO.existePorEmail(usuario.getEmail())) {
+            throw new EmailExistsException("Email já cadastrado");
+        }
+
+        if (usuarioDAO.existePorCpf(usuario.getCpf())) {
+            throw new CpfExistsException("CPF já cadastrado");
+        }
+
+        if (usuario.getTipoUsuario() != TipoUsuario.FUNCIONARIO) {
+            throw new ServiceException("Cadastro comum deve ser do tipo FUNCIONARIO");
+        }
+
+        usuarioDAO.inserir(usuario);
+    }
+
+//    Metodo que faz as validacoes da busca de usuario por id
+    public Usuario buscarPorId(int id) {
+
+//        AuthorizationValidator.validarAdmin(usuarioAtual);
+
+        if (id <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        Usuario usuario = usuarioDAO.buscarPorId(id);
+
+        if (usuario == null) {
+            throw new UsuarioNotFoundException("Usuário não encontrado");
+        }
+        return usuario;
+    }
+
+//    Metodo que busca listarTodos do DAO (sem validacoes)
+    public List<Usuario> listarTodos(Usuario usuarioAtual) {
+
+        AuthorizationValidator.validarAdmin(usuarioAtual);
+
+        return usuarioDAO.listarTodos();
+    }
+
+//    Metodo que faz as validacoes de atualizar usuario
+    public void atualizar(Usuario usuario, Usuario usuarioAtual) {
+
+        AuthorizationValidator.validarAdmin(usuarioAtual);
+
+        validarCampos(usuario);
+
+        if (usuario.getId() <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        if (usuario.getTipoUsuario() != TipoUsuario.FUNCIONARIO) {
+            throw new ServiceException("Tipo usuário comum deve ser FUNCIONARIO");
+        }
+
+        if (usuarioDAO.existePorEmailExcetoId(usuario.getEmail(), usuario.getId())) {
+            throw new EmailExistsException("Email já cadastrado");
+        }
+
+        if (usuarioDAO.existeCpfExcetoId(usuario.getCpf(), usuario.getId())) {
+            throw new CpfExistsException("CPF já cadastrado");
+        }
+
+        if (usuarioDAO.atualizar(usuario) == 0) {
+            throw new UsuarioNotFoundException("Usuário não encontrado");
+        }
+    }
+
+//    Metodo que faz as validações para deletar usuario por id
+    public void deletarPorId(int id) {
+
+//        AuthorizationValidator.validarAdmin(usuarioAtual);
+
+        if (id <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        Usuario usuario = usuarioDAO.buscarPorId(id);
+
+        if (usuario == null) {
+            throw new UsuarioNotFoundException("Usuário não encontrado");
+        }
+
+        if (usuario.getTipoUsuario() == TipoUsuario.ADMIN) {
+            throw new AdminException("Não é permitido deletar o Admin");
+        }
+
+        usuarioDAO.deletarPorId(id);
+    }
+
+//    Metodo que valida os campos do usuario
+    private void validarCampos(Usuario usuario) {
+
+        if (usuario == null) {
+            throw new ServiceException("Usuário não pode ser nulo");
+        }
+
+        if (usuario.getSenha() == null || usuario.getSenha().length() < 8) {
+            throw new ServiceException("A senha deve ter pelo menos 8 caracteres");
+        }
+
+        if (usuario.getNome() == null || usuario.getNome().isBlank()) {
+            throw new ServiceException("Nome é obrigatório");
+        }
+
+        if (usuario.getSobrenome() == null || usuario.getSobrenome().isBlank()) {
+            throw new ServiceException("Sobrenome é obrigatório");
+        }
+
+        if (usuario.getDataNascimento() == null) {
+            throw new ServiceException("Data de nascimento é obrigatória");
+        }
+
+        if (usuario.getDataNascimento().isAfter(LocalDate.now())) {
+            throw new ServiceException("Data de nascimento não pode ser futura");
+        }
+
+        if (usuario.getCep() == null || usuario.getCep().isBlank()) {
+            throw new ServiceException("CEP é obrigatório");
+        }
+
+        if (usuario.getEmail() == null || usuario.getEmail().isBlank()) {
+            throw new ServiceException("Email é obrigatório");
+        }
+    }
+}
