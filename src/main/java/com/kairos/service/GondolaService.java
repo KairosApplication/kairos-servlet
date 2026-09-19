@@ -52,7 +52,9 @@ public class GondolaService {
             throw new ServiceException("O id deve ser maior que 0");
         }
 
-        gondolaDAO.atualizar(gondola);
+        if (gondolaDAO.atualizar(gondola) == 0) {
+            throw new GondolaNotFoundException("Gôndola não encontrada");
+        }
     }
 
     public void deletarPorId(int id) {

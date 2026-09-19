@@ -1,6 +1,7 @@
 package com.kairos;
 
 import com.kairos.dao.GondolaDAO;
+import com.kairos.dao.ProdutoDAO;
 import com.kairos.model.*;
 import com.kairos.service.EmpresaService;
 import com.kairos.service.GondolaService;
@@ -20,6 +21,7 @@ public class Main {
             EmpresaService empresaService= new EmpresaService();
             SetorService setorService = new SetorService();
             GondolaService gondolaService = new GondolaService();
+            ProdutoDAO produtoDAO = new ProdutoDAO();
 
             List<Gondola> gondolas = new ArrayList<>();
 
@@ -85,14 +87,22 @@ public class Main {
 //                System.out.println();
 //            }
 
-            Gondola gondolaNova = new Gondola(
-                    2,
-                    27,
-                    setorService.buscarPorId(1)
+//            Gondola gondolaNova = new Gondola(
+//                    2,
+//                    27,
+//                    setorService.buscarPorId(1)
+//            );
+//
+//            gondolaService.atualizar(gondolaNova);
+
+            Produto criandoProduto = new Produto(
+                    "maca",
+                    "meca",
+                    153
             );
 
-            gondolaService.atualizar(gondolaNova);
-
+            Produto produto = produtoDAO.inserir(criandoProduto);
+            System.out.println(produto);
 
 
         } catch (DAOException e) {
