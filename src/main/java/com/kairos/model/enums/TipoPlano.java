@@ -1,4 +1,4 @@
-package com.kairos.model;
+package com.kairos.model.enums;
 
 public enum TipoPlano {
     GRATUITO,

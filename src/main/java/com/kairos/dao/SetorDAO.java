@@ -1,7 +1,7 @@
 package com.kairos.dao;
 
 import com.kairos.model.Setor;
-import com.kairos.utils.ConnectionFactory;
+import com.kairos.utils.connection.ConnectionFactory;
 import com.kairos.utils.exceptions.DAOException;
 
 import java.sql.Connection;
@@ -13,11 +13,12 @@ import java.util.List;
 
 public class SetorDAO {
 
-    public void inserir(Setor setor) {
+    public Setor inserir(Setor setor) {
 
         String sql = """
                      INSERT INTO setores (nome, categoria_setor)
                      VALUES (?, ?)
+                     RETURNING id, nome, categoria_setor
                      """;
 
         try (Connection connection = ConnectionFactory.getConnection();
@@ -26,7 +27,17 @@ public class SetorDAO {
             statement.setString(1, setor.getNome());
             statement.setString(2, setor.getCategoria());
 
-            statement.executeUpdate();
+            try (ResultSet rs = statement.executeQuery()) {
+
+                if (rs.next()) {
+                    return new Setor(
+                            rs.getInt("id"),
+                            rs.getString("nome"),
+                            rs.getString("categoria_setor")
+                    );
+                }
+                return null;
+            }
 
         } catch (SQLException e) {
             throw new DAOException("Erro ao inserir setor", e);
@@ -36,7 +47,7 @@ public class SetorDAO {
     public Setor buscarPorId(int id) {
 
         String sql = """
-                     SELECT id, nome, categoria
+                     SELECT id, nome, categoria_setor
                      FROM setores
                      WHERE id = ?
                      """;
@@ -52,7 +63,7 @@ public class SetorDAO {
                     Setor setor = new Setor(
                             rs.getInt("id"),
                             rs.getString("nome"),
-                            rs.getString("categoria")
+                            rs.getString("categoria_setor")
                     );
                     return setor;
                 }
@@ -156,6 +167,29 @@ public class SetorDAO {
 
         } catch (SQLException e) {
             throw new DAOException("Erro ao verificar setor por nome", e);
+        }
+    }
+
+    public boolean existePorNomeExcetoId(String nome, int id) {
+
+        String sql = """
+                     SELECT 1
+                     FROM setores
+                     WHERE nome = ? AND id <> ?
+                     """;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, nome);
+            statement.setInt(2, id);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao verificar nome de outro setor");
         }
     }
 }

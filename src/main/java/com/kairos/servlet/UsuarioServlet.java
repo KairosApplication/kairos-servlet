@@ -33,15 +33,15 @@ public class UsuarioServlet extends HttpServlet {
         String cep = request.getParameter("cep");
         String email = request.getParameter("email");
 
-        Usuario usuario = new Usuario(
-                cpf,
-                senha,
-                nome,
-                sobrenome,
-                dataNascimento,
-                cep,
-                email
-        );
+//        Usuario usuario = new Usuario(
+//                cpf,
+//                senha,
+//                nome,
+//                sobrenome,
+//                dataNascimento,
+//                cep,
+//                email
+//        );
 
         // Precisa das validações e get do usuarioAtual da sessão (validar admin)
 

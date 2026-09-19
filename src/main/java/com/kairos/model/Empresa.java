@@ -1,5 +1,12 @@
 package com.kairos.model;
 
+import com.kairos.model.enums.TipoPlano;
+import lombok.*;
+
+@Getter
+@Setter
+@AllArgsConstructor
+
 public class Empresa {
 
 //    Atributos
@@ -15,46 +22,11 @@ public class Empresa {
         this.tipoPlano = tipoPlano;
     }
 
-    public Empresa(int id, String cnpj, TipoPlano tipoPlano) {
-        this.id = id;
-        this.cnpj = cnpj;
-        this.tipoPlano = tipoPlano;
-    }
-
-    public Empresa (int id) {
-        this.id = id;
-    }
-
-//    Getters e Setters
-
-    public int getId() {
-        return id;
-    }
-
-    public String getCnpj() {
-        return cnpj;
-    }
-
-    public TipoPlano getTipoPlano() {
-        return tipoPlano;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
-    }
-
-    public void setTipoPlano(TipoPlano tipoPlano) {
-        this.tipoPlano = tipoPlano;
-    }
-
 //    toString
     @Override
     public String toString() {
-        return "-= Empresa " + getId() + "=-" +
+        return "-= Empresa =-" +
+               "ID: " + getId() +
                "\nCNPJ: " + getCnpj() +
                "\nTipo do plano: " + getTipoPlano();
     }

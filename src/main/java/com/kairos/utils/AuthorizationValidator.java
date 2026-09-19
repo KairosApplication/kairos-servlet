@@ -1,6 +1,6 @@
 package com.kairos.utils;
 
-import com.kairos.model.TipoUsuario;
+import com.kairos.model.enums.TipoUsuario;
 import com.kairos.model.Usuario;
 import com.kairos.utils.exceptions.AdminException;
 

@@ -1,0 +1,226 @@
+:root {
+    --green: #1c4a3a;
+    --green-2: #245a46;
+    --mint: #b7e4d1;
+    --card-bg: #eef0ef;
+    --text-dark: #171717;
+    --text-muted: #6f6f6f;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+    font-family: 'Poppins', sans-serif;
+    background: #ffffff;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+.left-col{
+    margin-left: 150px;
+}
+.page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden; /* Esconde o que passar dos limites da tela */
+}
+
+.circulo {
+    position: absolute;
+
+    /* Dimensões do bloco verde */
+    width: 60%;
+    height: 1200px; /* Altura maior que a tela para cobrir tudo ao inclinar */
+
+    /* Posição no canto superior direito */
+    top: -10vh;
+    right: -20%;
+
+    /* Cor e arredondamento dos cantos */
+    background-color: #1c4a3a;
+    /* border-radius: 80px 0 0 80px; Arredonda apenas os cantos esquerdos (superior e inferior) */
+    border-radius: 50%;
+
+
+    z-index: 0;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    min-height: 100vh;
+    padding: 100px 60px 60px;
+}
+
+/* logo */
+.logo {
+    position: absolute;
+    top: 34px;
+    left: 62px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 2;
+}
+
+.logo img {
+    height: 80px;
+    width: auto;
+}
+
+.logo span {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    color: var(--text-dark);
+}
+
+/* left column */
+.left-col {
+    flex: 1 1 480px;
+    max-width: 520px;
+}
+
+.left-col h1 {
+    font-size: 41px;
+    font-weight: 800;
+    line-height: 1.22;
+    color: var(--text-dark);
+    margin-bottom: 40px;
+}
+
+.illustration {
+    width: 100%;
+    max-width: 410px;
+}
+
+.illustration img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* form card */
+.form-card {
+    flex: 0 0 auto;
+    width: 466px;
+    background: var(--card-bg);
+    border-radius: 26px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.18);
+    padding: 32px 34px;
+    left: 100px;
+}
+
+.tabs {
+    display: flex;
+    background: var(--mint);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 26px;
+}
+
+.tab {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--green);
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease;
+}
+
+.tab.active {
+    background: var(--green);
+    color: #fff;
+}
+
+.field { margin-bottom: 18px; }
+
+.field label {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.input-wrap { position: relative; }
+
+.field input {
+    width: 100%;
+    padding: 13px 16px;
+    border: none;
+    border-radius: 10px;
+    background: var(--mint);
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    color: #222;
+    outline: none;
+}
+
+.toggle-eye {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-dark);
+    display: flex;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 15px 0;
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    background: var(--green);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+.submit-btn:hover { background: var(--green-2); }
+
+.terms {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 18px;
+    line-height: 1.6;
+}
+
+.terms a {
+    color: var(--text-dark);
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        padding: 90px 24px 50px;
+        text-align: center;
+    }
+    .left-col {
+        max-width: 100%;
+    }
+    .illustration {
+        margin: 0 auto;
+    }
+    .diagonal-bg {
+        clip-path: polygon(0 62%, 100% 40%, 100% 100%, 0 100%);
+    }
+}

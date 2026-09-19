@@ -1,8 +1,8 @@
 package com.kairos.dao;
 
 import com.kairos.model.Empresa;
-import com.kairos.model.TipoPlano;
-import com.kairos.utils.ConnectionFactory;
+import com.kairos.model.enums.TipoPlano;
+import com.kairos.utils.connection.ConnectionFactory;
 import com.kairos.utils.exceptions.DAOException;
 
 import java.sql.Connection;
@@ -37,7 +37,7 @@ public class EmpresaDAO {
                         TipoPlano.valueOf(rs.getString("tipo_plano"))
                     );
                 }
-                throw new DAOException("Não foi possível retornar a empresa criada");
+                return null;
             }
         } catch (SQLException e) {
             throw new DAOException("Erro ao inserir a empresa", e);
@@ -60,12 +60,11 @@ public class EmpresaDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
-                    Empresa empresa = new Empresa(
+                    return new Empresa(
                             rs.getInt("id"),
                             rs.getString("cnpj"),
                             TipoPlano.valueOf(rs.getString("tipo_plano"))
                     );
-                    return empresa;
                 }
                 return null;
             }
@@ -75,7 +74,7 @@ public class EmpresaDAO {
         }
     }
 
-    public List<Empresa> listarTodas() {
+    public List<Empresa> listarTodos() {
 
         String sql = """
                      SELECT id, cnpj, tipo_plano
@@ -214,11 +213,11 @@ public class EmpresaDAO {
                             TipoPlano.valueOf(rs.getString("tipo_plano"))
                     );
                 }
-                throw new DAOException("Não foi possível encontrar a empresa pelo CNPJ");
+                return null;
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao buscar empresa por CNPJ");
+            throw new DAOException("Erro ao buscar empresa por CNPJ", e);
         }
     }
 }

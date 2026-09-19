@@ -1,7 +1,7 @@
 package com.kairos.servlet;
 
 import com.kairos.model.Empresa;
-import com.kairos.model.TipoPlano;
+import com.kairos.model.enums.TipoPlano;
 import com.kairos.service.EmpresaService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,11 +20,10 @@ public class EmpresaServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String cnpj = request.getParameter("cnpj");
-        TipoPlano tipoPlano = TipoPlano.valueOf(request.getParameter("tipo_plano"));
-
-        Empresa empresa = new Empresa(cnpj, tipoPlano);
+//        String cnpj = request.getParameter("cnpj");
+//        TipoPlano tipoPlano = TipoPlano.valueOf(request.getParameter("tipo_plano"));
+//
+//        Empresa empresa = new Empresa(cnpj, tipoPlano);
 
     }
-
 }

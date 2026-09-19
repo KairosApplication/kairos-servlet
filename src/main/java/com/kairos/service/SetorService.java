@@ -6,6 +6,8 @@ import com.kairos.utils.exceptions.NameExistsException;
 import com.kairos.utils.exceptions.ServiceException;
 import com.kairos.utils.exceptions.SetorNotFoundException;
 
+import java.util.List;
+
 public class SetorService {
 
     private final SetorDAO setorDAO;
@@ -14,16 +16,14 @@ public class SetorService {
         this.setorDAO = new SetorDAO();
     }
 
-    public void cadastrar(Setor setor) {
+    public Setor cadastrar(Setor setor) {
 
         validarCampos(setor);
 
         if (setorDAO.existePorNome(setor.getNome())) {
             throw new NameExistsException("Nome de setor já cadastrado");
         }
-
-        setorDAO.inserir(setor);
-
+        return setorDAO.inserir(setor);
     }
 
     public Setor buscarPorId(int id) {
@@ -40,7 +40,64 @@ public class SetorService {
         return setor;
     }
 
+    public List<Setor> listarTodos() {
 
+//        AuthorizationValidator.validarAdmin(usuarioAtual);
+
+        return setorDAO.listarTodos();
+    }
+
+    public void atualizar(Setor setor) {
+
+        validarCampos(setor);
+
+        if (setor.getId() <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        if (setorDAO.existePorNomeExcetoId(setor.getNome(), setor.getId())) {
+            throw new NameExistsException("Nome já cadastrado");
+        }
+
+        if (setorDAO.atualizar(setor) == 0) {
+            throw new SetorNotFoundException("Setor não encontrado");
+        }
+    }
+
+    public void deletarPorId(int id) {
+
+        if (id <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        if (setorDAO.buscarPorId(id) == null) {
+            throw new SetorNotFoundException("Setor não encontrado");
+        }
+
+        setorDAO.deletarPorId(id);
+    }
+
+    public boolean existePorNome(String nome) {
+
+        if (nome == null || nome.isBlank()) {
+            throw new ServiceException("Nome é obrgatório");
+        }
+
+        return setorDAO.existePorNome(nome);
+    }
+
+    public boolean existePorNomeExcetoId(String nome, int id) {
+
+        if (nome == null || nome.isBlank()) {
+            throw new ServiceException("Nome é obrigatório");
+        }
+
+        if (id <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        return setorDAO.existePorNomeExcetoId(nome, id);
+    }
 
     private void validarCampos(Setor setor) {
 

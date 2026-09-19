@@ -1,9 +1,10 @@
 package com.kairos.service;
 
 import com.kairos.dao.UsuarioDAO;
-import com.kairos.model.TipoUsuario;
+import com.kairos.model.enums.TipoUsuario;
 import com.kairos.model.Usuario;
 import com.kairos.utils.AuthorizationValidator;
+import com.kairos.utils.Regex;
 import com.kairos.utils.exceptions.*;
 
 import java.time.LocalDate;
@@ -22,7 +23,7 @@ public class UsuarioService {
     }
 
 //    Metodo que faz as validacoes para o cadastro de usuario
-    public void cadastrar(Usuario usuario) {
+    public Usuario cadastrar(Usuario usuario) {
 
 //        AuthorizationValidator.validarAdmin(usuarioAtual);
 
@@ -40,7 +41,22 @@ public class UsuarioService {
             throw new ServiceException("Cadastro comum deve ser do tipo FUNCIONARIO");
         }
 
-        usuarioDAO.inserir(usuario);
+        if (!usuario.getCpf().matches(Regex.CPF)) {
+            throw new InvalidCpfRegexException("Formato do CPF inválido");
+        }
+
+        if (!usuario.getCep().matches(Regex.CEP)) {
+            throw new InvalidCepRegexException("Formato do CEP inválido");
+        }
+
+        if (!usuario.getEmail().matches(Regex.EMAIL)) {
+            throw new InvalidEmailRegexException("Formato do Email inválido");
+        }
+
+        usuario.setCpf(usuario.getCpf().replaceAll("[^0-9]", ""));
+        usuario.setCep(usuario.getCep().replaceAll("[^0-9]", ""));
+
+        return usuarioDAO.inserir(usuario);
     }
 
 //    Metodo que faz as validacoes da busca de usuario por id
@@ -87,9 +103,24 @@ public class UsuarioService {
             throw new EmailExistsException("Email já cadastrado");
         }
 
-        if (usuarioDAO.existeCpfExcetoId(usuario.getCpf(), usuario.getId())) {
+        if (usuarioDAO.existePorCpfExcetoId(usuario.getCpf(), usuario.getId())) {
             throw new CpfExistsException("CPF já cadastrado");
         }
+
+        if (!usuario.getCpf().matches(Regex.CEP)) {
+            throw new InvalidCpfRegexException("Formato do CPF inválido");
+        }
+
+        if (!usuario.getCep().matches(Regex.CEP)) {
+            throw new InvalidCepRegexException("Formato do CEP inválido");
+        }
+
+        if (!usuario.getEmail().matches(Regex.EMAIL)) {
+            throw new InvalidEmailRegexException("Formato do Email inválido");
+        }
+
+        usuario.setCpf(usuario.getCpf().replaceAll("[^0-9]", ""));
+        usuario.setCep(usuario.getCep().replaceAll("[^0-9]", ""));
 
         if (usuarioDAO.atualizar(usuario) == 0) {
             throw new UsuarioNotFoundException("Usuário não encontrado");
@@ -116,6 +147,70 @@ public class UsuarioService {
         }
 
         usuarioDAO.deletarPorId(id);
+    }
+
+    public boolean existePorEmail(String email) {
+
+        if (email == null || email.isBlank()) {
+            throw new ServiceException("Email é obrigatório");
+        }
+
+        if (!email.matches(Regex.EMAIL)) {
+            throw new InvalidEmailRegexException("Formato do Email inválido");
+        }
+
+        return usuarioDAO.existePorEmail(email);
+    }
+
+    public boolean existePorCpf(String cpf) {
+
+        if (cpf == null || cpf.isBlank()) {
+            throw new ServiceException("O CPF é obrigatório");
+        }
+
+        if (!cpf.matches(Regex.CPF)) {
+            throw new InvalidCpfRegexException("Formato do CPF inválido");
+        }
+
+        cpf = cpf.replaceAll("^[0-9]", "");
+
+        return usuarioDAO.existePorCpf(cpf);
+    }
+
+    public boolean existePorEmailExcetoId(String email, int id) {
+
+        if (email == null || email.isBlank()) {
+            throw new ServiceException("Email é obrigatório");
+        }
+
+        if (!email.matches(Regex.EMAIL)) {
+            throw new InvalidEmailRegexException("Formato do Email inválido");
+        }
+
+        if (id <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        return usuarioDAO.existePorEmailExcetoId(email, id);
+    }
+
+    public boolean existePorCpfExcetoId(String cpf, int id) {
+
+        if (cpf == null || cpf.isBlank()) {
+            throw new ServiceException("CPF é obrigatório");
+        }
+
+        if (id <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        if (!cpf.matches(Regex.CPF)) {
+            throw new InvalidCpfRegexException("Formato do CPF inválido");
+        }
+
+        cpf = cpf.replaceAll("^[0-9]", "");
+
+        return usuarioDAO.existePorCpfExcetoId(cpf, id);
     }
 
 //    Metodo que valida os campos do usuario

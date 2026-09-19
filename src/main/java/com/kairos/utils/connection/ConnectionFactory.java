@@ -1,4 +1,4 @@
-package com.kairos.utils;
+package com.kairos.utils.connection;
 
 import io.github.cdimascio.dotenv.Dotenv;
 

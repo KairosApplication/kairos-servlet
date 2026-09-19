@@ -4,8 +4,10 @@ import com.kairos.dao.EmpresaDAO;
 import com.kairos.model.Empresa;
 import com.kairos.model.Usuario;
 import com.kairos.utils.AuthorizationValidator;
+import com.kairos.utils.Regex;
 import com.kairos.utils.exceptions.CnpjExistsException;
 import com.kairos.utils.exceptions.EmpresaNotFoundException;
+import com.kairos.utils.exceptions.InvalidCnpjRegexException;
 import com.kairos.utils.exceptions.ServiceException;
 
 import java.util.List;
@@ -27,6 +29,12 @@ public class EmpresaService {
         if (empresaDAO.existePorCnpj(empresa.getCnpj())) {
             throw new CnpjExistsException("CNPJ já cadastrado");
         }
+
+        if (!empresa.getCnpj().matches(Regex.CNPJ)) {
+            throw new InvalidCnpjRegexException("Formato do CNPJ inválido");
+        }
+
+        empresa.setCnpj(empresa.getCnpj().replaceAll("[^0-9]", ""));
 
         return empresaDAO.inserir(empresa);
     }
@@ -51,7 +59,7 @@ public class EmpresaService {
 
         AuthorizationValidator.validarAdmin(usuarioAtual);
 
-        return empresaDAO.listarTodas();
+        return empresaDAO.listarTodos();
     }
 
     public void atualizar(Empresa empresa, Usuario usuarioAtual) {
@@ -68,11 +76,16 @@ public class EmpresaService {
             throw new CnpjExistsException("CNPJ já cadastrado");
         }
 
+        if (!empresa.getCnpj().matches(Regex.CNPJ)) {
+            throw new InvalidCnpjRegexException("Formato do CNPJ inválido");
+        }
+
+        empresa.setCnpj(empresa.getCnpj().replaceAll("[^0-9]", ""));
+
         if (empresaDAO.atualizar(empresa) == 0) {
             throw new EmpresaNotFoundException("Empresa não encontrada");
         }
     }
-
 
     public void deletarPorId(int id, Usuario usuarioAtual) {
 
@@ -91,11 +104,51 @@ public class EmpresaService {
         empresaDAO.deletarPorId(id);
     }
 
+    public boolean existePorCnpj(String cnpj) {
+
+        if (cnpj == null || cnpj.isBlank()) {
+            throw new ServiceException("CNPJ é obrigatório");
+        }
+
+        if (!cnpj.matches(Regex.CNPJ)) {
+            throw new InvalidCnpjRegexException("Formato do CNPJ inválido");
+        }
+
+        cnpj = cnpj.replaceAll("[^0-9]", "");
+
+        return empresaDAO.existePorCnpj(cnpj);
+    }
+
+    public boolean existePorCnpjExcetoId(String cnpj, int id) {
+
+        if (cnpj == null || cnpj.isBlank()) {
+            throw new ServiceException("O CNPJ é obrigatório");
+        }
+
+        if (!cnpj.matches(Regex.CNPJ)) {
+            throw new InvalidCnpjRegexException("Formato do CNPJ inválido");
+        }
+
+        if (id <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        cnpj = cnpj.replaceAll("[^0-9]", "");
+
+        return empresaDAO.existePorCnpjExcetoId(cnpj, id);
+    }
+
     public Empresa buscarPorCnpj(String cnpj) {
 
         if (cnpj == null || cnpj.isBlank()) {
             throw new ServiceException("CNPJ é obrigatório");
         }
+
+        if (!cnpj.matches(Regex.CNPJ)) {
+            throw new InvalidCnpjRegexException("Formato do CNPJ inválido");
+        }
+
+        cnpj = cnpj.replaceAll("[^0-9]", "");
 
         Empresa empresa = empresaDAO.buscarPorCnpj(cnpj);
 
@@ -119,7 +172,4 @@ public class EmpresaService {
             throw new ServiceException("Tipo Plano é obrigatório");
         }
     }
-
-
-
 }

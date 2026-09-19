@@ -1,10 +1,10 @@
 package com.kairos.dao;
 
 import com.kairos.model.Empresa;
-import com.kairos.model.TipoPlano;
-import com.kairos.model.TipoUsuario;
+import com.kairos.model.enums.TipoPlano;
+import com.kairos.model.enums.TipoUsuario;
 import com.kairos.model.Usuario;
-import com.kairos.utils.ConnectionFactory;
+import com.kairos.utils.connection.ConnectionFactory;
 import com.kairos.utils.exceptions.DAOException;
 
 import java.sql.Connection;
@@ -12,13 +12,14 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.Date;
 import java.sql.ResultSet;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioDAO {
 
 //    Metodo para inserir um usuario
-    public void inserir(Usuario usuario) {
+    public Usuario inserir(Usuario usuario) {
 
         String sql = """
                      INSERT INTO usuarios (
@@ -26,6 +27,8 @@ public class UsuarioDAO {
                                            cep, tipo_usuario, email, empresa_id
                                            )
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     RETURNING id, cpf, senha, nome, sobrenome, data_nascimento,
+                               cep, tipo_usuario, email
                      """;
 
         try (Connection connection = ConnectionFactory.getConnection();
@@ -41,7 +44,24 @@ public class UsuarioDAO {
             statement.setString(8, usuario.getEmail());
             statement.setInt(9, usuario.getEmpresa().getId());
 
-            statement.executeUpdate();
+            try (ResultSet rs = statement.executeQuery()) {
+
+                if (rs.next()) {
+                    return new Usuario(
+                            rs.getInt("id"),
+                            rs.getString("cpf"),
+                            rs.getString("senha"),
+                            rs.getString("nome"),
+                            rs.getString("sobrenome"),
+                            rs.getDate("data_nascimento").toLocalDate(),
+                            rs.getString("cep"),
+                            TipoUsuario.valueOf(rs.getString("tipo_usuario")),
+                            rs.getString("email"),
+                            usuario.getEmpresa()
+                    );
+                }
+                return null;
+            }
 
         } catch (SQLException e) {
             throw new DAOException("Erro ao inserir o usuário", e);
@@ -53,8 +73,8 @@ public class UsuarioDAO {
 
         String sql = """
                      SELECT u.id as usuario_id, u.cpf, u.senha, u.nome, u.sobrenome, 
-                     u.data_nascimento, u.cep, u.tipo_usuario, u.email, e.id as empresa_id,
-                     e.cnpj, e.tipo_plano
+                            u.data_nascimento, u.cep, u.tipo_usuario, u.email, 
+                            e.id as empresa_id, e.cnpj, e.tipo_plano
                      FROM usuarios u
                      JOIN empresas e ON e.id = u.empresa_id
                      WHERE u.id = ?
@@ -68,7 +88,7 @@ public class UsuarioDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
-                    Usuario usuario = new Usuario(
+                    return new Usuario(
                             rs.getInt("usuario_id"),
                             rs.getString("cpf"),
                             rs.getString("senha"),
@@ -83,7 +103,6 @@ public class UsuarioDAO {
                                     rs.getString("cnpj"),
                                     TipoPlano.valueOf(rs.getString("tipo_plano")))
                     );
-                    return usuario;
                 }
                 return null;
             }
@@ -152,7 +171,6 @@ public class UsuarioDAO {
                          sobrenome = ?,
                          data_nascimento = ?,
                          cep = ?,
-                         tipo_usuario = ?,
                          email = ?
                      WHERE id = ?
                      """;
@@ -166,10 +184,9 @@ public class UsuarioDAO {
             statement.setString(4, usuario.getSobrenome());
             statement.setDate(5, Date.valueOf(usuario.getDataNascimento()));
             statement.setString(6, usuario.getCep());
-            statement.setString(7, usuario.getTipoUsuario().name());
-            statement.setString(8, usuario.getEmail());
+            statement.setString(7, usuario.getEmail());
 
-            statement.setInt(9, usuario.getId());
+            statement.setInt(8, usuario.getId());
 
             return statement.executeUpdate();
 
@@ -265,7 +282,7 @@ public class UsuarioDAO {
             throw new DAOException("Erro ao verificar e-mail de outro usuário", e);
         }
     }
-    public boolean existeCpfExcetoId(String cpf, int id) {
+    public boolean existePorCpfExcetoId(String cpf, int id) {
 
         String sql = """
                      SELECT 1
