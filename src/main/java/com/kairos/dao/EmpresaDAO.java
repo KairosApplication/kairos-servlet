@@ -3,7 +3,7 @@ package com.kairos.dao;
 import com.kairos.model.Empresa;
 import com.kairos.model.enums.TipoPlano;
 import com.kairos.utils.connection.ConnectionFactory;
-import com.kairos.utils.exceptions.DAOException;
+import com.kairos.utils.exceptions.system.DAOException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

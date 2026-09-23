@@ -1,4 +1,4 @@
-package com.kairos.utils.exceptions;
+package com.kairos.utils.exceptions.capacity;
 
 public class MaximumCapacityException extends RuntimeException {
 

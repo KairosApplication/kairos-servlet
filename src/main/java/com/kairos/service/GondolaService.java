@@ -2,9 +2,9 @@ package com.kairos.service;
 
 import com.kairos.dao.GondolaDAO;
 import com.kairos.model.Gondola;
-import com.kairos.utils.exceptions.GondolaNotFoundException;
-import com.kairos.utils.exceptions.MaximumCapacityException;
-import com.kairos.utils.exceptions.ServiceException;
+import com.kairos.utils.exceptions.notfound.GondolaNotFoundException;
+import com.kairos.utils.exceptions.capacity.MaximumCapacityException;
+import com.kairos.utils.exceptions.system.ServiceException;
 
 import java.util.List;
 
@@ -82,8 +82,4 @@ public class GondolaService {
             throw new MaximumCapacityException("Capacidade máxima deve ser maior que 0");
         }
     }
-
-
-
-
 }

@@ -2,9 +2,9 @@ package com.kairos.service;
 
 import com.kairos.dao.SetorDAO;
 import com.kairos.model.Setor;
-import com.kairos.utils.exceptions.NameExistsException;
-import com.kairos.utils.exceptions.ServiceException;
-import com.kairos.utils.exceptions.SetorNotFoundException;
+import com.kairos.utils.exceptions.exists.NameExistsException;
+import com.kairos.utils.exceptions.system.ServiceException;
+import com.kairos.utils.exceptions.notfound.SetorNotFoundException;
 
 import java.util.List;
 

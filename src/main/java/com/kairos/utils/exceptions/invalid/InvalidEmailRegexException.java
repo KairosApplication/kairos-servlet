@@ -1,4 +1,4 @@
-package com.kairos.utils.exceptions;
+package com.kairos.utils.exceptions.invalid;
 
 public class InvalidEmailRegexException extends RuntimeException {
 

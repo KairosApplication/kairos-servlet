@@ -1,4 +1,4 @@
-package com.kairos.utils.exceptions;
+package com.kairos.utils.exceptions.exists;
 
 // Exceção para cpf já existente
 public class CpfExistsException extends RuntimeException {

@@ -1,4 +1,4 @@
-package com.kairos.utils.exceptions;
+package com.kairos.utils.exceptions.quantity;
 
 public class StockQuantityException extends RuntimeException {
 

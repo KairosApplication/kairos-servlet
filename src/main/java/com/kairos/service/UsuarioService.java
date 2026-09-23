@@ -5,7 +5,14 @@ import com.kairos.model.enums.TipoUsuario;
 import com.kairos.model.Usuario;
 import com.kairos.utils.AuthorizationValidator;
 import com.kairos.utils.Regex;
-import com.kairos.utils.exceptions.*;
+import com.kairos.utils.exceptions.exists.CpfExistsException;
+import com.kairos.utils.exceptions.exists.EmailExistsException;
+import com.kairos.utils.exceptions.invalid.InvalidCepRegexException;
+import com.kairos.utils.exceptions.invalid.InvalidCpfRegexException;
+import com.kairos.utils.exceptions.invalid.InvalidEmailRegexException;
+import com.kairos.utils.exceptions.notfound.UsuarioNotFoundException;
+import com.kairos.utils.exceptions.system.AdminException;
+import com.kairos.utils.exceptions.system.ServiceException;
 
 import java.time.LocalDate;
 import java.util.List;

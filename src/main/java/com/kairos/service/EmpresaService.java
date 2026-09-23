@@ -5,10 +5,10 @@ import com.kairos.model.Empresa;
 import com.kairos.model.Usuario;
 import com.kairos.utils.AuthorizationValidator;
 import com.kairos.utils.Regex;
-import com.kairos.utils.exceptions.CnpjExistsException;
-import com.kairos.utils.exceptions.EmpresaNotFoundException;
-import com.kairos.utils.exceptions.InvalidCnpjRegexException;
-import com.kairos.utils.exceptions.ServiceException;
+import com.kairos.utils.exceptions.exists.CnpjExistsException;
+import com.kairos.utils.exceptions.notfound.EmpresaNotFoundException;
+import com.kairos.utils.exceptions.invalid.InvalidCnpjRegexException;
+import com.kairos.utils.exceptions.system.ServiceException;
 
 import java.util.List;
 
@@ -90,7 +90,6 @@ public class EmpresaService {
     public void deletarPorId(int id, Usuario usuarioAtual) {
 
         AuthorizationValidator.validarAdmin(usuarioAtual);
-
         if (id <= 0) {
             throw new ServiceException("O id deve ser maior que 0");
         }

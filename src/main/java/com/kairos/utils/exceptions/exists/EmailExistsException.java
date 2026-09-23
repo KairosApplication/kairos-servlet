@@ -1,4 +1,4 @@
-package com.kairos.utils.exceptions;
+package com.kairos.utils.exceptions.exists;
 
 // Exceção para email já existente
 public class EmailExistsException extends RuntimeException {

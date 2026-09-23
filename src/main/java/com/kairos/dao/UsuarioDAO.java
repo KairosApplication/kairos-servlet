@@ -5,7 +5,7 @@ import com.kairos.model.enums.TipoPlano;
 import com.kairos.model.enums.TipoUsuario;
 import com.kairos.model.Usuario;
 import com.kairos.utils.connection.ConnectionFactory;
-import com.kairos.utils.exceptions.DAOException;
+import com.kairos.utils.exceptions.system.DAOException;
 
 import java.sql.Connection;
 import java.sql.SQLException;

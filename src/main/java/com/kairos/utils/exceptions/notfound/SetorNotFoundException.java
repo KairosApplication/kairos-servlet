@@ -1,4 +1,4 @@
-package com.kairos.utils.exceptions;
+package com.kairos.utils.exceptions.notfound;
 
 public class SetorNotFoundException extends RuntimeException {
 

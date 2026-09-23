@@ -1,4 +1,4 @@
-package com.kairos.utils.exceptions;
+package com.kairos.utils.exceptions.system;
 
 // Utilizado para exceções que ocorrem no DAO
 public class DAOException extends RuntimeException {

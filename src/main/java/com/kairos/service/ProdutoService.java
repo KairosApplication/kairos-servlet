@@ -2,10 +2,10 @@ package com.kairos.service;
 
 import com.kairos.dao.ProdutoDAO;
 import com.kairos.model.Produto;
-import com.kairos.utils.exceptions.NameExistsException;
-import com.kairos.utils.exceptions.ProdutoNotFoundException;
-import com.kairos.utils.exceptions.ServiceException;
-import com.kairos.utils.exceptions.StockQuantityException;
+import com.kairos.utils.exceptions.exists.NameExistsException;
+import com.kairos.utils.exceptions.notfound.ProdutoNotFoundException;
+import com.kairos.utils.exceptions.system.ServiceException;
+import com.kairos.utils.exceptions.quantity.StockQuantityException;
 
 import java.util.List;
 

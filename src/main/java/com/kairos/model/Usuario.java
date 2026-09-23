@@ -4,12 +4,6 @@ import java.time.LocalDate;
 
 import com.kairos.model.enums.TipoUsuario;
 
-import lombok.*;
-
-@Getter
-@Setter
-@AllArgsConstructor
-
 public class Usuario {
 
 //    Atributos
@@ -27,6 +21,20 @@ public class Usuario {
 
 //    Construtuores
 
+
+    public Usuario(int id, String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, TipoUsuario tipoUsuario, String email, Empresa empresa) {
+        this.id = id;
+        this.cpf = cpf;
+        this.senha = senha;
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.dataNascimento = dataNascimento;
+        this.cep = cep;
+        this.tipoUsuario = tipoUsuario;
+        this.email = email;
+        this.empresa = empresa;
+    }
+
     public Usuario(String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, String email) {
         this.cpf = cpf;
         this.senha = senha;
@@ -38,7 +46,87 @@ public class Usuario {
         this.email = email;
     }
 
-//    toString
+    public int getId() {
+        return id;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getSobrenome() {
+        return sobrenome;
+    }
+
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public TipoUsuario getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setSobrenome(String sobrenome) {
+        this.sobrenome = sobrenome;
+    }
+
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public void setTipoUsuario(TipoUsuario tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
+
+    //    toString
 
     @Override
     public String toString() {

@@ -1,14 +1,13 @@
 package com.kairos;
 
-import com.kairos.dao.GondolaDAO;
+import com.kairos.dao.CompraDAO;
 import com.kairos.dao.ProdutoDAO;
 import com.kairos.model.*;
-import com.kairos.service.EmpresaService;
-import com.kairos.service.GondolaService;
-import com.kairos.service.SetorService;
-import com.kairos.service.UsuarioService;
-import com.kairos.utils.exceptions.DAOException;
+import com.kairos.service.*;
+import com.kairos.utils.exceptions.system.DAOException;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +21,7 @@ public class Main {
             SetorService setorService = new SetorService();
             GondolaService gondolaService = new GondolaService();
             ProdutoDAO produtoDAO = new ProdutoDAO();
+            CompraDAO compraDAO = new CompraDAO();
 
             List<Gondola> gondolas = new ArrayList<>();
 
@@ -95,14 +95,30 @@ public class Main {
 //
 //            gondolaService.atualizar(gondolaNova);
 
-            Produto criandoProduto = new Produto(
-                    "maca",
-                    "meca",
-                    153
-            );
+//            Produto criandoProduto = new Produto(
+//                    "maca",
+//                    "meca",
+//                    153
+//            );
+//
+//            Produto produto = produtoDAO.inserir(criandoProduto);
+//            System.out.println(produto);
 
-            Produto produto = produtoDAO.inserir(criandoProduto);
-            System.out.println(produto);
+//            Compra compra = new Compra(LocalDate.parse("2022-02-05"));
+
+//            compraDAO.inserir(compra);
+
+//            Produto produto = new Produto("Nike", "Tênis Air Max", 15);
+//
+//            ProdutoService produtoService = new ProdutoService();
+////
+////            produtoService.cadastrar(produto);
+//
+//            produtoService.deletarPorId(1);
+
+            Compra compra = new Compra(Timestamp.valueOf("2026-09-22 20:00:00"));
+
+            compraDAO.inserir(compra);
 
 
         } catch (DAOException e) {

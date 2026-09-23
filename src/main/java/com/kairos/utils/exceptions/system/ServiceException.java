@@ -1,4 +1,4 @@
-package com.kairos.utils.exceptions;
+package com.kairos.utils.exceptions.system;
 
 // Utilizado para exceções no Service
 public class ServiceException extends RuntimeException {
