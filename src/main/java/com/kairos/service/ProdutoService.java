@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ProdutoService {
 
-    private ProdutoDAO produtoDAO;
+    private final ProdutoDAO produtoDAO;
 
     public ProdutoService() {
         this.produtoDAO = new ProdutoDAO();
@@ -69,9 +69,7 @@ public class ProdutoService {
             throw new ServiceException("O id deve ser maior que 0");
         }
 
-        Produto produto = produtoDAO.buscarPorId(id);
-
-        if (produto == null) {
+        if (produtoDAO.buscarPorId(id) == null) {
             throw new ProdutoNotFoundException("Produto não encontrado");
         }
 

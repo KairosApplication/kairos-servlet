@@ -59,7 +59,7 @@ public class CompraService {
     private void validarCampos(Compra compra) {
 
         if (compra == null) {
-            throw new ServiceException("Empresa não pode ser nula");
+            throw new ServiceException("Compra não pode ser nula");
         }
 
         if (compra.getDataCompra() == null) {

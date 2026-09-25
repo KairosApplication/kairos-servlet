@@ -39,9 +39,9 @@ public class EmpresaService {
         return empresaDAO.inserir(empresa);
     }
 
-    public Empresa buscarPorId(int id, Usuario usuarioAtual) {
+    public Empresa buscarPorId(int id) {
 
-        AuthorizationValidator.validarAdmin(usuarioAtual);
+//        AuthorizationValidator.validarAdmin(usuarioAtual);
 
         if (id <= 0) {
             throw new ServiceException("O id deve ser maior que 0");
@@ -62,9 +62,9 @@ public class EmpresaService {
         return empresaDAO.listarTodos();
     }
 
-    public void atualizar(Empresa empresa, Usuario usuarioAtual) {
+    public void atualizar(Empresa empresa) {
 
-        AuthorizationValidator.validarAdmin(usuarioAtual);
+//        AuthorizationValidator.validarAdmin(usuarioAtual);
 
         validarCampos(empresa);
 

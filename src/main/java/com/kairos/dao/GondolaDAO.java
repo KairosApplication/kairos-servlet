@@ -37,6 +37,7 @@ public class GondolaDAO {
                             gondola.getSetor()
                     );
                 }
+
                 return null;
             }
 
@@ -48,8 +49,12 @@ public class GondolaDAO {
     public Gondola buscarPorId(int id) {
 
         String sql = """
-                     SELECT g.id as gondola_id, g.capacidade_maxima, g.setor_id,
-                            s.id as setor_id, s.nome, s.categoria_setor
+                     SELECT g.id as gondola_id,
+                            g.capacidade_maxima,
+                            g.setor_id,
+                            s.id as setor_id,
+                            s.nome,
+                            s.categoria_setor
                      FROM gondolas g
                      JOIN setores s ON s.id = g.setor_id
                      WHERE g.id = ?
@@ -73,8 +78,10 @@ public class GondolaDAO {
                             )
                     );
                 }
+
                 return null;
             }
+
         } catch (SQLException e) {
             throw new DAOException("Erro ao buscar gondola por id", e);
         }
@@ -83,11 +90,15 @@ public class GondolaDAO {
     public List<Gondola> listarTodos() {
 
         String sql = """
-                         SELECT g.id as gondola_id, g.capacidade_maxima, g.setor_id,
-                                s.id as setor_id, s.nome, s.categoria_setor
-                         FROM gondolas g
-                         JOIN setores s ON s.id = g.setor_id
-                         """;
+                     SELECT g.id as gondola_id,
+                            g.capacidade_maxima,
+                            g.setor_id,
+                            s.id as setor_id,
+                            s.nome,
+                            s.categoria_setor
+                     FROM gondolas g
+                     JOIN setores s ON s.id = g.setor_id
+                     """;
 
         List<Gondola> gondolas = new ArrayList<>();
 
@@ -107,13 +118,15 @@ public class GondolaDAO {
                                     rs.getString("categoria_setor")
                             )
                     );
+
                     gondolas.add(gondola);
                 }
+
                 return gondolas;
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao buscar todas as gôndolas");
+            throw new DAOException("Erro ao buscar todas as gôndolas", e);
         }
     }
 
@@ -121,7 +134,8 @@ public class GondolaDAO {
 
         String sql = """
                      UPDATE gondolas
-                     SET capacidade_maxima = ?
+                     SET capacidade_maxima = ?,
+                         setor_id = ?
                      WHERE id = ?
                      """;
 
@@ -129,7 +143,8 @@ public class GondolaDAO {
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, gondola.getCapacidadeMaxima());
-            statement.setInt(2, gondola.getId());
+            statement.setInt(2, gondola.getSetor().getId());
+            statement.setInt(3, gondola.getId());
 
             return statement.executeUpdate();
 

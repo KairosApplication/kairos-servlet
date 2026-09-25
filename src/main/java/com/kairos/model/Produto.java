@@ -9,7 +9,7 @@ public class Produto {
     private String nome;
     private int quantidadeEstoque;
 
-//    Construtores
+    //    Construtores
 
     public Produto(int id, String marca, String nome, int quantidadeEstoque) {
         this.id = id;
@@ -59,7 +59,7 @@ public class Produto {
     //    toString
     @Override
     public String toString() {
-        return "-= Produto =- " +
+        return "\n-= Produto =- " +
                "\nID: " + getId() +
                "\nMarca: " + getMarca() +
                "\nNome: " + getNome() +

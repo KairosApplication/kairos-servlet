@@ -35,6 +35,18 @@ public class Usuario {
         this.empresa = empresa;
     }
 
+    public Usuario(String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, String email, Empresa empresa) {
+        this.cpf = cpf;
+        this.senha = senha;
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.dataNascimento = dataNascimento;
+        this.cep = cep;
+        this.tipoUsuario = TipoUsuario.FUNCIONARIO;
+        this.email = email;
+        this.empresa = empresa;
+    }
+
     public Usuario(String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, String email) {
         this.cpf = cpf;
         this.senha = senha;
@@ -130,7 +142,7 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return "-= USUARIO =-" +
+        return "\n-= USUARIO =-" +
                "\nID: " + getId() +
                "\nCPF: " + getCpf() +
                "\nSenha: " + getSenha() +

@@ -8,6 +8,7 @@ public class Compra {
 
     private int id;
     private Timestamp dataCompra;
+    private int quantidadeItem;
 
 //    Construtores
 
@@ -39,7 +40,7 @@ public class Compra {
     //    toString
     @Override
     public String toString() {
-        return "-= Compra =- " +
+        return "\n-= Compra =- " +
                "\nID: " + getId() +
                "\nData da compra: " + getDataCompra();
     }

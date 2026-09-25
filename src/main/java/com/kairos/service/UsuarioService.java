@@ -1,8 +1,11 @@
 package com.kairos.service;
 
+import com.kairos.dao.EmpresaDAO;
 import com.kairos.dao.UsuarioDAO;
+
 import com.kairos.model.enums.TipoUsuario;
 import com.kairos.model.Usuario;
+
 import com.kairos.utils.AuthorizationValidator;
 import com.kairos.utils.Regex;
 import com.kairos.utils.exceptions.exists.CpfExistsException;
@@ -10,6 +13,7 @@ import com.kairos.utils.exceptions.exists.EmailExistsException;
 import com.kairos.utils.exceptions.invalid.InvalidCepRegexException;
 import com.kairos.utils.exceptions.invalid.InvalidCpfRegexException;
 import com.kairos.utils.exceptions.invalid.InvalidEmailRegexException;
+import com.kairos.utils.exceptions.notfound.EmpresaNotFoundException;
 import com.kairos.utils.exceptions.notfound.UsuarioNotFoundException;
 import com.kairos.utils.exceptions.system.AdminException;
 import com.kairos.utils.exceptions.system.ServiceException;
@@ -22,11 +26,13 @@ public class UsuarioService {
 //    Atributos
 
     private final UsuarioDAO usuarioDAO;
+    private final EmpresaDAO empresaDAO;
 
 //    Construtor
 
     public UsuarioService() {
         this.usuarioDAO = new UsuarioDAO();
+        this.empresaDAO = new EmpresaDAO();
     }
 
 //    Metodo que faz as validacoes para o cadastro de usuario
@@ -92,9 +98,9 @@ public class UsuarioService {
     }
 
 //    Metodo que faz as validacoes de atualizar usuario
-    public void atualizar(Usuario usuario, Usuario usuarioAtual) {
+    public void atualizar(Usuario usuario) {
 
-        AuthorizationValidator.validarAdmin(usuarioAtual);
+//        AuthorizationValidator.validarAdmin(usuarioAtual);
 
         validarCampos(usuario);
 
@@ -114,7 +120,7 @@ public class UsuarioService {
             throw new CpfExistsException("CPF já cadastrado");
         }
 
-        if (!usuario.getCpf().matches(Regex.CEP)) {
+        if (!usuario.getCpf().matches(Regex.CPF)) {
             throw new InvalidCpfRegexException("Formato do CPF inválido");
         }
 
@@ -124,6 +130,10 @@ public class UsuarioService {
 
         if (!usuario.getEmail().matches(Regex.EMAIL)) {
             throw new InvalidEmailRegexException("Formato do Email inválido");
+        }
+
+        if (empresaDAO.buscarPorId(usuario.getEmpresa().getId()) == null) {
+            throw new EmpresaNotFoundException("Empresa não encontrada");
         }
 
         usuario.setCpf(usuario.getCpf().replaceAll("[^0-9]", ""));
@@ -225,6 +235,10 @@ public class UsuarioService {
 
         if (usuario == null) {
             throw new ServiceException("Usuário não pode ser nulo");
+        }
+
+        if (usuario.getEmpresa() == null) {
+            throw new ServiceException("Empresa não pode ser nula");
         }
 
         if (usuario.getSenha() == null || usuario.getSenha().length() < 8) {

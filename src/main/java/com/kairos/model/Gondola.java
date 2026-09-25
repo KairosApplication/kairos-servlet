@@ -2,7 +2,7 @@ package com.kairos.model;
 
 public class Gondola {
 
-//    Atributos
+    //    Atributos
     private int id;
     private int capacidadeMaxima;
     private Setor setor;
@@ -15,9 +15,16 @@ public class Gondola {
         this.setor = setor;
     }
 
+    public Gondola(int capacidadeMaxima, Setor setor) {
+        this.capacidadeMaxima = capacidadeMaxima;
+        this.setor = setor;
+    }
+
     public Gondola(int capacidadeMaxima) {
         this.capacidadeMaxima = capacidadeMaxima;
     }
+
+//    Getters
 
     public int getId() {
         return id;
@@ -31,6 +38,8 @@ public class Gondola {
         return setor;
     }
 
+//    Setters
+
     public void setId(int id) {
         this.id = id;
     }
@@ -43,14 +52,16 @@ public class Gondola {
         this.setor = setor;
     }
 
-    //    toString
+//    toString
+
+    @Override
     public String toString() {
-        return "-= Gondola =- " +
-               "\nID: " + getId() +
-               "\nCapacidade máxima: " + getCapacidadeMaxima() +
-               "\nSetor: " +
-               "\n   - ID: " + setor.getId() +
-               "\n   - Nome: " + setor.getNome() +
-               "\n   - Categoria do setor: " + setor.getCategoria();
+        return "\n-= Gondola =- " +
+                "\nID: " + getId() +
+                "\nCapacidade máxima: " + getCapacidadeMaxima() +
+                "\nSetor: " +
+                "\n   - ID: " + setor.getId() +
+                "\n   - Nome: " + setor.getNome() +
+                "\n   - Categoria do setor: " + setor.getCategoria();
     }
 }

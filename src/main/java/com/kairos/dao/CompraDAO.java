@@ -76,6 +76,7 @@ public class CompraDAO {
         String sql = """
                      SELECT id, data_compra
                      FROM compras
+                     ORDER BY id
                      """;
 
         List<Compra> compras = new ArrayList<>();

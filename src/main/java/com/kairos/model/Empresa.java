@@ -12,7 +12,6 @@ public class Empresa {
 
 //    Construtores
 
-
     public Empresa(int id, String cnpj, TipoPlano tipoPlano) {
         this.id = id;
         this.cnpj = cnpj;
@@ -51,8 +50,8 @@ public class Empresa {
     //    toString
     @Override
     public String toString() {
-        return "-= Empresa =-" +
-               "ID: " + getId() +
+        return "\n-= Empresa =-" +
+               "\nID: " + getId() +
                "\nCNPJ: " + getCnpj() +
                "\nTipo do plano: " + getTipoPlano();
     }

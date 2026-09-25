@@ -44,7 +44,7 @@ public class Setor {
 
     //    toString
     public String toString() {
-        return "-= Setor =-" +
+        return "\n-= Setor =-" +
                "\nID: " + getId() +
                "\nNome: " + getNome() +
                "\nCategoria: " + getCategoria();
