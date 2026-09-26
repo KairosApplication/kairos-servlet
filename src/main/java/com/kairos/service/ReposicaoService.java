@@ -5,7 +5,6 @@ import com.kairos.model.Reposicao;
 import com.kairos.utils.exceptions.notfound.GondolaNotFoundException;
 import com.kairos.utils.exceptions.notfound.ProdutoNotFoundException;
 import com.kairos.utils.exceptions.notfound.ReposicaoNotFoundException;
-import com.kairos.utils.exceptions.notfound.UsuarioNotFoundException;
 import com.kairos.utils.exceptions.quantity.ReplenishmentQuantityException;
 import com.kairos.utils.exceptions.system.ServiceException;
 
@@ -15,13 +14,11 @@ import java.util.List;
 public class ReposicaoService {
 
     private final ReposicaoDAO reposicaoDAO;
-    private final UsuarioService usuarioService;
     private final ProdutoService produtoService;
     private final GondolaService gondolaService;
 
     public ReposicaoService() {
         this.reposicaoDAO = new ReposicaoDAO();
-        this.usuarioService = new UsuarioService();
         this.produtoService = new ProdutoService();
         this.gondolaService = new GondolaService();
     }
@@ -29,10 +26,6 @@ public class ReposicaoService {
     public Reposicao cadastrar(Reposicao reposicao) {
 
         validarCampos(reposicao);
-
-        if (usuarioService.buscarPorId(reposicao.getUsuario().getId()) == null) {
-            throw new UsuarioNotFoundException("Usuário não encontrado");
-        }
 
         if (produtoService.buscarPorId(reposicao.getProduto().getId()) == null) {
             throw new ProdutoNotFoundException("Produto não encontrado");
@@ -73,10 +66,6 @@ public class ReposicaoService {
             throw new ServiceException("O id deve ser maior que 0");
         }
 
-        if (usuarioService.buscarPorId(reposicao.getUsuario().getId()) == null) {
-            throw new UsuarioNotFoundException("Usuário não encontrado");
-        }
-
         if (produtoService.buscarPorId(reposicao.getProduto().getId()) == null) {
             throw new ProdutoNotFoundException("Produto não encontrado");
         }
@@ -107,10 +96,6 @@ public class ReposicaoService {
 
         if (reposicao == null) {
             throw new ServiceException("Reposição não pode ser nula");
-        }
-
-        if (reposicao.getUsuario() == null) {
-            throw new ServiceException("Usuário não pode ser nulo");
         }
 
         if (reposicao.getProduto() == null) {

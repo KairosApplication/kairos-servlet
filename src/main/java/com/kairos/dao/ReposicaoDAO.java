@@ -1,8 +1,9 @@
 package com.kairos.dao;
 
-import com.kairos.model.*;
-import com.kairos.model.enums.TipoPlano;
-import com.kairos.model.enums.TipoUsuario;
+import com.kairos.model.Gondola;
+import com.kairos.model.Produto;
+import com.kairos.model.Reposicao;
+import com.kairos.model.Setor;
 import com.kairos.utils.connection.ConnectionFactory;
 import com.kairos.utils.exceptions.system.DAOException;
 
@@ -15,30 +16,28 @@ public class ReposicaoDAO {
     public Reposicao inserir(Reposicao reposicao) {
 
         String sql = """
-                     INSERT INTO reposicoes (usuario_id, produto_id, data_reposicao,
+                     INSERT INTO reposicoes (produto_id, data_reposicao,
                                              quantidade_reposto, motivo_reposicao,
                                              gondola_id)
-                     VALUES (?, ?, ?, ?, ?, ?)
-                     RETURNING id, usuario_id, produto_id, data_reposicao,
+                     VALUES (?, ?, ?, ?, ?)
+                     RETURNING id, produto_id, data_reposicao,
                                quantidade_reposto, motivo_reposicao, gondola_id
                      """;
 
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, reposicao.getUsuario().getId());
-            statement.setInt(2, reposicao.getProduto().getId());
-            statement.setTimestamp(3, reposicao.getDataReposicao());
-            statement.setInt(4, reposicao.getQuantidadeReposto());
-            statement.setString(5, reposicao.getMotivoReposicao());
-            statement.setInt(6, reposicao.getGondola().getId());
+            statement.setInt(1, reposicao.getProduto().getId());
+            statement.setTimestamp(2, reposicao.getDataReposicao());
+            statement.setInt(3, reposicao.getQuantidadeReposto());
+            statement.setString(4, reposicao.getMotivoReposicao());
+            statement.setInt(5, reposicao.getGondola().getId());
 
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
                     return new Reposicao(
                             rs.getInt("id"),
-                            reposicao.getUsuario(),
                             reposicao.getProduto(),
                             rs.getTimestamp("data_reposicao"),
                             rs.getInt("quantidade_reposto"),
@@ -58,17 +57,24 @@ public class ReposicaoDAO {
     public Reposicao buscarPorId(int id) {
 
         String sql = """
-                     SELECT r.id as rid, r.usuario_id, r.produto_id, r.data_reposicao,
-                            r.quantidade_reposto, r.motivo_reposicao, r.gondola_id,
-                            u.id as uid, u.cpf, u.senha, u.nome, u.sobrenome,
-                            u.data_nascimento, u.cep, u.tipo_usuario, u.email,
-                            u.empresa_id, p.id as pid, p.marca, p.nome, p.quantidade_estoque,
-                            e.id as eid, e.cnpj, e.tipo_plano, g.id as gid, g.capacidade_maxima,
-                            g.setor_id, s.id as sid, s.nome as setor_nome, s.categoria_setor
+                     SELECT r.id AS rid,
+                            r.produto_id,
+                            r.data_reposicao,
+                            r.quantidade_reposto,
+                            r.motivo_reposicao,
+                            r.gondola_id,
+                            p.id AS pid,
+                            p.marca,
+                            p.nome,
+                            p.quantidade_estoque,
+                            g.id AS gid,
+                            g.capacidade_maxima,
+                            g.setor_id,
+                            s.id AS sid,
+                            s.nome AS setor_nome,
+                            s.categoria_setor
                      FROM reposicoes r
-                     JOIN usuarios u ON u.id = r.usuario_id
                      JOIN produtos p ON p.id = r.produto_id
-                     JOIN empresas e ON e.id = u.empresa_id
                      JOIN gondolas g ON g.id = r.gondola_id
                      JOIN setores s ON s.id = g.setor_id
                      WHERE r.id = ?
@@ -84,22 +90,6 @@ public class ReposicaoDAO {
                 if (rs.next()) {
                     return new Reposicao(
                             rs.getInt("rid"),
-                            new Usuario(
-                                    rs.getInt("uid"),
-                                    rs.getString("cpf"),
-                                    rs.getString("senha"),
-                                    rs.getString("nome"),
-                                    rs.getString("sobrenome"),
-                                    rs.getDate("data_nascimento").toLocalDate(),
-                                    rs.getString("cep"),
-                                    TipoUsuario.valueOf(rs.getString("tipo_usuario")),
-                                    rs.getString("email"),
-                                    new Empresa(
-                                            rs.getInt("eid"),
-                                            rs.getString("cnpj"),
-                                            TipoPlano.valueOf(rs.getString("tipo_plano"))
-                                    )
-                            ),
                             new Produto(
                                     rs.getInt("pid"),
                                     rs.getString("marca"),
@@ -132,17 +122,24 @@ public class ReposicaoDAO {
     public List<Reposicao> listarTodos() {
 
         String sql = """
-                     SELECT r.id as rid, r.usuario_id, r.produto_id, r.data_reposicao,
-                            r.quantidade_reposto, r.motivo_reposicao, r.gondola_id,
-                            u.id as uid, u.cpf, u.senha, u.nome, u.sobrenome,
-                            u.data_nascimento, u.cep, u.tipo_usuario, u.email,
-                            u.empresa_id, p.id as pid, p.marca, p.nome, p.quantidade_estoque,
-                            e.id as eid, e.cnpj, e.tipo_plano, g.id as gid, g.capacidade_maxima,
-                            g.setor_id, s.id as sid, s.nome as setor_nome, s.categoria_setor
+                     SELECT r.id AS rid,
+                            r.produto_id,
+                            r.data_reposicao,
+                            r.quantidade_reposto,
+                            r.motivo_reposicao,
+                            r.gondola_id,
+                            p.id AS pid,
+                            p.marca,
+                            p.nome,
+                            p.quantidade_estoque,
+                            g.id AS gid,
+                            g.capacidade_maxima,
+                            g.setor_id,
+                            s.id AS sid,
+                            s.nome AS setor_nome,
+                            s.categoria_setor
                      FROM reposicoes r
-                     JOIN usuarios u ON u.id = r.usuario_id
                      JOIN produtos p ON p.id = r.produto_id
-                     JOIN empresas e ON e.id = u.empresa_id
                      JOIN gondolas g ON g.id = r.gondola_id
                      JOIN setores s ON s.id = g.setor_id
                      ORDER BY r.id
@@ -158,22 +155,6 @@ public class ReposicaoDAO {
                 while (rs.next()) {
                     Reposicao reposicao = new Reposicao(
                             rs.getInt("rid"),
-                            new Usuario(
-                                    rs.getInt("uid"),
-                                    rs.getString("cpf"),
-                                    rs.getString("senha"),
-                                    rs.getString("nome"),
-                                    rs.getString("sobrenome"),
-                                    rs.getDate("data_nascimento").toLocalDate(),
-                                    rs.getString("cep"),
-                                    TipoUsuario.valueOf(rs.getString("tipo_usuario")),
-                                    rs.getString("email"),
-                                    new Empresa(
-                                            rs.getInt("eid"),
-                                            rs.getString("cnpj"),
-                                            TipoPlano.valueOf(rs.getString("tipo_plano"))
-                                    )
-                            ),
                             new Produto(
                                     rs.getInt("pid"),
                                     rs.getString("marca"),
@@ -209,8 +190,7 @@ public class ReposicaoDAO {
 
         String sql = """
                      UPDATE reposicoes
-                     SET usuario_id = ?,
-                         produto_id = ?,
+                     SET produto_id = ?,
                          data_reposicao = ?,
                          quantidade_reposto = ?,
                          motivo_reposicao = ?,
@@ -221,14 +201,12 @@ public class ReposicaoDAO {
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, reposicao.getUsuario().getId());
-            statement.setInt(2, reposicao.getProduto().getId());
-            statement.setTimestamp(3, reposicao.getDataReposicao());
-            statement.setInt(4, reposicao.getQuantidadeReposto());
-            statement.setString(5, reposicao.getMotivoReposicao());
-            statement.setInt(6, reposicao.getGondola().getId());
-
-            statement.setInt(7, reposicao.getId());
+            statement.setInt(1, reposicao.getProduto().getId());
+            statement.setTimestamp(2, reposicao.getDataReposicao());
+            statement.setInt(3, reposicao.getQuantidadeReposto());
+            statement.setString(4, reposicao.getMotivoReposicao());
+            statement.setInt(5, reposicao.getGondola().getId());
+            statement.setInt(6, reposicao.getId());
 
             return statement.executeUpdate();
 
