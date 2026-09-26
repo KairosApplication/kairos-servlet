@@ -2,8 +2,6 @@ package com.kairos.service;
 
 import com.kairos.dao.EmpresaDAO;
 import com.kairos.model.Empresa;
-import com.kairos.model.Usuario;
-import com.kairos.utils.AuthorizationValidator;
 import com.kairos.utils.Regex;
 import com.kairos.utils.exceptions.exists.CnpjExistsException;
 import com.kairos.utils.exceptions.notfound.EmpresaNotFoundException;
@@ -22,8 +20,6 @@ public class EmpresaService {
 
     public Empresa cadastrar(Empresa empresa) {
 
-//        AuthorizationValidator.validarAdmin(usuarioAtual);
-
         validarCampos(empresa);
 
         if (empresaDAO.existePorCnpj(empresa.getCnpj())) {
@@ -41,8 +37,6 @@ public class EmpresaService {
 
     public Empresa buscarPorId(int id) {
 
-//        AuthorizationValidator.validarAdmin(usuarioAtual);
-
         if (id <= 0) {
             throw new ServiceException("O id deve ser maior que 0");
         }
@@ -55,16 +49,12 @@ public class EmpresaService {
         return empresa;
     }
 
-    public List<Empresa> listarTodas(Usuario usuarioAtual) {
-
-        AuthorizationValidator.validarAdmin(usuarioAtual);
+    public List<Empresa> listarTodas() {
 
         return empresaDAO.listarTodos();
     }
 
     public void atualizar(Empresa empresa) {
-
-//        AuthorizationValidator.validarAdmin(usuarioAtual);
 
         validarCampos(empresa);
 
@@ -87,9 +77,8 @@ public class EmpresaService {
         }
     }
 
-    public void deletarPorId(int id, Usuario usuarioAtual) {
+    public void deletarPorId(int id) {
 
-        AuthorizationValidator.validarAdmin(usuarioAtual);
         if (id <= 0) {
             throw new ServiceException("O id deve ser maior que 0");
         }

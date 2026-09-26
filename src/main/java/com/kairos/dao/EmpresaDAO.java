@@ -88,7 +88,7 @@ public class EmpresaDAO {
 
             try (ResultSet rs = statement.executeQuery()) {
 
-                if (rs.next()) {
+                while (rs.next()) {
                     Empresa empresa = new Empresa(
                             rs.getInt("id"),
                             rs.getString("cnpj"),
@@ -109,7 +109,7 @@ public class EmpresaDAO {
         String sql = """
                      UPDATE empresas
                      SET cnpj = ?,
-                         tipo_plano = ?,
+                         tipo_plano = ?
                      WHERE id = ?
                      """;
 

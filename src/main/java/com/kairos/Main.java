@@ -7,7 +7,11 @@ import com.kairos.model.*;
 import com.kairos.model.enums.TipoPlano;
 import com.kairos.model.enums.TipoUsuario;
 import com.kairos.service.*;
+import com.kairos.utils.exceptions.exists.CnpjExistsException;
+import com.kairos.utils.exceptions.invalid.InvalidCnpjRegexException;
+import com.kairos.utils.exceptions.notfound.EmpresaNotFoundException;
 import com.kairos.utils.exceptions.system.DAOException;
+import com.kairos.utils.exceptions.system.ServiceException;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -18,54 +22,17 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
+        EmpresaService empresaService = new EmpresaService();
+
         try {
-            UsuarioService usuarioService = new UsuarioService();
-            EmpresaService empresaService= new EmpresaService();
-            ProdutoService produtoService = new ProdutoService();
-            SetorService setorService = new SetorService();
-            GondolaService gondolaService = new GondolaService();
-            ReposicaoService reposicaoService = new ReposicaoService();
-            ReposicaoDAO reposicaoDAO = new ReposicaoDAO();
-            ProdutoDAO produtoDAO = new ProdutoDAO();
-            CompraDAO compraDAO = new CompraDAO();
+            Empresa empresa = empresaService.buscarPorId(1);
+            empresa.setTipoPlano(null);
 
+            empresaService.atualizar(empresa);
 
-//            Empresa criarEmpresa = new Empresa(
-//                    "76574857463456",
-//                    TipoPlano.STANDART
-//            );
-//
-//            Empresa empresa = empresaService.cadastrar(criarEmpresa);
-//
-//            Usuario criarUsuario = new Usuario(
-//                    "87463526473",
-//                    "guiv348j34h",
-//                    "Victor",
-//                    "Chandia",
-//                    LocalDate.parse("2020-05-03"),
-//                    "85736475",
-//                    "akjfka@gmail.com",
-//                    empresa
-//            );
-//
-//            Usuario usuario = usuarioService.cadastrar(criarUsuario);
-//
-//            System.out.println(usuario);
-
-            Usuario usuario = usuarioService.buscarPorId(3);
-//
-//
-            usuario.setNome("atulacatumbatumbata");
-
-            usuarioService.atualizar(usuario);
-
-
-
-
-
-
-        } catch (DAOException e) {
-            System.out.println("erro: " + e.getCause());
+        } catch (ServiceException e) {
+            System.out.println(e.getMessage());
         }
+
     }
 }
