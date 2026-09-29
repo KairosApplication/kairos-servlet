@@ -7,68 +7,68 @@
     --text-muted: #6f6f6f;
 }
 
-* { margin:0; padding:0; box-sizing:border-box; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-html, body {
+html,
+body {
     font-family: 'Poppins', sans-serif;
     background: #ffffff;
     overflow-x: hidden;
     overflow-y: hidden;
 }
-.left-col{
-    margin-left: 150px;
-}
+
 .page {
     position: relative;
     width: 100%;
     min-height: 100vh;
-    overflow: hidden; /* Esconde o que passar dos limites da tela */
+    overflow: hidden;
 }
 
+/* Fundo verde */
 .circulo {
     position: absolute;
-
-    /* Dimensões do bloco verde */
     width: 60%;
-    height: 1200px; /* Altura maior que a tela para cobrir tudo ao inclinar */
-
-    /* Posição no canto superior direito */
+    height: 1200px;
     top: -10vh;
     right: -20%;
-
-    /* Cor e arredondamento dos cantos */
     background-color: #1c4a3a;
-    /* border-radius: 80px 0 0 80px; Arredonda apenas os cantos esquerdos (superior e inferior) */
     border-radius: 50%;
-
-
     z-index: 0;
 }
 
+/* Container principal */
 .container {
     position: relative;
     z-index: 1;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 40px;
+    justify-content: center;
+    gap: 70px;
     min-height: 100vh;
-    padding: 100px 60px 60px;
+    padding: 80px 60px 60px;
 }
 
-/* logo */
+/* Logo */
 .logo {
     position: absolute;
-    top: 34px;
-    left: 62px;
+    top: 18px;
+    left: 40px;
     display: flex;
     align-items: center;
-    gap: 12px;
     z-index: 2;
+    transition: opacity 0.3s ease;
+}
+
+.logo:hover {
+    opacity: 0.7;
 }
 
 .logo img {
-    height: 80px;
+    height: 70px;
     width: auto;
 }
 
@@ -79,23 +79,27 @@ html, body {
     color: var(--text-dark);
 }
 
-/* left column */
+/* Coluna esquerda */
 .left-col {
-    flex: 1 1 480px;
-    max-width: 520px;
+    flex: 0 1 480px;
+    max-width: 480px;
+    margin-left: 0;
 }
 
 .left-col h1 {
-    font-size: 41px;
-    font-weight: 800;
+    font-size: 35px;
+    font-weight: 630;
     line-height: 1.22;
     color: var(--text-dark);
     margin-bottom: 40px;
+    margin-left: -70px;
 }
 
+/* Ilustração */
 .illustration {
     width: 100%;
-    max-width: 410px;
+    max-width: 400px;
+    margin-left: -50px;
 }
 
 .illustration img {
@@ -104,17 +108,20 @@ html, body {
     display: block;
 }
 
-/* form card */
+/* Card do formulário */
 .form-card {
-    flex: 0 0 auto;
+    flex: 0 0 466px;
     width: 466px;
-    background: var(--card-bg);
+    background: #f0f1f4;
     border-radius: 26px;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.18);
+    box-shadow:
+            0 2px 2px rgba(0, 0, 0, 0.08),
+            0 5px 8px rgba(0, 0, 0, 0.10),
+            0 12px 18px rgba(0, 0, 0, 0.08);
     padding: 32px 34px;
-    left: 100px;
 }
 
+/* Abas */
 .tabs {
     display: flex;
     background: var(--mint);
@@ -129,13 +136,15 @@ html, body {
     padding: 8px 0;
     font-family: 'Poppins', sans-serif;
     font-size: 15px;
-    font-weight: 600px;
+    font-weight: 400;
     border-radius: 8px;
     border: none;
     background: transparent;
     color: var(--green);
     cursor: pointer;
-    transition: background .2s ease, color .2s ease;
+    transition:
+            background .2s ease,
+            color .2s ease;
 }
 
 .tab.active {
@@ -143,7 +152,10 @@ html, body {
     color: #fff;
 }
 
-.field { margin-bottom: 18px; }
+/* Campos */
+.field {
+    margin-bottom: 18px;
+}
 
 .field label {
     display: block;
@@ -153,7 +165,9 @@ html, body {
     margin-bottom: 8px;
 }
 
-.input-wrap { position: relative; }
+.input-wrap {
+    position: relative;
+}
 
 .field input {
     width: 100%;
@@ -167,6 +181,7 @@ html, body {
     outline: none;
 }
 
+/* Ícone de visualizar senha */
 .toggle-eye {
     position: absolute;
     right: 14px;
@@ -177,6 +192,7 @@ html, body {
     display: flex;
 }
 
+/* Botão */
 .submit-btn {
     width: 100%;
     padding: 15px 0;
@@ -192,8 +208,11 @@ html, body {
     transition: background .2s ease;
 }
 
-.submit-btn:hover { background: var(--green-2); }
+.submit-btn:hover {
+    background: var(--green-2);
+}
 
+/* Termos */
 .terms {
     text-align: center;
     font-size: 13px;
@@ -208,19 +227,49 @@ html, body {
     text-decoration: underline;
 }
 
+/* Mensagem de erro */
+.login-error {
+    color: #d32f2f;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 12px;
+}
+
+/* Responsivo */
 @media (max-width: 900px) {
+
     .container {
         flex-direction: column;
+        justify-content: center;
+        gap: 40px;
         padding: 90px 24px 50px;
         text-align: center;
     }
+
     .left-col {
+        flex: 0 1 auto;
         max-width: 100%;
+        margin-left: 0;
     }
+
     .illustration {
         margin: 0 auto;
     }
-    .diagonal-bg {
-        clip-path: polygon(0 62%, 100% 40%, 100% 100%, 0 100%);
+
+    .form-card {
+        width: min(466px, 100%);
+        flex: 0 1 auto;
     }
+}
+
+.erro {
+    color: #dc2626;
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px var(--mint) inset;
+    -webkit-text-fill-color: var(--text-dark);
 }

@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.Date;
 import java.sql.ResultSet;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -305,19 +306,111 @@ public class UsuarioDAO {
         }
     }
 
+    public Usuario buscarPorEmail(String email) {
 
+        String sql = """
+                 SELECT u.id as usuario_id, u.cpf, u.senha, u.nome, u.sobrenome,
+                        u.data_nascimento, u.cep, u.tipo_usuario, u.email,
+                        e.id as empresa_id, e.cnpj, e.tipo_plano
+                 FROM usuarios u
+                 JOIN empresas e ON e.id = u.empresa_id
+                 WHERE u.email = ?
+                 """;
 
-//    Precisa saber as regras do front
-//    public Usuario login(String email, String senha) {
-//
-//        String sql = """
-//                     SELECT id, cpf, senha, nome, sobrenome, data_nascimento,
-//                     cep, tipo_usuario, email
-//                     FROM usuarios
-//                     WHERE email = ? AND senha = ?
-//                     """;
-//
-//
-//    }
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, email);
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                if (rs.next()) {
+                    return new Usuario(
+                            rs.getInt("usuario_id"),
+                            rs.getString("cpf"),
+                            rs.getString("senha"),
+                            rs.getString("nome"),
+                            rs.getString("sobrenome"),
+                            rs.getDate("data_nascimento").toLocalDate(),
+                            rs.getString("cep"),
+                            TipoUsuario.valueOf(rs.getString("tipo_usuario")),
+                            rs.getString("email"),
+                            new Empresa(
+                                    rs.getInt("empresa_id"),
+                                    rs.getString("cnpj"),
+                                    TipoPlano.valueOf(rs.getString("tipo_plano"))
+                            )
+                    );
+                }
+
+                return null;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao buscar usuário pelo email " + email, e);
+        }
+    }
+
+    public List<Usuario> pesquisar(String pesquisa) {
+
+        String sql = """
+                 SELECT
+                     u.id AS usuario_id, u.cpf, u.senha, u.nome, u.sobrenome,
+                     u.data_nascimento, u.cep, u.tipo_usuario, u.email,
+                     e.id AS empresa_id, e.cnpj, e.tipo_plano
+                 FROM usuarios u
+                 JOIN empresas e ON e.id = u.empresa_id
+                 WHERE CAST(u.id AS TEXT) ILIKE ?
+                    OR u.cpf ILIKE ?
+                    OR u.nome ILIKE ?
+                    OR u.sobrenome ILIKE ?
+                    OR CAST(u.data_nascimento AS TEXT) ILIKE ?
+                    OR u.cep ILIKE ?
+                    OR u.email ILIKE ?
+                    OR u.tipo_usuario ILIKE ?
+                    OR CAST(u.empresa_id AS TEXT) ILIKE ?
+                 """;
+
+        String filtro = "%" + pesquisa + "%";
+
+        List<Usuario> usuarios = new ArrayList<>();
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            for (int i = 1; i <= 9; i++) {
+                statement.setString(i, filtro);
+            }
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                while (rs.next()) {
+
+                    Usuario usuario = new Usuario(
+                            rs.getInt("usuario_id"),
+                            rs.getString("cpf"),
+                            rs.getString("senha"),
+                            rs.getString("nome"),
+                            rs.getString("sobrenome"),
+                            rs.getDate("data_nascimento").toLocalDate(),
+                            rs.getString("cep"),
+                            TipoUsuario.valueOf(rs.getString("tipo_usuario")),
+                            rs.getString("email"),
+                            new Empresa(
+                                    rs.getInt("empresa_id"),
+                                    rs.getString("cnpj"),
+                                    TipoPlano.valueOf(rs.getString("tipo_plano"))
+                            )
+                    );
+
+                    usuarios.add(usuario);
+                }
+
+                return usuarios;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao listar usuários por pesquisa");
+        }
+    }
 }
-

@@ -1,4 +1,4 @@
-package com.kairos.utils.exceptions.invalid;
+package com.kairos.utils.exceptions.regex;
 
 public class InvalidCepRegexException extends RuntimeException {
 

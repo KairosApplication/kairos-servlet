@@ -10,9 +10,9 @@ import com.kairos.utils.AuthorizationValidator;
 import com.kairos.utils.Regex;
 import com.kairos.utils.exceptions.exists.CpfExistsException;
 import com.kairos.utils.exceptions.exists.EmailExistsException;
-import com.kairos.utils.exceptions.invalid.InvalidCepRegexException;
-import com.kairos.utils.exceptions.invalid.InvalidCpfRegexException;
-import com.kairos.utils.exceptions.invalid.InvalidEmailRegexException;
+import com.kairos.utils.exceptions.regex.InvalidCepRegexException;
+import com.kairos.utils.exceptions.regex.InvalidCpfRegexException;
+import com.kairos.utils.exceptions.regex.InvalidEmailRegexException;
 import com.kairos.utils.exceptions.notfound.EmpresaNotFoundException;
 import com.kairos.utils.exceptions.notfound.UsuarioNotFoundException;
 import com.kairos.utils.exceptions.system.AdminException;
@@ -230,11 +230,34 @@ public class UsuarioService {
         return usuarioDAO.existePorCpfExcetoId(cpf, id);
     }
 
+    public Usuario buscarPorEmail(String email) {
+
+        if (email == null || email.isBlank()) {
+            throw new ServiceException("Email é obrigatório");
+        }
+
+        if (!email.matches(Regex.EMAIL)) {
+            throw new InvalidEmailRegexException("Formato do Email inválido");
+        }
+
+        Usuario usuario = usuarioDAO.buscarPorEmail(email);
+
+        if (usuario == null) {
+            throw new UsuarioNotFoundException("Usuário não encontrado");
+        }
+
+        return usuario;
+    }
+
 //    Metodo que valida os campos do usuario
     private void validarCampos(Usuario usuario) {
 
         if (usuario == null) {
             throw new ServiceException("Usuário não pode ser nulo");
+        }
+
+        if (usuario.getNome().matches(".*\\d.*")) {
+            throw new ServiceException("O nome não pode conter números");
         }
 
         if (usuario.getEmpresa() == null) {

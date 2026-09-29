@@ -5,7 +5,7 @@ import com.kairos.model.Empresa;
 import com.kairos.utils.Regex;
 import com.kairos.utils.exceptions.exists.CnpjExistsException;
 import com.kairos.utils.exceptions.notfound.EmpresaNotFoundException;
-import com.kairos.utils.exceptions.invalid.InvalidCnpjRegexException;
+import com.kairos.utils.exceptions.regex.InvalidCnpjRegexException;
 import com.kairos.utils.exceptions.system.ServiceException;
 
 import java.util.List;
