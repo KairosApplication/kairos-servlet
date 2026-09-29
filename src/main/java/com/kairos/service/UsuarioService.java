@@ -292,4 +292,10 @@ public class UsuarioService {
             throw new ServiceException("Email é obrigatório");
         }
     }
+
+    public List<Usuario> pesquisar(String pesquisa) {
+
+        return usuarioDAO.pesquisar(pesquisa);
+
+    }
 }

@@ -1,6 +1,7 @@
 package com.kairos.service;
 
 import com.kairos.model.Usuario;
+import com.kairos.utils.PasswordHasher;
 import com.kairos.utils.exceptions.system.ServiceException;
 
 public class LoginService {
@@ -15,7 +16,7 @@ public class LoginService {
 
         Usuario usuario = usuarioService.buscarPorEmail(email);
 
-        if (!usuario.getSenha().equals(senha)) {
+        if (!PasswordHasher.verificar(senha, usuario.getSenha())) {
             throw new ServiceException("Email ou senha inválidos");
         }
 

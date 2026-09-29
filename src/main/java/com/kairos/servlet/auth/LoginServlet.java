@@ -29,6 +29,8 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String senha = request.getParameter("senha");
 
+
+
         try {
 
             Usuario usuario = loginService.autenticar(email, senha);

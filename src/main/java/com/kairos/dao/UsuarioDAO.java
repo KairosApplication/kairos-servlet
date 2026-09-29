@@ -4,6 +4,7 @@ import com.kairos.model.Empresa;
 import com.kairos.model.enums.TipoPlano;
 import com.kairos.model.enums.TipoUsuario;
 import com.kairos.model.Usuario;
+import com.kairos.utils.PasswordHasher;
 import com.kairos.utils.connection.ConnectionFactory;
 import com.kairos.utils.exceptions.system.DAOException;
 
@@ -22,6 +23,8 @@ public class UsuarioDAO {
 //    Metodo para inserir um usuario
     public Usuario inserir(Usuario usuario) {
 
+        String senhaHash = PasswordHasher.hash(usuario.getSenha());
+
         String sql = """
                      INSERT INTO usuarios (
                                            cpf, senha, nome, sobrenome, data_nascimento, 
@@ -36,7 +39,7 @@ public class UsuarioDAO {
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, usuario.getCpf());
-            statement.setString(2, usuario.getSenha());
+            statement.setString(2, senhaHash);
             statement.setString(3, usuario.getNome());
             statement.setString(4, usuario.getSobrenome());
             statement.setDate(5, Date.valueOf(usuario.getDataNascimento()));
@@ -176,11 +179,13 @@ public class UsuarioDAO {
                      WHERE id = ?
                      """;
 
+        String senhaHash = PasswordHasher.hash(usuario.getSenha());
+
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, usuario.getCpf());
-            statement.setString(2, usuario.getSenha());
+            statement.setString(2, senhaHash);
             statement.setString(3, usuario.getNome());
             statement.setString(4, usuario.getSobrenome());
             statement.setDate(5, Date.valueOf(usuario.getDataNascimento()));
