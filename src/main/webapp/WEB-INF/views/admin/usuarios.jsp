@@ -250,7 +250,6 @@
 
                             <!-- VER MAIS: somente FUNCIONARIO -->
 
-
                             <c:choose>
 
                                 <c:when test="${usuario.tipoUsuario.name() == 'FUNCIONARIO'}">
@@ -265,6 +264,7 @@
                                             for="details-${usuario.id}"
                                             class="details-button"
                                     >
+
                                         <span class="button-text">
                                             Ver mais
                                         </span>
@@ -272,6 +272,7 @@
                                         <span class="arrow">
                                             ▼
                                         </span>
+
                                     </label>
 
                                 </c:when>
@@ -294,6 +295,7 @@
                             >
                                 Atualizar
                             </label>
+
 
                             <!-- DELETAR: FUNCIONARIO e GERENTE -->
 
@@ -453,7 +455,7 @@
             type="checkbox"
             id="update-user-${usuario.id}"
             class="popup-toggle"
-            ${idUsuarioAtualizacao == usuario.id ? 'checked' : ''}
+        ${idUsuarioAtualizacao == usuario.id ? 'checked' : ''}
     >
 
 
@@ -470,6 +472,7 @@
                 <label
                         for="update-user-${usuario.id}"
                         class="popup-close"
+                        onclick="limparFormularioAtualizacao(${usuario.id})"
                 >
                     &times;
                 </label>
@@ -505,13 +508,14 @@
                                 name="nome"
                                 value="${idUsuarioAtualizacao == usuario.id ? param.nome : usuario.nome}"
                                 data-original="${usuario.nome}"
-
                         >
 
                         <c:if test="${idUsuarioAtualizacao == usuario.id and not empty errosAtualizacao.nome}">
+
                             <div class="campo-erro">
                                     ${errosAtualizacao.nome}
                             </div>
+
                         </c:if>
 
                     </div>
@@ -532,9 +536,11 @@
                         >
 
                         <c:if test="${idUsuarioAtualizacao == usuario.id and not empty errosAtualizacao.sobrenome}">
+
                             <div class="campo-erro">
                                     ${errosAtualizacao.sobrenome}
                             </div>
+
                         </c:if>
 
                     </div>
@@ -555,9 +561,11 @@
                         >
 
                         <c:if test="${idUsuarioAtualizacao == usuario.id and not empty errosAtualizacao.cpf}">
+
                             <div class="campo-erro">
                                     ${errosAtualizacao.cpf}
                             </div>
+
                         </c:if>
 
                     </div>
@@ -578,9 +586,11 @@
                         >
 
                         <c:if test="${idUsuarioAtualizacao == usuario.id and not empty errosAtualizacao.nascimento}">
+
                             <div class="campo-erro">
                                     ${errosAtualizacao.nascimento}
                             </div>
+
                         </c:if>
 
                     </div>
@@ -601,9 +611,11 @@
                         >
 
                         <c:if test="${idUsuarioAtualizacao == usuario.id and not empty errosAtualizacao.cep}">
+
                             <div class="campo-erro">
                                     ${errosAtualizacao.cep}
                             </div>
+
                         </c:if>
 
                     </div>
@@ -624,9 +636,11 @@
                         >
 
                         <c:if test="${idUsuarioAtualizacao == usuario.id and not empty errosAtualizacao.email}">
+
                             <div class="campo-erro">
                                     ${errosAtualizacao.email}
                             </div>
+
                         </c:if>
 
                     </div>
@@ -639,6 +653,7 @@
                     <label
                             for="update-user-${usuario.id}"
                             class="cancel-button"
+                            onclick="limparFormularioAtualizacao(${usuario.id})"
                     >
                         Cancelar
                     </label>
@@ -1243,11 +1258,17 @@ ${not empty erros ? 'checked' : ''}
 
 </div>
 
+
+<!-- ====================================================== -->
+<!-- POPUP LOGOUT -->
+<!-- ====================================================== -->
+
 <input
         type="checkbox"
         id="logout-popup"
         class="popup-toggle"
 >
+
 
 <div class="popup-overlay">
 
@@ -1268,9 +1289,11 @@ ${not empty erros ? 'checked' : ''}
 
         </div>
 
+
         <p>
             Você deseja realmente sair da página do administrador?
         </p>
+
 
         <div class="popup-actions">
 
@@ -1293,6 +1316,7 @@ ${not empty erros ? 'checked' : ''}
     </div>
 
 </div>
+
 
 <script
         src="${pageContext.request.contextPath}/assets/js/usuarios.js">

@@ -57,11 +57,8 @@ public class SetorServlet extends HttpServlet {
         List<Setor> setores;
 
         if (busca != null && !busca.isBlank()) {
-
-            setores = setorService.pesquisar(busca);
-
+            setores = setorService.pesquisar(busca.trim());
         } else {
-
             setores = setorService.listarTodos();
         }
 

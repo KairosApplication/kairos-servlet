@@ -31,21 +31,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-
             form.dataset.enviado = "true";
-
 
             const botao = form.querySelector(
                 'button[type="submit"], input[type="submit"]'
             );
 
-
             if (botao) {
 
                 botao.disabled = true;
-
                 botao.style.opacity = "0.6";
-
                 botao.style.cursor = "not-allowed";
 
             }
@@ -72,13 +67,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-
             link.dataset.clicado = "true";
 
             link.style.opacity = "0.6";
-
             link.style.pointerEvents = "none";
-
             link.style.cursor = "not-allowed";
 
         });
@@ -123,6 +115,7 @@ function limparFormularioAdicionar() {
     });
 }
 
+
 /*
  * Limpa erros e restaura os dados originais
  * do usuário no formulário de atualização.
@@ -145,6 +138,45 @@ function limparFormularioAtualizacao(id) {
 
         }
 
+    });
+
+    formulario.querySelectorAll(
+        ".campo-erro"
+    ).forEach(function (erro) {
+
+        erro.remove();
+
+    });
+}
+
+
+/*
+ * Limpa o formulário de vincular gôndola.
+ * Remove o ID digitado e os erros de validação.
+ */
+function limparFormularioVincular(id) {
+
+    const formulario = document.getElementById(
+        "link-gondola-form-" + id
+    );
+
+    if (!formulario) {
+        return;
+    }
+
+    formulario.querySelectorAll("input").forEach(function (input) {
+
+        if (input.type !== "hidden") {
+
+            input.removeAttribute("value");
+            input.value = "";
+
+        }
+
+    });
+
+    formulario.querySelectorAll("select").forEach(function (select) {
+        select.value = "";
     });
 
     formulario.querySelectorAll(

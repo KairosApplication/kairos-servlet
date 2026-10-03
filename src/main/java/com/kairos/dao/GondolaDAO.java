@@ -171,4 +171,50 @@ public class GondolaDAO {
             throw new DAOException("Erro ao excluir gôndola", e);
         }
     }
+
+    public List<Gondola> pesquisar(String pesquisa) {
+
+        String sql = """
+                 SELECT g.id as gondola_id, g.capacidade_maxima, g.setor_id,
+                        s.id as setor_id, s.nome, s.categoria_setor
+                 FROM gondolas g
+                 JOIN setores s ON s.id = g.setor_id
+                 WHERE CAST(g.id AS TEXT) ILIKE ?
+                       OR CAST(g.capacidade_maxima AS TEXT) ILIKE ?
+                       OR s.nome ILIKE ?
+                 """;
+
+        List<Gondola> gondolas = new ArrayList<>();
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            for (int i = 1; i <= 3; i++) {
+                statement.setString(i, pesquisa);
+            }
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                while (rs.next()) {
+
+                    Gondola gondola = new Gondola(
+                            rs.getInt("gondola_id"),
+                            rs.getInt("capacidade_maxima"),
+                            new Setor(
+                                    rs.getInt("setor_id"),
+                                    rs.getString("nome"),
+                                    rs.getString("categoria_setor")
+                            )
+                    );
+
+                    gondolas.add(gondola);
+                }
+
+                return gondolas;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao listar setores por pesquisa");
+        }
+    }
 }

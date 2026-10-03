@@ -363,23 +363,23 @@ public class UsuarioDAO {
     public List<Usuario> pesquisar(String pesquisa) {
 
         String sql = """
-                 SELECT
-                     u.id AS usuario_id, u.cpf, u.nome, u.sobrenome,
-                     u.data_nascimento, u.cep, u.tipo_usuario, u.email,
-                     e.id AS empresa_id, e.nome AS empresa_nome,
-                     e.cnpj, e.tipo_plano
-                 FROM usuarios u
-                 JOIN empresas e ON e.id = u.empresa_id
-                 WHERE CAST(u.id AS TEXT) ILIKE ?
-                    OR u.cpf ILIKE ?
-                    OR u.nome ILIKE ?
-                    OR u.sobrenome ILIKE ?
-                    OR TO_CHAR(u.data_nascimento AS 'DD/MM/YYYY') ILIKE ?
-                    OR u.cep ILIKE ?
-                    OR u.email ILIKE ?
-                    OR u.tipo_usuario ILIKE ?
-                    OR CAST(u.nome AS TEXT) ILIKE ?
-                 """;
+            SELECT u.id AS usuario_id, u.cpf, u.nome, u.sobrenome,
+                   u.data_nascimento, u.cep, u.tipo_usuario,
+                   u.email, e.id AS empresa_id, e.nome AS empresa_nome,
+                   e.cnpj, e.tipo_plano
+            FROM usuarios u
+            JOIN empresas e ON e.id = u.empresa_id
+            WHERE CAST(u.id AS TEXT) ILIKE ?
+               OR u.cpf ILIKE ?
+               OR u.nome ILIKE ?
+               OR u.sobrenome ILIKE ?
+               OR TO_CHAR(u.data_nascimento, 'DD/MM/YYYY') ILIKE ?
+               OR u.cep ILIKE ?
+               OR u.email ILIKE ?
+               OR u.tipo_usuario ILIKE ?
+               OR e.nome ILIKE ?
+            ORDER BY u.id
+            """;
 
         List<Usuario> usuarios = new ArrayList<>();
 
@@ -418,7 +418,7 @@ public class UsuarioDAO {
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao listar usuários por pesquisa");
+            throw new DAOException("Erro ao pesquisar usuários", e);
         }
     }
 }

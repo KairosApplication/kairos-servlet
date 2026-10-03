@@ -23,6 +23,7 @@ public class SetorService {
         if (setorDAO.existePorNome(setor.getNome())) {
             throw new NameExistsException("Nome de setor já cadastrado");
         }
+
         return setorDAO.inserir(setor);
     }
 
@@ -37,6 +38,22 @@ public class SetorService {
         if (setor == null) {
             throw new SetorNotFoundException("Setor não encontrado");
         }
+
+        return setor;
+    }
+
+    public Setor buscarPorNome(String nome) {
+
+        if (nome == null || nome.isBlank()) {
+            throw new ServiceException("Nome é obrigatório");
+        }
+
+        Setor setor = setorDAO.buscarPorNome(nome);
+
+        if (setor == null) {
+            throw new SetorNotFoundException("Setor não encontrado");
+        }
+
         return setor;
     }
 
@@ -97,6 +114,12 @@ public class SetorService {
         return setorDAO.existePorNomeExcetoId(nome, id);
     }
 
+    public List<Setor> pesquisar(String pesquisa) {
+
+        return setorDAO.pesquisar(pesquisa);
+
+    }
+
     private void validarCampos(Setor setor) {
 
         if (setor == null) {
@@ -110,11 +133,5 @@ public class SetorService {
         if (setor.getCategoria() == null || setor.getCategoria().isBlank()) {
             throw new ServiceException("Categoria é obrigatória");
         }
-    }
-
-    public List<Setor> pesquisar(String pesquisa) {
-
-        return setorDAO.pesquisar(pesquisa);
-
     }
 }

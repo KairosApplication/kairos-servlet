@@ -59,11 +59,8 @@ public class EmpresaServlet extends HttpServlet {
         List<Empresa> empresas;
 
         if (busca != null && !busca.isBlank()) {
-
-            empresas = empresaService.pesquisar(busca);
-
+            empresas = empresaService.pesquisar(busca.trim());
         } else {
-
             empresas = empresaService.listarTodos();
         }
 

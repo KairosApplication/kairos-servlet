@@ -43,6 +43,21 @@ public class ProdutoService {
         return produtoDAO.inserir(produto);
     }
 
+    public Produto buscarPorNome(String nome) {
+
+        if (nome == null || nome.isBlank()) {
+            throw new ServiceException("Nome é obrigatório");
+        }
+
+        Produto produto = produtoDAO.buscarPorNome(nome);
+
+        if (produto == null) {
+            throw new ProdutoNotFoundException("Produto não encontrado");
+        }
+
+        return produto;
+    }
+
     public List<Produto> listarTodos() {
 
 //

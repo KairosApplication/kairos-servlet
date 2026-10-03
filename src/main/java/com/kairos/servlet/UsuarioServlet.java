@@ -58,7 +58,7 @@ public class UsuarioServlet extends HttpServlet {
         List<Usuario> usuarios;
 
         if (busca != null && !busca.isBlank()) {
-            usuarios = usuarioService.pesquisar(busca);
+            usuarios = usuarioService.pesquisar(busca.trim());
         } else {
             usuarios = usuarioService.listarTodos();
         }

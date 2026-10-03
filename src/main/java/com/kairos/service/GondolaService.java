@@ -100,4 +100,10 @@ public class GondolaService {
             );
         }
     }
+
+    public List<Gondola> pesquisar(String pesquisa) {
+
+        return gondolaDAO.pesquisar(pesquisa);
+
+    }
 }

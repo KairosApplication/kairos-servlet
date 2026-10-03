@@ -62,18 +62,50 @@ public class SetorDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
-                    Setor setor = new Setor(
+                    return new Setor(
                             rs.getInt("id"),
                             rs.getString("nome"),
                             rs.getString("categoria_setor")
                     );
-                    return setor;
                 }
+
                 return null;
             }
 
         } catch (SQLException e) {
             throw new DAOException("Erro ao buscar setor por id", e);
+        }
+    }
+
+    public Setor buscarPorNome(String nome) {
+
+        String sql = """
+                     SELECT id, nome, categoria_setor
+                     FROM setores
+                     WHERE nome = ?
+                     """;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, nome);
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                if (rs.next()) {
+
+                    return new Setor(
+                            rs.getInt("id"),
+                            rs.getString("nome"),
+                            rs.getString("categoria_setor")
+                    );
+
+                }
+                return null;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao buscar setor pelo nome", e);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.kairos.dao;
 
 import com.kairos.model.Produto;
+import com.kairos.model.Setor;
 import com.kairos.utils.connection.ConnectionFactory;
 import com.kairos.utils.exceptions.system.DAOException;
 
@@ -71,6 +72,39 @@ public class ProdutoDAO {
             }
         } catch (SQLException e) {
             throw new DAOException("Erro ao buscar produto por id", e);
+        }
+    }
+
+    public Produto buscarPorNome(String nome) {
+
+        String sql = """
+                     SELECT id, marca, nome, quantidade_estoque
+                     FROM produtos
+                     WHERE nome = ?
+                     """;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, nome);
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                if (rs.next()) {
+
+                    return new Produto(
+                            rs.getInt("id"),
+                            rs.getString("marca"),
+                            rs.getString("nome"),
+                            rs.getInt("quantidade_estoque")
+                    );
+
+                }
+                return null;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao buscar produto pelo nome", e);
         }
     }
 
