@@ -1,6 +1,8 @@
 package com.kairos.dao;
 
+import com.kairos.model.Empresa;
 import com.kairos.model.Setor;
+import com.kairos.model.enums.TipoPlano;
 import com.kairos.utils.connection.ConnectionFactory;
 import com.kairos.utils.exceptions.system.DAOException;
 
@@ -117,8 +119,8 @@ public class SetorDAO {
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, "nome");
-            statement.setString(2, "categoria_setor");
+            statement.setString(1, setor.getNome());
+            statement.setString(2, setor.getCategoria());
 
             statement.setInt(3, setor.getId());
 
@@ -190,6 +192,46 @@ public class SetorDAO {
 
         } catch (SQLException e) {
             throw new DAOException("Erro ao verificar nome de outro setor");
+        }
+    }
+
+    public List<Setor> pesquisar(String pesquisa) {
+
+        String sql = """
+                 SELECT id, nome, categoria_setor
+                 FROM setores
+                 WHERE CAST(id AS TEXT) ILIKE ?
+                       OR nome ILIKE ?
+                       OR categoria_setor ILIKE ?
+                 """;
+
+        List<Setor> setores = new ArrayList<>();
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            for (int i = 1; i <= 3; i++) {
+                statement.setString(i, pesquisa);
+            }
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                while (rs.next()) {
+
+                    Setor setor = new Setor(
+                            rs.getInt("id"),
+                            rs.getString("nome"),
+                            rs.getString("categoria_setor")
+                    );
+
+                    setores.add(setor);
+                }
+
+                return setores;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao listar setores por pesquisa");
         }
     }
 }

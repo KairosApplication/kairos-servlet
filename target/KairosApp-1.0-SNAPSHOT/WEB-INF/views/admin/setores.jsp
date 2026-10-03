@@ -9,9 +9,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Kairos - Empresas</title>
+    <title>Kairos - Setores</title>
 
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/empresas.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/setores.css">
 
 </head>
 
@@ -32,13 +32,18 @@
 
     <nav class="menu">
 
-        <a href="${pageContext.request.contextPath}/admin/usuarios" class="menu-item">
+        <a
+                href="${pageContext.request.contextPath}/admin/usuarios"
+                class="menu-item"
+        >
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/usuario.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Usuários</span>
@@ -46,13 +51,18 @@
         </a>
 
 
-        <a href="#" class="menu-item active">
+        <a
+                href="${pageContext.request.contextPath}/admin/empresas"
+                class="menu-item"
+        >
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/empresa.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Empresa</span>
@@ -60,13 +70,18 @@
         </a>
 
 
-        <a href="${pageContext.request.contextPath}/admin/setores" class="menu-item">
+        <a
+                href="#"
+                class="menu-item active"
+        >
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/setor.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Setor</span>
@@ -74,13 +89,18 @@
         </a>
 
 
-        <a href="${pageContext.request.contextPath}/admin/gondolas" class="menu-item">
+        <a
+                href="${pageContext.request.contextPath}/admin/gondolas"
+                class="menu-item"
+        >
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/gondola.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Gôndola</span>
@@ -88,13 +108,18 @@
         </a>
 
 
-        <a href="${pageContext.request.contextPath}/admin/produtos" class="menu-item">
+        <a
+                href="${pageContext.request.contextPath}/admin/produtos"
+                class="menu-item"
+        >
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/produto.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Produto</span>
@@ -102,13 +127,18 @@
         </a>
 
 
-        <a href="${pageContext.request.contextPath}/admin/reposicoes" class="menu-item">
+        <a
+                href="${pageContext.request.contextPath}/admin/reposicoes"
+                class="menu-item"
+        >
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/reposicao.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Reposição</span>
@@ -116,13 +146,18 @@
         </a>
 
 
-        <a href="${pageContext.request.contextPath}/admin/alertas" class="menu-item">
+        <a
+                href="${pageContext.request.contextPath}/admin/alertas"
+                class="menu-item"
+        >
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/alerta.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Alerta</span>
@@ -130,13 +165,18 @@
         </a>
 
 
-        <a href="${pageContext.request.contextPath}/admin/compras" class="menu-item">
+        <a
+                href="${pageContext.request.contextPath}/admin/compras"
+                class="menu-item"
+        >
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/compra.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Compra</span>
@@ -170,7 +210,7 @@
     <section class="search-area">
 
         <form
-                action="${pageContext.request.contextPath}/admin/empresas"
+                action="${pageContext.request.contextPath}/admin/setores"
                 method="get"
                 class="search-form"
         >
@@ -178,7 +218,7 @@
             <input
                     type="text"
                     name="busca"
-                    placeholder="Buscar empresa..."
+                    placeholder="Buscar setor..."
                     class="search-input"
                     value="${param.busca}"
             >
@@ -194,10 +234,10 @@
 
 
         <label
-                for="add-company-toggle"
+                for="add-sector-toggle"
                 class="add-user-button"
         >
-            + Adicionar Empresa
+            + Adicionar Setor
         </label>
 
     </section>
@@ -209,7 +249,7 @@
 
     <section class="content-card">
 
-        <h1>Empresas</h1>
+        <h1>Setores</h1>
 
 
         <div class="table-wrapper">
@@ -222,8 +262,7 @@
 
                     <th>ID</th>
                     <th>Nome</th>
-                    <th>CNPJ</th>
-                    <th>Tipo de plano</th>
+                    <th>Categoria</th>
                     <th>Ações</th>
 
                 </tr>
@@ -234,26 +273,22 @@
                 <tbody>
 
                 <c:forEach
-                        var="empresa"
-                        items="${empresas}"
+                        var="setor"
+                        items="${setores}"
                 >
 
                     <tr class="user-row">
 
                         <td>
-                                ${empresa.id}
+                                ${setor.id}
                         </td>
 
                         <td>
-                                ${empresa.nome}
+                                ${setor.nome}
                         </td>
 
                         <td>
-                                ${empresa.cnpj}
-                        </td>
-
-                        <td>
-                                ${empresa.tipoPlano}
+                                ${setor.categoria}
                         </td>
 
                         <td class="actions">
@@ -261,7 +296,7 @@
                             <!-- ATUALIZAR -->
 
                             <label
-                                    for="update-company-${empresa.id}"
+                                    for="update-sector-${setor.id}"
                                     class="update-button"
                             >
                                 Atualizar
@@ -271,7 +306,7 @@
                             <!-- DELETAR -->
 
                             <label
-                                    for="delete-company-${empresa.id}"
+                                    for="delete-sector-${setor.id}"
                                     class="delete-button"
                             >
                                 Deletar
@@ -299,15 +334,15 @@
 <!-- ====================================================== -->
 
 <c:forEach
-        var="empresa"
-        items="${empresas}"
+        var="setor"
+        items="${setores}"
 >
 
     <input
             type="checkbox"
-            id="update-company-${empresa.id}"
+            id="update-sector-${setor.id}"
             class="popup-toggle"
-        ${idEmpresaAtualizacao == empresa.id ? 'checked' : ''}
+        ${idSetorAtualizacao == setor.id ? 'checked' : ''}
     >
 
 
@@ -318,13 +353,13 @@
             <div class="popup-header">
 
                 <h2>
-                    Atualizar Empresa
+                    Atualizar Setor
                 </h2>
 
                 <label
-                        for="update-company-${empresa.id}"
+                        for="update-sector-${setor.id}"
                         class="popup-close"
-                        onclick="limparFormularioAtualizacao(${empresa.id})"
+                        onclick="limparFormularioAtualizacao(${setor.id})"
                 >
                     &times;
                 </label>
@@ -333,8 +368,8 @@
 
 
             <form
-                    id="update-company-form-${empresa.id}"
-                    action="${pageContext.request.contextPath}/admin/empresas"
+                    id="update-sector-form-${setor.id}"
+                    action="${pageContext.request.contextPath}/admin/setores"
                     method="post"
                     class="add-user-form"
             >
@@ -342,63 +377,66 @@
                 <input
                         type="hidden"
                         name="id"
-                        value="${empresa.id}"
+                        value="${setor.id}"
                 >
+
 
                 <div class="form-grid">
 
-                    <div class="form-field full-width">
 
-                        <label for="tipoPlano-${empresa.id}">
-                            Tipo de plano
+                    <!-- NOME -->
+
+                    <div class="form-field">
+
+                        <label for="nome-${setor.id}">
+                            Nome
                         </label>
 
-                        <select
-                                id="tipoPlano-${empresa.id}"
-                                name="tipoPlano"
-                                data-original="${empresa.tipoPlano != null ? empresa.tipoPlano.name() : ''}"
-
+                        <input
+                                type="text"
+                                id="nome-${setor.id}"
+                                name="nome"
+                                value="${idSetorAtualizacao == setor.id && not empty param.nome ? param.nome : setor.nome}"
+                                data-original="${setor.nome}"
                         >
 
-                            <option
-                                    value=""
-                                ${empty param.tipoPlano && empty empresa.tipoPlano ? 'selected' : ''}
-                            >
-                                Selecione o tipo de plano
-                            </option>
-
-                            <option
-                                    value="GRATUITO"
-                                ${idEmpresaAtualizacao == empresa.id && param.tipoPlano == 'GRATUITO' || idEmpresaAtualizacao != empresa.id && empresa.tipoPlano.name() == 'GRATUITO' ? 'selected' : ''}
-                            >
-                                Gratuito
-                            </option>
-
-                            <option
-                                    value="STANDART"
-                                ${idEmpresaAtualizacao == empresa.id && param.tipoPlano == 'STANDART' || idEmpresaAtualizacao != empresa.id && empresa.tipoPlano.name() == 'STANDART' ? 'selected' : ''}
-                            >
-                                Standart
-                            </option>
-
-                            <option
-                                    value="PREMIUM"
-                                ${idEmpresaAtualizacao == empresa.id && param.tipoPlano == 'PREMIUM' || idEmpresaAtualizacao != empresa.id && empresa.tipoPlano.name() == 'PREMIUM' ? 'selected' : ''}
-                            >
-                                Premium
-                            </option>
-
-                        </select>
-
-                        <c:if test="${idEmpresaAtualizacao == empresa.id and not empty errosAtualizacao.tipoPlano}">
+                        <c:if test="${idSetorAtualizacao == setor.id and not empty errosAtualizacao.nome}">
 
                             <div class="campo-erro">
-                                    ${errosAtualizacao.tipoPlano}
+                                    ${errosAtualizacao.nome}
                             </div>
 
                         </c:if>
 
                     </div>
+
+
+                    <!-- CATEGORIA -->
+
+                    <div class="form-field">
+
+                        <label for="categoria-${setor.id}">
+                            Categoria
+                        </label>
+
+                        <input
+                                type="text"
+                                id="categoria-${setor.id}"
+                                name="categoria"
+                                value="${idSetorAtualizacao == setor.id && not empty param.categoria ? param.categoria : setor.categoria}"
+                                data-original="${setor.categoria}"
+                        >
+
+                        <c:if test="${idSetorAtualizacao == setor.id and not empty errosAtualizacao.categoria}">
+
+                            <div class="campo-erro">
+                                    ${errosAtualizacao.categoria}
+                            </div>
+
+                        </c:if>
+
+                    </div>
+
 
                 </div>
 
@@ -406,18 +444,19 @@
                 <div class="popup-actions">
 
                     <label
-                            for="update-company-${empresa.id}"
+                            for="update-sector-${setor.id}"
                             class="cancel-button"
-                            onclick="limparFormularioAtualizacao(${empresa.id})"
+                            onclick="limparFormularioAtualizacao(${setor.id})"
                     >
                         Cancelar
                     </label>
+
 
                     <button
                             type="submit"
                             class="save-button"
                     >
-                        Atualizar Empresa
+                        Atualizar Setor
                     </button>
 
                 </div>
@@ -436,13 +475,13 @@
 <!-- ====================================================== -->
 
 <c:forEach
-        var="empresa"
-        items="${empresas}"
+        var="setor"
+        items="${setores}"
 >
 
     <input
             type="checkbox"
-            id="delete-company-${empresa.id}"
+            id="delete-sector-${setor.id}"
             class="popup-toggle"
     >
 
@@ -454,11 +493,11 @@
             <div class="popup-header">
 
                 <h2>
-                    Deletar Empresa
+                    Deletar Setor
                 </h2>
 
                 <label
-                        for="delete-company-${empresa.id}"
+                        for="delete-sector-${setor.id}"
                         class="popup-close"
                 >
                     &times;
@@ -469,10 +508,10 @@
 
             <p>
 
-                Você deseja realmente deletar a empresa
+                Você deseja realmente deletar o setor
 
                 <strong>
-                        ${empresa.nome}
+                        ${setor.nome}
                 </strong>?
 
             </p>
@@ -481,7 +520,7 @@
             <div class="popup-actions">
 
                 <label
-                        for="delete-company-${empresa.id}"
+                        for="delete-sector-${setor.id}"
                         class="cancel-button"
                 >
                     Cancelar
@@ -489,7 +528,7 @@
 
 
                 <a
-                        href="${pageContext.request.contextPath}/admin/empresas?acao=deletar&amp;id=${empresa.id}"
+                        href="${pageContext.request.contextPath}/admin/setores?acao=deletar&amp;id=${setor.id}"
                         class="delete-confirm-button"
                 >
                     Deletar
@@ -505,12 +544,12 @@
 
 
 <!-- ====================================================== -->
-<!-- POPUP DE ADICIONAR EMPRESA -->
+<!-- POPUP DE ADICIONAR SETOR -->
 <!-- ====================================================== -->
 
 <input
         type="checkbox"
-        id="add-company-toggle"
+        id="add-sector-toggle"
         class="popup-toggle"
 ${not empty erros ? 'checked' : ''}
 >
@@ -523,11 +562,11 @@ ${not empty erros ? 'checked' : ''}
         <div class="popup-header">
 
             <h2>
-                Adicionar Empresa
+                Adicionar Setor
             </h2>
 
             <label
-                    for="add-company-toggle"
+                    for="add-sector-toggle"
                     class="popup-close"
                     onclick="limparFormularioAdicionar()"
             >
@@ -538,14 +577,16 @@ ${not empty erros ? 'checked' : ''}
 
 
         <form
-                id="add-company-form"
-                action="${pageContext.request.contextPath}/admin/empresas"
+                id="add-sector-form"
+                action="${pageContext.request.contextPath}/admin/setores"
                 method="post"
                 class="add-user-form"
         >
 
             <div class="form-grid">
 
+
+                <!-- NOME -->
 
                 <div class="form-field">
 
@@ -571,76 +612,25 @@ ${not empty erros ? 'checked' : ''}
                 </div>
 
 
+                <!-- CATEGORIA -->
+
                 <div class="form-field">
 
-                    <label for="cnpj">
-                        CNPJ
+                    <label for="categoria">
+                        Categoria
                     </label>
 
                     <input
                             type="text"
-                            id="cnpj"
-                            name="cnpj"
-                            value="${param.cnpj}"
+                            id="categoria"
+                            name="categoria"
+                            value="${param.categoria}"
                     >
 
-                    <c:if test="${not empty erros.cnpj}">
+                    <c:if test="${not empty erros.categoria}">
 
                         <div class="campo-erro">
-                                ${erros.cnpj}
-                        </div>
-
-                    </c:if>
-
-                </div>
-
-
-                <div class="form-field full-width">
-
-                    <label for="tipoPlano">
-                        Tipo de plano
-                    </label>
-
-                    <select
-                            id="tipoPlano"
-                            name="tipoPlano"
-                    >
-
-                        <option
-                                value=""
-                        ${empty param.tipoPlano ? 'selected' : ''}
-                        >
-                            Selecione o tipo de plano
-                        </option>
-
-                        <option
-                                value="GRATUITO"
-                        ${param.tipoPlano == 'GRATUITO' ? 'selected' : ''}
-                        >
-                            Gratuito
-                        </option>
-
-                        <option
-                                value="STANDART"
-                        ${param.tipoPlano == 'STANDART' ? 'selected' : ''}
-                        >
-                            Standart
-                        </option>
-
-                        <option
-                                value="PREMIUM"
-                        ${param.tipoPlano == 'PREMIUM' ? 'selected' : ''}
-                        >
-                            Premium
-                        </option>
-
-                    </select>
-
-
-                    <c:if test="${not empty erros.tipoPlano}">
-
-                        <div class="campo-erro">
-                                ${erros.tipoPlano}
+                                ${erros.categoria}
                         </div>
 
                     </c:if>
@@ -654,18 +644,19 @@ ${not empty erros ? 'checked' : ''}
             <div class="popup-actions">
 
                 <label
-                        for="add-company-toggle"
+                        for="add-sector-toggle"
                         class="cancel-button"
                         onclick="limparFormularioAdicionar()"
                 >
                     Cancelar
                 </label>
 
+
                 <button
                         type="submit"
                         class="save-button"
                 >
-                    Adicionar Empresa
+                    Adicionar Setor
                 </button>
 
             </div>
@@ -722,6 +713,7 @@ ${not empty erros ? 'checked' : ''}
                 Cancelar
             </label>
 
+
             <a
                     href="${pageContext.request.contextPath}/logout"
                     class="delete-confirm-button"
@@ -737,7 +729,7 @@ ${not empty erros ? 'checked' : ''}
 
 
 <script
-        src="${pageContext.request.contextPath}/assets/js/empresas.js">
+        src="${pageContext.request.contextPath}/assets/js/setores.js">
 </script>
 
 </body>

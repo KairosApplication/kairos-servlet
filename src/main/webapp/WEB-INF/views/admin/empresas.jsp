@@ -737,7 +737,7 @@ ${not empty erros ? 'checked' : ''}
 
 
 <script
-        src="${pageContext.request.contextPath}/assets/js/empresa.js">
+        src="${pageContext.request.contextPath}/assets/js/empresas.js">
 </script>
 
 </body>

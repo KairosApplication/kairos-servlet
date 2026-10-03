@@ -111,4 +111,10 @@ public class SetorService {
             throw new ServiceException("Categoria é obrigatória");
         }
     }
+
+    public List<Setor> pesquisar(String pesquisa) {
+
+        return setorDAO.pesquisar(pesquisa);
+
+    }
 }
