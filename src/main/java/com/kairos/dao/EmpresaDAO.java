@@ -1,7 +1,9 @@
 package com.kairos.dao;
 
 import com.kairos.model.Empresa;
+import com.kairos.model.Usuario;
 import com.kairos.model.enums.TipoPlano;
+import com.kairos.model.enums.TipoUsuario;
 import com.kairos.utils.connection.ConnectionFactory;
 import com.kairos.utils.exceptions.system.DAOException;
 
@@ -314,5 +316,45 @@ public class EmpresaDAO {
         }
     }
 
+    public List<Empresa> pesquisar(String pesquisa) {
 
+        String sql = """
+                 SELECT id, nome, cnpj, tipo_plano
+                 FROM empresas
+                 WHERE CAST(id AS TEXT) ILIKE ?
+                       OR nome ILIKE ?
+                       OR cnpj ILIKE ?
+                       OR tipo_plano ILIKE ?
+                 """;
+
+        List<Empresa> empresas = new ArrayList<>();
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            for (int i = 1; i <= 4; i++) {
+                statement.setString(i, pesquisa);
+            }
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                while (rs.next()) {
+
+                    Empresa empresa = new Empresa(
+                            rs.getInt("id"),
+                            rs.getString("nome"),
+                            rs.getString("cnpj"),
+                            TipoPlano.valueOf(rs.getString("tipo_plano"))
+                    );
+
+                    empresas.add(empresa);
+                }
+
+                return empresas;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao listar empresas por pesquisa");
+        }
+    }
 }

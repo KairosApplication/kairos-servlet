@@ -11,8 +11,7 @@
 
     <title>Kairos - Empresas</title>
 
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/assets/css/empresa.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/empresas.css">
 
 </head>
 
@@ -33,7 +32,7 @@
 
     <nav class="menu">
 
-        <a href="#" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/usuarios" class="menu-item">
 
             <span class="menu-icon">
                 <img
@@ -61,7 +60,7 @@
         </a>
 
 
-        <a href="#" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/setores" class="menu-item">
 
             <span class="menu-icon">
                 <img
@@ -75,7 +74,7 @@
         </a>
 
 
-        <a href="#" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/gondolas" class="menu-item">
 
             <span class="menu-icon">
                 <img
@@ -89,7 +88,7 @@
         </a>
 
 
-        <a href="#" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/produtos" class="menu-item">
 
             <span class="menu-icon">
                 <img
@@ -103,7 +102,7 @@
         </a>
 
 
-        <a href="#" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/reposicoes" class="menu-item">
 
             <span class="menu-icon">
                 <img
@@ -117,7 +116,7 @@
         </a>
 
 
-        <a href="#" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/alertas" class="menu-item">
 
             <span class="menu-icon">
                 <img
@@ -131,7 +130,7 @@
         </a>
 
 
-        <a href="#" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/compras" class="menu-item">
 
             <span class="menu-icon">
                 <img
@@ -264,7 +263,6 @@
                             <label
                                     for="update-company-${empresa.id}"
                                     class="update-button"
-                                    onclick="limparFormularioAtualizacao(${empresa.id})"
                             >
                                 Atualizar
                             </label>
@@ -326,6 +324,7 @@
                 <label
                         for="update-company-${empresa.id}"
                         class="popup-close"
+                        onclick="limparFormularioAtualizacao(${empresa.id})"
                 >
                     &times;
                 </label>
@@ -346,59 +345,7 @@
                         value="${empresa.id}"
                 >
 
-
                 <div class="form-grid">
-
-
-                    <div class="form-field">
-
-                        <label for="nome-${empresa.id}">
-                            Nome
-                        </label>
-
-                        <input
-                                type="text"
-                                id="nome-${empresa.id}"
-                                name="nome"
-                                value="${idEmpresaAtualizacao == empresa.id ? param.nome : empresa.nome}"
-                                data-original="${empresa.nome}"
-                        >
-
-                        <c:if test="${idEmpresaAtualizacao == empresa.id and not empty errosAtualizacao.nome}">
-
-                            <div class="campo-erro">
-                                    ${errosAtualizacao.nome}
-                            </div>
-
-                        </c:if>
-
-                    </div>
-
-
-                    <div class="form-field">
-
-                        <label for="cnpj-${empresa.id}">
-                            CNPJ
-                        </label>
-
-                        <input
-                                type="text"
-                                id="cnpj-${empresa.id}"
-                                name="cnpj"
-                                value="${idEmpresaAtualizacao == empresa.id ? param.cnpj : empresa.cnpj}"
-                                data-original="${empresa.cnpj}"
-                        >
-
-                        <c:if test="${idEmpresaAtualizacao == empresa.id and not empty errosAtualizacao.cnpj}">
-
-                            <div class="campo-erro">
-                                    ${errosAtualizacao.cnpj}
-                            </div>
-
-                        </c:if>
-
-                    </div>
-
 
                     <div class="form-field full-width">
 
@@ -409,6 +356,8 @@
                         <select
                                 id="tipoPlano-${empresa.id}"
                                 name="tipoPlano"
+                                data-original="${empresa.tipoPlano != null ? empresa.tipoPlano.name() : ''}"
+
                         >
 
                             <option
@@ -441,7 +390,6 @@
 
                         </select>
 
-
                         <c:if test="${idEmpresaAtualizacao == empresa.id and not empty errosAtualizacao.tipoPlano}">
 
                             <div class="campo-erro">
@@ -452,7 +400,6 @@
 
                     </div>
 
-
                 </div>
 
 
@@ -461,6 +408,7 @@
                     <label
                             for="update-company-${empresa.id}"
                             class="cancel-button"
+                            onclick="limparFormularioAtualizacao(${empresa.id})"
                     >
                         Cancelar
                     </label>

@@ -69,7 +69,7 @@ public class EmpresaService {
         return empresa;
     }
 
-    public List<Empresa> listarTodas() {
+    public List<Empresa> listarTodos() {
 
         return empresaDAO.listarTodos();
     }
@@ -209,5 +209,11 @@ public class EmpresaService {
         if (empresa.getTipoPlano() == null) {
             throw new ServiceException("Tipo Plano é obrigatório");
         }
+    }
+
+    public List<Empresa> pesquisar(String pesquisa) {
+
+        return empresaDAO.pesquisar(pesquisa);
+
     }
 }

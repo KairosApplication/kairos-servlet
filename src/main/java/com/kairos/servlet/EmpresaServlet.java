@@ -51,10 +51,21 @@ public class EmpresaServlet extends HttpServlet {
         }
 
         // ==========================
-        // LISTAR EMPRESAS
+        // PESQUISAR / LISTAR EMPRESAS
         // ==========================
 
-        List<Empresa> empresas = empresaService.listarTodas();
+        String busca = request.getParameter("busca");
+
+        List<Empresa> empresas;
+
+        if (busca != null && !busca.isBlank()) {
+
+            empresas = empresaService.pesquisar(busca);
+
+        } else {
+
+            empresas = empresaService.listarTodos();
+        }
 
         request.setAttribute(
                 "empresas",
@@ -62,20 +73,20 @@ public class EmpresaServlet extends HttpServlet {
         );
 
         request.getRequestDispatcher(
-                "/WEB-INF/views/admin/empresa.jsp"
+                "/WEB-INF/views/admin/empresas.jsp"
         ).forward(request, response);
     }
 
     @Override
-    protected void doPost(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
         String id = request.getParameter("id");
 
         String nome = request.getParameter("nome");
+
         String cnpj = request.getParameter("cnpj");
+
         String tipoPlano = request.getParameter("tipoPlano");
 
         // ==========================
@@ -89,51 +100,8 @@ public class EmpresaServlet extends HttpServlet {
             Empresa empresa =
                     empresaService.buscarPorId(idEmpresa);
 
-            Map<String, String> erros = new HashMap<>();
-
-            // ==========================
-            // NOME
-            // ==========================
-
-            if (nome == null || nome.isBlank()) {
-
-                erros.put(
-                        "nome",
-                        "Nome é obrigatório"
-                );
-
-            }
-
-            // ==========================
-            // CNPJ
-            // ==========================
-
-            if (cnpj == null || cnpj.isBlank()) {
-
-                erros.put(
-                        "cnpj",
-                        "CNPJ é obrigatório"
-                );
-
-            } else if (!cnpj.matches(Regex.CNPJ)) {
-
-                erros.put(
-                        "cnpj",
-                        "Formato do CNPJ inválido"
-                );
-
-            } else if (
-                    empresaService.existePorCnpjExcetoId(
-                            cnpj,
-                            idEmpresa
-                    )
-            ) {
-
-                erros.put(
-                        "cnpj",
-                        "CNPJ já cadastrado"
-                );
-            }
+            Map<String, String> erros =
+                    new HashMap<>();
 
             // ==========================
             // TIPO PLANO
@@ -164,7 +132,7 @@ public class EmpresaServlet extends HttpServlet {
                 );
 
                 List<Empresa> empresas =
-                        empresaService.listarTodas();
+                        empresaService.listarTodos();
 
                 request.setAttribute(
                         "empresas",
@@ -172,7 +140,7 @@ public class EmpresaServlet extends HttpServlet {
                 );
 
                 request.getRequestDispatcher(
-                        "/WEB-INF/views/admin/empresa.jsp"
+                        "/WEB-INF/views/admin/empresas.jsp"
                 ).forward(request, response);
 
                 return;
@@ -182,8 +150,11 @@ public class EmpresaServlet extends HttpServlet {
             // ATUALIZAR
             // ==========================
 
-            empresa.setNome(nome);
-            empresa.setCnpj(cnpj);
+            /*
+             * Nome e CNPJ não são alterados.
+             * Apenas o tipo de plano é atualizado.
+             */
+
             empresa.setTipoPlano(
                     TipoPlano.valueOf(tipoPlano)
             );
@@ -209,6 +180,15 @@ public class EmpresaServlet extends HttpServlet {
                         "nome",
                         "Nome é obrigatório"
                 );
+
+            } else if (
+                    empresaService.existePorNome(nome)
+            ) {
+
+                erros.put(
+                        "nome",
+                        "Nome já cadastrado"
+                );
             }
 
             // ==========================
@@ -229,7 +209,9 @@ public class EmpresaServlet extends HttpServlet {
                         "Formato do CNPJ inválido"
                 );
 
-            } else if (empresaService.existePorCnpj(cnpj)) {
+            } else if (
+                    empresaService.existePorCnpj(cnpj)
+            ) {
 
                 erros.put(
                         "cnpj",
@@ -250,22 +232,6 @@ public class EmpresaServlet extends HttpServlet {
             }
 
             // ==========================
-            // NOME DUPLICADO
-            // ==========================
-
-            if (
-                    nome != null &&
-                            !nome.isBlank() &&
-                            empresaService.existePorNome(nome)
-            ) {
-
-                erros.put(
-                        "nome",
-                        "Nome já cadastrado"
-                );
-            }
-
-            // ==========================
             // EXISTEM ERROS
             // ==========================
 
@@ -277,7 +243,7 @@ public class EmpresaServlet extends HttpServlet {
                 );
 
                 List<Empresa> empresas =
-                        empresaService.listarTodas();
+                        empresaService.listarTodos();
 
                 request.setAttribute(
                         "empresas",
@@ -285,7 +251,7 @@ public class EmpresaServlet extends HttpServlet {
                 );
 
                 request.getRequestDispatcher(
-                        "/WEB-INF/views/admin/empresa.jsp"
+                        "/WEB-INF/views/admin/empresas.jsp"
                 ).forward(request, response);
 
                 return;
@@ -303,6 +269,10 @@ public class EmpresaServlet extends HttpServlet {
 
             empresaService.cadastrar(empresa);
         }
+
+        // ==========================
+        // REDIRECIONAR
+        // ==========================
 
         response.sendRedirect(
                 request.getContextPath() + "/admin/empresas"

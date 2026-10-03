@@ -60,7 +60,7 @@
 
         </a>
 
-        <a href="#" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/setores" class="menu-item">
 
             <span class="menu-icon">
                 <img
@@ -73,7 +73,7 @@
 
         </a>
 
-        <a href="#" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/gondolas" class="menu-item">
 
             <span class="menu-icon">
                 <img
@@ -86,7 +86,7 @@
 
         </a>
 
-        <a href="#" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/produtos" class="menu-item">
 
             <span class="menu-icon">
                 <img
@@ -99,7 +99,7 @@
 
         </a>
 
-        <a href="#" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/reposicoes" class="menu-item">
 
             <span class="menu-icon">
                 <img
@@ -112,7 +112,7 @@
 
         </a>
 
-        <a href="#" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/alertas" class="menu-item">
 
             <span class="menu-icon">
                 <img
@@ -125,7 +125,7 @@
 
         </a>
 
-        <a href="#" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/compras" class="menu-item">
 
             <span class="menu-icon">
                 <img
