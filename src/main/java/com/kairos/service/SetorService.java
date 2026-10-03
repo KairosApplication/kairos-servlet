@@ -42,8 +42,6 @@ public class SetorService {
 
     public List<Setor> listarTodos() {
 
-//        AuthorizationValidator.validarAdmin(usuarioAtual);
-
         return setorDAO.listarTodos();
     }
 

@@ -1,0 +1,1097 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.imagem{
+    position: relative;
+    display: flex;
+    justify-content: start;
+    text-align: left;
+    top: -57px;
+    padding-left: 20px;
+}
+
+.header{
+    display: flex;
+    justify-content: flex-end;
+    align-items: right;
+    padding: 20px 100px;
+    background-color: #ffffff;
+    box-shadow: 0 0px 0px rgba(0,0,0,0.1);
+    gap: 40px;
+    font-size: 20px;
+}
+
+.montserrat-unifiquifer{
+    display: flex;
+    text-align: right;
+    gap: 28px;
+}
+
+#Icone-de-entrada{
+    justify-content: space-between;
+    width: 38px;
+    height: 38px;
+}
+
+.montserrat-unifiquifer{
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    text-decoration: none;
+
+}
+
+.Topicos#ponto,#pontos,#pontos1{
+    width: 200px;
+    height: auto;
+}
+
+.Kaico{
+    display: lef;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 150px;
+}
+#Kai{
+    color: #1B4D3E;
+}
+.Kaico{
+    font-weight: bold;
+    font-size: 70px;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    color: black;
+    text-decoration: none;
+}
+.Geren{
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    text-decoration: none;
+}
+#um-só-local{
+    color: #1B4D3E;
+    font-weight: bold;
+}
+.Topicos{
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    text-decoration: none;
+}
+.Meu-Botão {
+    display: flex;
+    gap: 36px;
+}
+#Comece,
+#Ver-uma {
+    text-align: center;
+}
+
+#Comece,
+#Ver-uma {
+    width: 224px;
+    height: 48px;
+
+    border-radius: 9px;
+
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+#Comece {
+    background-color: #1B4D3E;
+    color: white;
+    border: none;
+}
+
+#Ver-uma {
+    background-color: white;
+    color: #573D2D;
+    border: 2px solid #FFDA61F2;
+}
+.Geren, .Topicos{
+    font-size: 23px;
+}
+
+
+.Funcionalidades h2{
+    text-align: center;
+    font-family: "Montserrat", sans-serif;
+    font-weight: bold ;
+    font-size: 50px;
+    font-style: normal;
+    color: black;
+    text-decoration: none;
+}
+.linhas{
+    width: 250px;
+    height: 4px;
+    background-color: green;
+    margin: 5px auto;
+    border-radius: 5px;
+}
+.Funcional{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.card{
+    width: 200;
+    height: 170;
+    background-color: white;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    font-size: 25px;
+    border-radius: 50%;
+    justify-content: center;
+
+}
+.card h3{
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    text-decoration: none;
+    text-align: center;
+    font-size: 150;
+}
+.cards{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+
+.card{
+    width: 350px;
+    height: 350px;
+    box-shadow: 0px 10px 12px rgba(0,0,0,0.25);
+    border-radius: 15px;
+}
+#ponto,#pontos,#pontos1{
+    width: 300px;
+    max-width: 100%;
+    height: auto;
+}
+
+.circuloamar{
+    position: absolute ;
+    width: 720px;
+    height: 700px;
+    background-color: #eeba3f;
+    border-radius: 50%;
+    left: -270px;
+}
+.circulover{
+    position: absolute ;
+    width: 720px;
+    height: 700px;
+    background-color: #1B4D3E;
+    border-radius: 50%;
+    right: -270px;
+}
+.arcoesqu{
+    position: absolute;
+    width: 820px;
+    height: 540px;
+    border: 1px solid #1B4D3E;
+    border-radius: 50%;
+    left: -270px;
+}
+.arcodire{
+    position: absolute ;
+    width: 820px;
+    height: 540px;
+    border: 1px solid #eeba3f;
+    border-radius: 50%;
+    right: -270px;
+}
+/* Inicio para começar a estudar*/
+
+.PassoaPasso {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.PassoaPasso > h2 {
+    margin-bottom: 30px;
+
+}
+
+
+
+.Carrossel {
+    width: 100%;
+
+    margin: 0 auto;
+
+    overflow: hidden;
+}
+
+
+
+
+.carrossel {
+    display: flex;
+
+    width: 100%;
+
+    transition: transform 0.5s ease-in-out;
+}
+
+
+
+
+.carrossel > div {
+    min-width: 100%;
+    width: 300px;
+    height: 500px;
+
+    flex-shrink: 0;
+
+    position: relative;
+
+    box-sizing: border-box;
+}
+
+
+
+
+.Cadrastro {
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #E9AF22;
+
+    overflow: hidden;
+}
+
+
+
+
+.Acesse {
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #164F42;
+
+    overflow: hidden;
+}
+
+
+
+.Perso {
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #DCDCE4;
+
+    overflow: hidden;
+}
+
+
+
+
+.Rece {
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #000000;
+
+    overflow: hidden;
+}
+
+
+
+.Background,
+.Background1,
+.Background2,
+.Background3 {
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    pointer-events: none;
+}
+
+
+
+
+
+.Passos,
+.Dash,
+.Persona,
+.Receba {
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    text-align: center;
+}
+
+
+
+
+.Passos h2,
+.Dash h2,
+.Persona h2,
+.Receba h2 {
+    margin: 0;
+
+    font-size: 28px;
+}
+
+
+.Carrossel img{
+    position: relative;
+    width: auto;
+    height: 70px;
+    left: 10px;
+    top: 20px;
+}
+
+.bolacarrosel{
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 100px;
+    left: 741px;
+    top: 115px;
+    background-color: #FFFCFC;
+}
+#CadastrePS {
+    position: relative;
+
+    top: -120px;
+
+    margin: 0;
+
+    font-size: 26px;
+
+    line-height: 1.5;
+}
+
+#titulocadastro{
+    position: relative;
+    font-weight: bolder;
+    font-size: 50px;
+    bottom: 50px;
+}
+
+
+.Cadrastro .Passos {
+    color: white;
+}
+
+.Acesse .Dash {
+    color: white;
+}
+
+.Perso .Persona {
+    color: black;
+}
+
+.Rece .Receba {
+    color: white;
+}
+
+
+
+.indicadores {
+
+    display: flex;
+    position: relative;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: -70px;
+}
+
+.bolabraind{
+    display: flex;
+    position: relative;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 8px;
+
+
+}
+.bolabraind {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #E6E5ED;
+    left: 590px;
+
+}
+
+.indicadores button {
+    width: 34px;
+    height: 34px;
+    left: 695px;
+    padding: 0;
+    position: relative;
+
+
+    border: none;
+    border-radius: 50%;
+
+    background-color: white;
+
+    color: black;
+
+    font-size: 10px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+
+}
+
+.indicadores button.ativo {
+    transform: scale(1.2);
+    background-color: #E9AF22;
+    width: 60px;
+    height: 60px;
+    left: 695px;
+    border: 2px solid white;
+}
+
+
+
+@media (max-width: 768px) {
+
+    .Carrossel {
+        width: 90%;
+
+    }
+
+    .carrossel > div {
+        height: 280px;
+    }
+
+    .Passos h2,
+    .Dash h2,
+    .Persona h2,
+    .Receba h2 {
+        font-size: 22px;
+    }
+
+    #CadastrePS {
+        font-size: 14px;
+    }
+}
+
+.PassoaPasso, .Carrossel{
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    text-decoration: none;
+    font-size: 50px
+}
+
+.linhacard{
+    width: 350px;
+    position:relative;
+    height: 25px;
+    background-color: white;
+    margin: 5px auto;
+    border-radius: 5px;
+    right: 225px;
+    top: 100px;
+}
+.Kaico{
+    margin-left: 70px;
+}
+.inicial{
+    margin: 70px;
+}
+.mapa{
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    text-decoration: none;
+}
+.direita{
+    font-size: 90px;
+    font-weight: bold;
+}
+.mapa{
+    margin: 70px;
+}
+.mapa p{
+    font-size: 30px;
+}
+.corzinha{
+    color: #1B4D3E;
+}
+.frasemapa{
+    font-size: 25px;
+}
+.Demo{
+    background-color: #1B4D3E;
+    width: 224px;
+    height: 48px;
+    border-radius: 9px;
+    color: white;
+}
+.Mercado {
+    font-family: "Montserrat", sans-serif;
+    background-color: #F7FAF3; /* Fundo aplicado direto na seção */
+    padding: 60px 20px; /* Dá espaço ao redor sem precisar fixar altura */
+}
+
+.Beneficios {
+    text-align: center;
+    font-size: 50px;
+    font-weight: bold;
+    margin-bottom: 50px;
+}
+
+.CardMercado {
+    background-color: white;
+    max-width: 1300px;
+    margin: 0 auto; /* Centraliza o card na tela */
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* Sombra leve opcional */
+
+    /* Flexbox: Coloca tudo lado a lado automaticamente */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.Mercado img{
+    position: relative;
+    left: -20px;
+    height: 60px;
+    width: 60px;
+}
+#reduzaper{
+    position: relative;
+    right: -50px;
+}
+#casinhalam{
+    position: relative;
+    left: 40px;
+    height: 60px;
+    width: 50px;
+}
+#Casinha{
+    height: 60px;
+    width: 50px;
+}
+.item-beneficio {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Distância entre a imagem e o texto */
+}
+.item-beneficio1 {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Distância entre a imagem e o texto */
+}
+
+.item-beneficio img {
+    width: 48px;
+    height: auto;
+}
+
+.item-beneficio p {
+    font-size: 20px;
+    margin: 0;
+    color: white;
+}
+.item-beneficio1 p{
+    font-size: 20px;
+    margin: 0;
+    color: black;
+}
+
+.barra {
+    background-color: #D9D9D9;
+    width: 2px;
+    height: 44px;
+}
+
+/* Configuração Geral do Rodapé */
+.rodape {
+    font-family: "Montserrat", sans-serif;
+    background-color: #1B4D3E; /* Fundo verde padrão */
+    color: white;
+    margin-top: 0; /* ← SEM espaçinho branco entre Valores e rodapé */
+}
+
+/* Container principal alinhado com Flexbox */
+.rodape-conteudo {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    padding: 60px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 40px;
+    flex-wrap: wrap; /* Para telas menores */
+}
+.perguntasrodape{
+    position: relative;
+    font-size: 30px;
+    top: 25px;
+}
+
+/* Configuração de cada coluna */
+.coluna {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 280px;
+}
+
+/* Textos em Destaque (Amarelo) */
+.destaque {
+    color: #E9AF22;
+    font-weight: bold;
+}
+
+/* --- COLUNA 1 --- */
+.logo-rodape {
+    width: 220px; /* Ajuste o tamanho da logo conforme necessário */
+    margin-bottom: 25px;
+}
+
+.texto-gerencie {
+    font-size: 24px;
+    line-height: 1.4;
+    margin-bottom: 30px;
+}
+
+.beneficios-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 10px;
+
+}
+.beneficios-grid p{
+    font-size: 16px;
+}
+.item-beneficio {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.3;
+}
+
+.item-beneficio img {
+    width: 30px;
+    height: 30px;
+}
+
+.item-largo {
+    grid-column: 1 / -1; /* Ocupa as duas colunas */
+}
+
+/* --- DIVISÓRIAS --- */
+.barra-vertical {
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.5); /* Linha branca levemente transparente */
+    margin: 0 10px;
+}
+.barra-horizontal {
+    width: 180px;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 10px 0 25px 0;
+    position: relative;
+    bottom: 20px;
+}
+.barra-horizontal1 {
+    width: 180px;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 10px 0 25px 0;
+    position: relative;
+    top: 20px;
+}
+
+/* --- COLUNAS 2 e 3 (Títulos e Textos) --- */
+.coluna h2 {
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0;
+}
+
+.texto-descritivo {
+    font-size: 22px;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+/* --- COLUNA 2 (Contatos) --- */
+.lista-contatos {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.lista-contatos a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #FFFFFF;
+    text-decoration: none;
+    font-style: italic;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.lista-contatos a img {
+    width: 24px;
+    height: 24px;
+}
+
+.lista-contatos a:hover {
+    color: #E9AF22; /* Efeito ao passar o mouse */
+}
+
+.btn-duvidas {
+    background-color: transparent;
+    color: #E9AF22;
+    padding: 10px 24px;
+    border: 1px solid #E9AF22;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
+    width: max-content;
+    transition: 0.3s;
+}
+
+.btn-duvidas:hover {
+    background-color: #E9AF22;
+    color: #1B4D3E;
+}
+
+.rodape-inferior {
+    width: 100%;
+    background-color: #17392F;
+    text-align: center;
+    padding: 20px;
+    font-size: 22px;
+    color: white;
+}
+.iniciorodape{
+    position: relative;
+    height: 100px;
+    width: auto;
+    background-color: #17392F;
+}
+
+/* inicio da section de valores para criação - DESLIGADO (o bloco novo abaixo manda) */
+.valores-desligado{
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    text-decoration: none;
+}
+/*<div class="bolavalores"></div>
+        <div class="arovalores"></div>*/
+.bolasvalor{
+    display: none;
+    justify-content:flex-end ;
+    align-items:end;
+}
+.bolavalores{
+    position: relative;
+    left: 820px;
+    bottom: 280px;
+    background-color: #E9AF22;
+    width: 500px;
+    height: 500px;
+    border-radius: 9000px;
+    z-index: -1;
+    display: none;
+}
+.arovalores{
+    background-color: none;
+    border: 2px solid #E9AF22;
+    width: 600px;
+    height: 600px;
+    border-radius: 9000px;
+    z-index: -2;
+    position: relative;
+    bottom: 230px;
+    left: 270px;
+    display: none;
+}
+
+/* ===== SEÇÃO VALORES - EDITE OS TAMANHOS AQUI ===== */
+.valores{
+    --largura-palco: 650px; /* ← LARGURA do carrossel */
+    --altura-card: 250px; /* ← ALTURA do card verde */
+    --tamanho-titulo: 52px; /* ← TAMANHO do "Foco" */
+    --tamanho-texto: 19px; /* ← TAMANHO do texto */
+    --tamanho-imagem: 170px; /* ← TAMANHO da imagem */
+    --cor-card: #1E4D3B; /* ← COR do card */
+    --cor-aba1: #111112; /* ← COR aba preta */
+    --cor-aba2: #E0A81E; /* ← COR aba amarela */
+    position:relative !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    padding:46px 16px 24px !important; /* ← PADDING-BOTTOM menor = menos faixa branca */
+    margin-bottom:0 !important;
+    text-align:center !important;
+    background:#fff !important;
+    overflow:hidden !important;
+    font-family:"Montserrat", sans-serif !important;
+}
+.valor-canto{
+    position:absolute !important;
+    width:380px !important; /* ← TAMANHO da bolinha (aumente aqui: 380px) */
+    height:380px !important; /* ← TAMANHO da bolinha (aumente aqui: 380px) */
+    border-radius:50% !important;
+    background:#E9AF22 !important; /* ← COR da bolinha (amarelo) */
+    background-color:#E9AF22 !important;
+    pointer-events:none;
+    z-index:0 !important;
+}
+.valor-canto::before{
+    content:"" !important;
+    position:absolute !important;
+    inset:-28px !important; /* ← DISTÂNCIA do anel fino ao redor */
+    border:2px solid #E9AF22 !important; /* ← COR do anel fino */
+    border-radius:50% !important;
+    background:transparent !important;
+}
+.canto-sup{
+    top:-190px !important; /* ← POSIÇÃO: quanto mais negativo, mais escondida */
+    right:-190px !important; /* ← POSIÇÃO lateral */
+}
+.canto-inf{
+    bottom:-190px !important; /* ← POSIÇÃO: quanto mais negativo, mais escondida */
+    left:-190px !important; /* ← POSIÇÃO lateral */
+}
+.valores .nossovalo{
+    font-size:44px !important; /* ← TAMANHO "Nossos Valores" */
+    font-weight:800 !important;
+    margin:10px 0 8px !important;
+    color:#1c1c1c !important;
+    position:relative;
+    z-index:1;
+}
+.valores .linhahorisontal{
+    /* ▼▼▼ BARRINHA EMBAIXO DO TÍTULO - EDITE AQUI ▼▼▼ */
+    --largura-barra: 230px; /* ← LARGURA da barrinha (ex: 100px, 200px) */
+    --altura-barra: 6px; /* ← ALTURA/ESPESSURA da barrinha (ex: 4px, 10px) */
+    width:var(--largura-barra) !important;
+    height:var(--altura-barra) !important;
+    background:#1B4D3E !important; /* ← COR da barrinha */
+    border-radius:99px; /* ← ARREDONDAMENTO (99px = redonda, 0 = quadrada) */
+    margin:0 auto 12px !important;
+    position:relative;
+    z-index:1;
+}
+.valores .textinho{
+    font-size:17px !important; /* ← TAMANHO subtítulo */
+    line-height:1.5 !important;
+    color:#6B5B4F !important;
+    margin:0 0 30px !important;
+    position:relative;
+    z-index:1;
+}
+.valores-palco{
+    width:min(650px,92vw) !important; /* ← LARGURA do carrossel */
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    padding-top:24px !important;
+    padding-bottom:0 !important; /* ← sem respiro extra dentro do palco */
+    margin-bottom:0 !important;
+    position:relative;
+    z-index:1;
+}
+.valor-trilho{
+    width:100% !important;
+    position:relative !important;
+}
+/* ABAS DE TRÁS (as 2 barrinhas que giram de cor) */
+.valor-abas{
+    position:absolute !important;
+    top:0 !important;
+    left:0 !important;
+    right:0 !important;
+    height:0 !important;
+    z-index:0 !important;
+    pointer-events:none !important;
+}
+.valor-aba{
+    position:absolute !important;
+    height:14px !important; /* ← ALTURA das abinhas de trás */
+    border-radius:8px 8px 0 0 !important;
+    transition:background-color .35s ease !important;
+}
+.aba-meio{
+    top:-11px !important;
+    left:12px !important;
+    right:12px !important;
+    background:#111112 !important; /* ← COR inicial (JS troca depois) */
+}
+.aba-tras{
+    top:-24px !important;
+    left:30px !important;
+    right:30px !important;
+    background:#E0A81E !important; /* ← COR inicial (JS troca depois) */
+}
+/* cards: só o ativo aparece (carrossel) */
+.valor-trilho .valor-card{
+    display:none;
+    position:relative !important;
+    z-index:1 !important;
+    width:100% !important;
+    min-height:250px !important; /* ← ALTURA do card verde */
+    border-radius:12px !important;
+    padding:30px 30px !important; /* ← ESPAÇO interno */
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:18px !important;
+    text-align:left !important;
+    color:#fff !important;
+    isolation:isolate !important;
+    box-sizing:border-box !important;
+}
+.valor-trilho .valor-card.is-ativo{ display:flex; }
+/* ▼▼▼ COR DE CADA CARD - TROQUE O HEX AQUI (CSS, sem JS) ▼▼▼
+   .valor-verde  = card FOCO
+   .valor-preto  = card PERSISTÊNCIA
+   .valor-amarelo = card ESPERANÇA */
+.valor-trilho .valor-card.valor-verde{ background:#1E4D3B; background-color:#1E4D3B; }
+.valor-trilho .valor-card.valor-preto{ background:#101010; background-color:#101010; }
+.valor-trilho .valor-card.valor-amarelo{ background:#E9AF22; background-color:#E9AF22; }
+/* abas antigas via ::before/::after DESLIGADAS (agora são divs que o JS pinta) */
+.valor-trilho .valor-card::before,
+.valor-trilho .valor-card::after{
+    content:none !important;
+    display:none !important;
+}
+.valor-texto{ flex:1 1 auto !important; min-width:0 !important; }
+.valores .valor-titulo{
+    margin:0 0 12px !important;
+    font-size:52px !important; /* ← TAMANHO do "Foco" */
+    font-weight:800 !important;
+    line-height:1 !important;
+    color:#fff !important;
+}
+.valores .valor-desc{
+    margin:0 !important;
+    font-size:19px !important; /* ← TAMANHO do texto */
+    line-height:1.55 !important;
+    font-weight:500 !important;
+    color:#F3F6F2 !important;
+}
+/* TAG DE IMAGEM - você coloca o src no HTML depois */
+.valor-foto{
+    flex:0 0 170px !important; /* ← LARGURA reservada p/ imagem */
+    width:170px !important; /* ← LARGURA da imagem */
+    height:170px !important; /* ← ALTURA da imagem */
+    object-fit:contain !important;
+    display:block !important;
+    border:none !important;
+    background:transparent !important;
+}
+/* enquanto o src estiver vazio, esconde o <img> (sem ícone quebrado).
+   Quando você preencher o src no HTML, a imagem aparece sozinha. */
+.valor-foto[src=""]{
+    display:none !important;
+}
+.valor-nav{
+    display:flex !important;
+    gap:10px !important;
+    justify-content:center !important;
+    align-items:center !important;
+    margin-top:18px !important;
+}
+.valor-btn{
+    width:38px !important; /* ← TAMANHO botão */
+    height:38px !important; /* ← TAMANHO botão */
+    border:none !important;
+    border-radius:9px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    font-size:18px !important;
+    font-weight:800 !important;
+    line-height:1 !important;
+    cursor:pointer !important;
+    color:#fff !important;
+    padding:0 !important;
+}
+.valor-btn-amarelo{ background:#E9AF22 !important; }
+.valor-btn-verde{ background:#1E4D3B !important; }
+.valores .bolasvalor{ display:none !important; }
+.valores .bolavalores1,
+.valores .arovalores1{ display:none !important; }
+/* remove estilos antigos da caixa tracejada */
+.valores-caixa{ border:none !important; background:transparent !important; padding-top:24px !important; }
+@media (max-width:700px){
+    .valores-palco{ width:92vw !important; }
+    .valor-foto{ flex-basis:120px !important; width:120px !important; height:120px !important; }
+    .valores .valor-titulo{ font-size:38px !important; }
+    .valores .valor-desc{ font-size:16px !important; }
+}
+

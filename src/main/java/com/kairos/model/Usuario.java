@@ -3,6 +3,7 @@ package com.kairos.model;
 import java.time.LocalDate;
 
 import com.kairos.model.enums.TipoUsuario;
+import com.kairos.utils.Formatter;
 
 public class Usuario {
 
@@ -35,27 +36,28 @@ public class Usuario {
         this.empresa = empresa;
     }
 
-    public Usuario(String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, String email, Empresa empresa) {
+    public Usuario(int id, String cpf, String nome, String sobrenome, LocalDate dataNascimento, String cep, TipoUsuario tipoUsuario, String email, Empresa empresa) {
+        this.id = id;
         this.cpf = cpf;
-        this.senha = senha;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.dataNascimento = dataNascimento;
         this.cep = cep;
-        this.tipoUsuario = TipoUsuario.FUNCIONARIO;
+        this.tipoUsuario = tipoUsuario;
         this.email = email;
         this.empresa = empresa;
     }
 
-    public Usuario(String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, String email) {
+    public Usuario(String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, TipoUsuario tipoUsuario, String email, Empresa empresa) {
         this.cpf = cpf;
         this.senha = senha;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.dataNascimento = dataNascimento;
         this.cep = cep;
-        this.tipoUsuario = TipoUsuario.FUNCIONARIO;
+        this.tipoUsuario = tipoUsuario;
         this.email = email;
+        this.empresa = empresa;
     }
 
     public int getId() {
@@ -136,6 +138,18 @@ public class Usuario {
 
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
+    }
+
+    public String getCpfFormatado() {
+        return Formatter.cpf(cpf);
+    }
+
+    public String getCepFormatado() {
+        return Formatter.cep(cep);
+    }
+
+    public String getDataNascimentoFormatada() {
+        return Formatter.data(dataNascimento);
     }
 
     //    toString

@@ -26,6 +26,13 @@ public class UsuarioGondolaService {
         validarUsuario(usuario);
         validarGondola(gondola);
 
+        if (usuarioGondolaDAO.existeVinculo(usuario, gondola)) {
+
+            throw new ServiceException(
+                    "Esta gôndola já está vinculada a este usuário."
+            );
+        }
+
         usuarioGondolaDAO.vincular(usuario, gondola);
     }
 
@@ -79,5 +86,13 @@ public class UsuarioGondolaService {
         if (gondolaService.buscarPorId(gondola.getId()) == null) {
             throw new GondolaNotFoundException("Gôndola não encontrada");
         }
+    }
+
+    public boolean existeVinculo(Usuario usuario, Gondola gondola) {
+
+        validarUsuario(usuario);
+        validarGondola(gondola);
+
+        return usuarioGondolaDAO.existeVinculo(usuario, gondola);
     }
 }

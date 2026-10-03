@@ -14,22 +14,21 @@ import java.sql.PreparedStatement;
 import java.sql.Date;
 import java.sql.ResultSet;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioDAO {
 
-//    Metodo para inserir um usuario
+    // Metodo para inserir um usuario
     public Usuario inserir(Usuario usuario) {
 
         String senhaHash = PasswordHasher.hash(usuario.getSenha());
 
         String sql = """
                      INSERT INTO usuarios (
-                                           cpf, senha, nome, sobrenome, data_nascimento, 
+                                           cpf, senha, nome, sobrenome, data_nascimento,
                                            cep, tipo_usuario, email, empresa_id
-                                           )
+                                          )
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                      RETURNING id, cpf, senha, nome, sobrenome, data_nascimento,
                                cep, tipo_usuario, email
@@ -64,6 +63,7 @@ public class UsuarioDAO {
                             usuario.getEmpresa()
                     );
                 }
+
                 return null;
             }
 
@@ -72,13 +72,14 @@ public class UsuarioDAO {
         }
     }
 
-//    Metodo que busca usuario pelo id
+    // Metodo que busca usuario pelo id
     public Usuario buscarPorId(int id) {
 
         String sql = """
-                     SELECT u.id as usuario_id, u.cpf, u.senha, u.nome, u.sobrenome, 
-                            u.data_nascimento, u.cep, u.tipo_usuario, u.email, 
-                            e.id as empresa_id, e.cnpj, e.tipo_plano
+                     SELECT u.id as usuario_id, u.cpf, u.senha, u.nome, u.sobrenome,
+                            u.data_nascimento, u.cep, u.tipo_usuario, u.email,
+                            e.id as empresa_id, e.nome as empresa_nome,
+                            e.cnpj, e.tipo_plano
                      FROM usuarios u
                      JOIN empresas e ON e.id = u.empresa_id
                      WHERE u.id = ?
@@ -104,10 +105,13 @@ public class UsuarioDAO {
                             rs.getString("email"),
                             new Empresa(
                                     rs.getInt("empresa_id"),
+                                    rs.getString("empresa_nome"),
                                     rs.getString("cnpj"),
-                                    TipoPlano.valueOf(rs.getString("tipo_plano")))
+                                    TipoPlano.valueOf(rs.getString("tipo_plano"))
+                            )
                     );
                 }
+
                 return null;
             }
 
@@ -116,13 +120,14 @@ public class UsuarioDAO {
         }
     }
 
-//    Metodo que busca todos os usuarios
+    // Metodo que busca todos os usuarios
     public List<Usuario> listarTodos() {
 
         String sql = """
-                     SELECT u.id as usuario_id, u.cpf, u.senha, u.nome, u.sobrenome, 
-                     u.data_nascimento, u.cep, u.tipo_usuario, u.email, e.id as empresa_id,
-                     e.cnpj, e.tipo_plano
+                     SELECT u.id as usuario_id, u.cpf, u.nome, u.sobrenome,
+                            u.data_nascimento, u.cep, u.tipo_usuario, u.email,
+                            e.id as empresa_id, e.nome as empresa_nome,
+                            e.cnpj, e.tipo_plano
                      FROM usuarios u
                      JOIN empresas e ON e.id = u.empresa_id
                      ORDER BY u.id
@@ -140,7 +145,6 @@ public class UsuarioDAO {
                     Usuario usuario = new Usuario(
                             rs.getInt("usuario_id"),
                             rs.getString("cpf"),
-                            rs.getString("senha"),
                             rs.getString("nome"),
                             rs.getString("sobrenome"),
                             rs.getDate("data_nascimento").toLocalDate(),
@@ -149,10 +153,12 @@ public class UsuarioDAO {
                             rs.getString("email"),
                             new Empresa(
                                     rs.getInt("empresa_id"),
+                                    rs.getString("empresa_nome"),
                                     rs.getString("cnpj"),
                                     TipoPlano.valueOf(rs.getString("tipo_plano"))
                             )
                     );
+
                     usuarios.add(usuario);
                 }
 
@@ -164,35 +170,30 @@ public class UsuarioDAO {
         }
     }
 
-//    Metodo que atualiza um usuario
+    // Metodo que atualiza um usuario
     public int atualizar(Usuario usuario) {
 
         String sql = """
-                     UPDATE usuarios
-                     SET cpf = ?,
-                         senha = ?,
-                         nome = ?,
-                         sobrenome = ?,
-                         data_nascimento = ?,
-                         cep = ?,
-                         email = ?
-                     WHERE id = ?
-                     """;
-
-        String senhaHash = PasswordHasher.hash(usuario.getSenha());
+                 UPDATE usuarios
+                 SET cpf = ?,
+                     nome = ?,
+                     sobrenome = ?,
+                     data_nascimento = ?,
+                     cep = ?,
+                     email = ?
+                 WHERE id = ?
+                 """;
 
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, usuario.getCpf());
-            statement.setString(2, senhaHash);
-            statement.setString(3, usuario.getNome());
-            statement.setString(4, usuario.getSobrenome());
-            statement.setDate(5, Date.valueOf(usuario.getDataNascimento()));
-            statement.setString(6, usuario.getCep());
-            statement.setString(7, usuario.getEmail());
-
-            statement.setInt(8, usuario.getId());
+            statement.setString(2, usuario.getNome());
+            statement.setString(3, usuario.getSobrenome());
+            statement.setDate(4, Date.valueOf(usuario.getDataNascimento()));
+            statement.setString(5, usuario.getCep());
+            statement.setString(6, usuario.getEmail());
+            statement.setInt(7, usuario.getId());
 
             return statement.executeUpdate();
 
@@ -201,7 +202,7 @@ public class UsuarioDAO {
         }
     }
 
-//    Metodo que deleta um usuario por id
+    // Metodo que deleta um usuario por id
     public void deletarPorId(int id) {
 
         String sql = """
@@ -265,7 +266,7 @@ public class UsuarioDAO {
         }
     }
 
-//    Metodo que busca o email de outro usuario
+    // Metodo que busca o email de outro usuario
     public boolean existePorEmailExcetoId(String email, int id) {
 
         String sql = """
@@ -288,6 +289,7 @@ public class UsuarioDAO {
             throw new DAOException("Erro ao verificar e-mail de outro usuário", e);
         }
     }
+
     public boolean existePorCpfExcetoId(String cpf, int id) {
 
         String sql = """
@@ -316,7 +318,8 @@ public class UsuarioDAO {
         String sql = """
                  SELECT u.id as usuario_id, u.cpf, u.senha, u.nome, u.sobrenome,
                         u.data_nascimento, u.cep, u.tipo_usuario, u.email,
-                        e.id as empresa_id, e.cnpj, e.tipo_plano
+                        e.id as empresa_id, e.nome as empresa_nome,
+                        e.cnpj, e.tipo_plano
                  FROM usuarios u
                  JOIN empresas e ON e.id = u.empresa_id
                  WHERE u.email = ?
@@ -342,6 +345,7 @@ public class UsuarioDAO {
                             rs.getString("email"),
                             new Empresa(
                                     rs.getInt("empresa_id"),
+                                    rs.getString("empresa_nome"),
                                     rs.getString("cnpj"),
                                     TipoPlano.valueOf(rs.getString("tipo_plano"))
                             )
@@ -360,23 +364,22 @@ public class UsuarioDAO {
 
         String sql = """
                  SELECT
-                     u.id AS usuario_id, u.cpf, u.senha, u.nome, u.sobrenome,
+                     u.id AS usuario_id, u.cpf, u.nome, u.sobrenome,
                      u.data_nascimento, u.cep, u.tipo_usuario, u.email,
-                     e.id AS empresa_id, e.cnpj, e.tipo_plano
+                     e.id AS empresa_id, e.nome AS empresa_nome,
+                     e.cnpj, e.tipo_plano
                  FROM usuarios u
                  JOIN empresas e ON e.id = u.empresa_id
                  WHERE CAST(u.id AS TEXT) ILIKE ?
                     OR u.cpf ILIKE ?
                     OR u.nome ILIKE ?
                     OR u.sobrenome ILIKE ?
-                    OR CAST(u.data_nascimento AS TEXT) ILIKE ?
+                    OR TO_CHAR(u.data_nascimento AS 'DD/MM/YYYY') ILIKE ?
                     OR u.cep ILIKE ?
                     OR u.email ILIKE ?
                     OR u.tipo_usuario ILIKE ?
-                    OR CAST(u.empresa_id AS TEXT) ILIKE ?
+                    OR CAST(u.nome AS TEXT) ILIKE ?
                  """;
-
-        String filtro = "%" + pesquisa + "%";
 
         List<Usuario> usuarios = new ArrayList<>();
 
@@ -384,7 +387,7 @@ public class UsuarioDAO {
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             for (int i = 1; i <= 9; i++) {
-                statement.setString(i, filtro);
+                statement.setString(i, pesquisa);
             }
 
             try (ResultSet rs = statement.executeQuery()) {
@@ -394,7 +397,6 @@ public class UsuarioDAO {
                     Usuario usuario = new Usuario(
                             rs.getInt("usuario_id"),
                             rs.getString("cpf"),
-                            rs.getString("senha"),
                             rs.getString("nome"),
                             rs.getString("sobrenome"),
                             rs.getDate("data_nascimento").toLocalDate(),
@@ -403,6 +405,7 @@ public class UsuarioDAO {
                             rs.getString("email"),
                             new Empresa(
                                     rs.getInt("empresa_id"),
+                                    rs.getString("empresa_nome"),
                                     rs.getString("cnpj"),
                                     TipoPlano.valueOf(rs.getString("tipo_plano"))
                             )

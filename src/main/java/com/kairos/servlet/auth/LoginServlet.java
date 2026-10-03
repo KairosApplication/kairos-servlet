@@ -1,9 +1,10 @@
 package com.kairos.servlet.auth;
 
-import com.kairos.model.Usuario;
+import com.kairos.model.Admin;
 import com.kairos.service.LoginService;
 import com.kairos.utils.exceptions.regex.InvalidEmailRegexException;
 import com.kairos.utils.exceptions.notfound.UsuarioNotFoundException;
+import com.kairos.utils.exceptions.system.AdminException;
 import com.kairos.utils.exceptions.system.ServiceException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -29,28 +30,33 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String senha = request.getParameter("senha");
 
-
-
         try {
 
-            Usuario usuario = loginService.autenticar(email, senha);
+            Admin admin = loginService.autenticar(email, senha);
 
-            response.getWriter().println("Login realizado com sucesso!");
+            response.sendRedirect(request.getContextPath() + "/admin/usuarios");
+
+        } catch (AdminException e) {
+
+            request.setAttribute(
+                    "erroEmailOuSenha",
+                    "E-mail ou senha inválidos"
+            );
+
+            request.getRequestDispatcher(
+                    "/WEB-INF/views/login/login.jsp"
+            ).forward(request, response);
 
         } catch (ServiceException e) {
 
-            request.setAttribute("erroService", e.getMessage());
+            request.setAttribute(
+                    "erroService",
+                    e.getMessage()
+            );
 
-            request.getRequestDispatcher("/WEB-INF/views/login/login.jsp")
-                    .forward(request, response);
-        }
-
-        catch (UsuarioNotFoundException | InvalidEmailRegexException e) {
-
-            request.setAttribute("erroEmailOuSenha", "E-mail ou senha inválidos");
-
-            request.getRequestDispatcher("/WEB-INF/views/login/login.jsp")
-                    .forward(request, response);
+            request.getRequestDispatcher(
+                    "/WEB-INF/views/login/login.jsp"
+            ).forward(request, response);
         }
     }
 }

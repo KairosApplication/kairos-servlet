@@ -110,7 +110,8 @@ public class UsuarioGondolaDAO {
         String sql = """
                      SELECT u.id as uid, u.cpf, u.senha, u.nome, u.sobrenome,
                             u.data_nascimento, u.cep, u.tipo_usuario, u.email,
-                            e.id as eid, e.cnpj, e.tipo_plano
+                            e.id as eid, e.nome as empresa_nome,
+                            e.cnpj, e.tipo_plano
                      FROM usuarios_gondolas ug
                      JOIN usuarios u ON u.id = ug.usuario_id
                      JOIN empresas e ON e.id = u.empresa_id
@@ -131,6 +132,7 @@ public class UsuarioGondolaDAO {
 
                     Empresa empresa = new Empresa(
                             rs.getInt("eid"),
+                            rs.getString("empresa_nome"),
                             rs.getString("cnpj"),
                             TipoPlano.valueOf(rs.getString("tipo_plano"))
                     );
@@ -138,7 +140,6 @@ public class UsuarioGondolaDAO {
                     Usuario usuario = new Usuario(
                             rs.getInt("uid"),
                             rs.getString("cpf"),
-                            rs.getString("senha"),
                             rs.getString("nome"),
                             rs.getString("sobrenome"),
                             rs.getDate("data_nascimento").toLocalDate(),
@@ -156,6 +157,33 @@ public class UsuarioGondolaDAO {
 
         } catch (SQLException e) {
             throw new DAOException("Erro ao listar usuários da gôndola", e);
+        }
+    }
+
+    public boolean existeVinculo(Usuario usuario, Gondola gondola) {
+
+        String sql = """
+                 SELECT 1
+                 FROM usuarios_gondolas
+                 WHERE usuario_id = ?
+                   AND gondola_id = ?
+                 """;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, usuario.getId());
+            statement.setInt(2, gondola.getId());
+
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(
+                    "Erro ao verificar vínculo entre usuário e gôndola",
+                    e
+            );
         }
     }
 }

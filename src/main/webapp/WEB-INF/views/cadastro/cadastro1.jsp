@@ -45,7 +45,9 @@
                 </a>
             </div>
 
-            <form action="${pageContext.request.contextPath}/cadastro-page" method="post">
+            <form action="${pageContext.request.contextPath}/cadastro-page"
+                  method="post"
+                  autocomplete="off">
 
                 <div class="field">
                     <label for="nome">Nome completo</label>

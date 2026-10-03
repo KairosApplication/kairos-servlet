@@ -3,10 +3,10 @@ package com.kairos.service;
 import com.kairos.dao.EmpresaDAO;
 import com.kairos.dao.UsuarioDAO;
 
-import com.kairos.model.enums.TipoUsuario;
+import com.kairos.dao.UsuarioGondolaDAO;
+import com.kairos.model.Gondola;
 import com.kairos.model.Usuario;
 
-import com.kairos.utils.AuthorizationValidator;
 import com.kairos.utils.Regex;
 import com.kairos.utils.exceptions.exists.CpfExistsException;
 import com.kairos.utils.exceptions.exists.EmailExistsException;
@@ -15,7 +15,6 @@ import com.kairos.utils.exceptions.regex.InvalidCpfRegexException;
 import com.kairos.utils.exceptions.regex.InvalidEmailRegexException;
 import com.kairos.utils.exceptions.notfound.EmpresaNotFoundException;
 import com.kairos.utils.exceptions.notfound.UsuarioNotFoundException;
-import com.kairos.utils.exceptions.system.AdminException;
 import com.kairos.utils.exceptions.system.ServiceException;
 
 import java.time.LocalDate;
@@ -27,18 +26,18 @@ public class UsuarioService {
 
     private final UsuarioDAO usuarioDAO;
     private final EmpresaDAO empresaDAO;
+    private final UsuarioGondolaDAO usuarioGondolaDAO;
 
 //    Construtor
 
     public UsuarioService() {
         this.usuarioDAO = new UsuarioDAO();
         this.empresaDAO = new EmpresaDAO();
+        this.usuarioGondolaDAO = new UsuarioGondolaDAO();
     }
 
 //    Metodo que faz as validacoes para o cadastro de usuario
     public Usuario cadastrar(Usuario usuario) {
-
-//        AuthorizationValidator.validarAdmin(usuarioAtual);
 
         validarCampos(usuario);
 
@@ -48,10 +47,6 @@ public class UsuarioService {
 
         if (usuarioDAO.existePorCpf(usuario.getCpf())) {
             throw new CpfExistsException("CPF já cadastrado");
-        }
-
-        if (usuario.getTipoUsuario() != TipoUsuario.FUNCIONARIO) {
-            throw new ServiceException("Cadastro comum deve ser do tipo FUNCIONARIO");
         }
 
         if (!usuario.getCpf().matches(Regex.CPF)) {
@@ -75,8 +70,6 @@ public class UsuarioService {
 //    Metodo que faz as validacoes da busca de usuario por id
     public Usuario buscarPorId(int id) {
 
-//        AuthorizationValidator.validarAdmin(usuarioAtual);
-
         if (id <= 0) {
             throw new ServiceException("O id deve ser maior que 0");
         }
@@ -90,9 +83,7 @@ public class UsuarioService {
     }
 
 //    Metodo que busca listarTodos do DAO (sem validacoes)
-    public List<Usuario> listarTodos(Usuario usuarioAtual) {
-
-        AuthorizationValidator.validarAdmin(usuarioAtual);
+    public List<Usuario> listarTodos() {
 
         return usuarioDAO.listarTodos();
     }
@@ -100,16 +91,10 @@ public class UsuarioService {
 //    Metodo que faz as validacoes de atualizar usuario
     public void atualizar(Usuario usuario) {
 
-//        AuthorizationValidator.validarAdmin(usuarioAtual);
-
         validarCampos(usuario);
 
         if (usuario.getId() <= 0) {
             throw new ServiceException("O id deve ser maior que 0");
-        }
-
-        if (usuario.getTipoUsuario() != TipoUsuario.FUNCIONARIO) {
-            throw new ServiceException("Tipo usuário comum deve ser FUNCIONARIO");
         }
 
         if (usuarioDAO.existePorEmailExcetoId(usuario.getEmail(), usuario.getId())) {
@@ -147,8 +132,6 @@ public class UsuarioService {
 //    Metodo que faz as validações para deletar usuario por id
     public void deletarPorId(int id) {
 
-//        AuthorizationValidator.validarAdmin(usuarioAtual);
-
         if (id <= 0) {
             throw new ServiceException("O id deve ser maior que 0");
         }
@@ -157,10 +140,6 @@ public class UsuarioService {
 
         if (usuario == null) {
             throw new UsuarioNotFoundException("Usuário não encontrado");
-        }
-
-        if (usuario.getTipoUsuario() == TipoUsuario.ADMIN) {
-            throw new AdminException("Não é permitido deletar o Admin");
         }
 
         usuarioDAO.deletarPorId(id);
@@ -189,7 +168,7 @@ public class UsuarioService {
             throw new InvalidCpfRegexException("Formato do CPF inválido");
         }
 
-        cpf = cpf.replaceAll("^[0-9]", "");
+        cpf = cpf.replaceAll("[^0-9]", "");
 
         return usuarioDAO.existePorCpf(cpf);
     }
@@ -256,6 +235,10 @@ public class UsuarioService {
             throw new ServiceException("Usuário não pode ser nulo");
         }
 
+        if (usuario.getNome() == null || usuario.getNome().isBlank()) {
+            throw new ServiceException("Nome é obrigatório");
+        }
+
         if (usuario.getNome().matches(".*\\d.*")) {
             throw new ServiceException("O nome não pode conter números");
         }
@@ -266,10 +249,6 @@ public class UsuarioService {
 
         if (usuario.getSenha() == null || usuario.getSenha().length() < 8) {
             throw new ServiceException("A senha deve ter pelo menos 8 caracteres");
-        }
-
-        if (usuario.getNome() == null || usuario.getNome().isBlank()) {
-            throw new ServiceException("Nome é obrigatório");
         }
 
         if (usuario.getSobrenome() == null || usuario.getSobrenome().isBlank()) {
@@ -291,6 +270,10 @@ public class UsuarioService {
         if (usuario.getEmail() == null || usuario.getEmail().isBlank()) {
             throw new ServiceException("Email é obrigatório");
         }
+    }
+
+    public List<Gondola> listarGondolasPorUsuario(Usuario usuario) {
+        return usuarioGondolaDAO.listarGondolasPorUsuario(usuario);
     }
 
     public List<Usuario> pesquisar(String pesquisa) {

@@ -4,27 +4,36 @@ import com.kairos.model.enums.TipoPlano;
 
 public class Empresa {
 
-//    Atributos
+    // Atributos
 
     private int id;
+    private String nome;
     private String cnpj;
     private TipoPlano tipoPlano;
 
-//    Construtores
+    // Construtores
 
-    public Empresa(int id, String cnpj, TipoPlano tipoPlano) {
+    public Empresa(int id, String nome, String cnpj, TipoPlano tipoPlano) {
         this.id = id;
+        this.nome = nome;
         this.cnpj = cnpj;
         this.tipoPlano = tipoPlano;
     }
 
-    public Empresa(String cnpj, TipoPlano tipoPlano) {
+    public Empresa(String nome, String cnpj, TipoPlano tipoPlano) {
+        this.nome = nome;
         this.cnpj = cnpj;
         this.tipoPlano = tipoPlano;
     }
+
+    // Getters
 
     public int getId() {
         return id;
+    }
+
+    public String getNome() {
+        return nome;
     }
 
     public String getCnpj() {
@@ -35,8 +44,14 @@ public class Empresa {
         return tipoPlano;
     }
 
+    // Setters
+
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public void setCnpj(String cnpj) {
@@ -47,12 +62,14 @@ public class Empresa {
         this.tipoPlano = tipoPlano;
     }
 
-    //    toString
+    // toString
+
     @Override
     public String toString() {
         return "\n-= Empresa =-" +
-               "\nID: " + getId() +
-               "\nCNPJ: " + getCnpj() +
-               "\nTipo do plano: " + getTipoPlano();
+                "\nID: " + getId() +
+                "\nNome: " + getNome() +
+                "\nCNPJ: " + getCnpj() +
+                "\nTipo do plano: " + getTipoPlano();
     }
 }

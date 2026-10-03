@@ -94,7 +94,6 @@ public class AlertaDAO {
                             new Usuario(
                                     rs.getInt("uid"),
                                     rs.getString("cpf"),
-                                    rs.getString("senha"),
                                     rs.getString("nome"),
                                     rs.getString("sobrenome"),
                                     rs.getDate("data_nascimento").toLocalDate(),
@@ -103,6 +102,7 @@ public class AlertaDAO {
                                     rs.getString("email"),
                                     new Empresa(
                                             rs.getInt("eid"),
+                                            rs.getString("nome"),
                                             rs.getString("cnpj"),
                                             TipoPlano.valueOf(rs.getString("tipo_plano"))
                                     )
@@ -146,7 +146,7 @@ public class AlertaDAO {
                             u.id as uid, u.cpf, u.senha, u.nome, u.sobrenome,
                             u.data_nascimento, u.cep, u.tipo_usuario, u.email,
                             u.empresa_id,
-                            e.id as eid, e.cnpj, e.tipo_plano,
+                            e.id as eid, e.nome, e.cnpj, e.tipo_plano,
                             g.id as gid, g.capacidade_maxima, g.setor_id,
                             s.id as sid, s.nome as setor_nome, s.categoria_setor,
                             p.id as pid, p.marca, p.nome, p.quantidade_estoque
@@ -172,7 +172,6 @@ public class AlertaDAO {
                             new Usuario(
                                     rs.getInt("uid"),
                                     rs.getString("cpf"),
-                                    rs.getString("senha"),
                                     rs.getString("nome"),
                                     rs.getString("sobrenome"),
                                     rs.getDate("data_nascimento").toLocalDate(),
@@ -181,6 +180,7 @@ public class AlertaDAO {
                                     rs.getString("email"),
                                     new Empresa(
                                             rs.getInt("eid"),
+                                            rs.getString("nome"),
                                             rs.getString("cnpj"),
                                             TipoPlano.valueOf(rs.getString("tipo_plano"))
                                     )

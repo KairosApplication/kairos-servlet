@@ -1,25 +1,29 @@
 package com.kairos.service;
 
-import com.kairos.model.Usuario;
-import com.kairos.utils.PasswordHasher;
+import com.kairos.model.Admin;
+import com.kairos.utils.exceptions.system.AdminException;
 import com.kairos.utils.exceptions.system.ServiceException;
 
 public class LoginService {
 
-    private final UsuarioService usuarioService;
+    private final AdminService adminService;
 
     public LoginService() {
-        this.usuarioService = new UsuarioService();
+        this.adminService = new AdminService();
     }
 
-    public Usuario autenticar(String email, String senha) {
+    public Admin autenticar(String email, String senha) {
 
-        Usuario usuario = usuarioService.buscarPorEmail(email);
+        Admin admin = adminService.buscarPorEmail(email);
 
-        if (!PasswordHasher.verificar(senha, usuario.getSenha())) {
-            throw new ServiceException("Email ou senha inválidos");
+        if (admin == null) {
+            throw new AdminException("Email ou senha inválidos");
         }
 
-        return usuario;
+        if (!senha.equals(admin.getSenha())) {
+            throw new AdminException("Email ou senha inválidos");
+        }
+
+        return admin;
     }
 }

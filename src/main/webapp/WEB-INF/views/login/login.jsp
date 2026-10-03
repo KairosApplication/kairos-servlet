@@ -46,7 +46,9 @@
             </div>
 
             <!-- Formulário de Login -->
-            <form action="login" method="post">
+            <form action="login"
+                  method="post"
+                  autocomplete="off">
 
                 <div class="field">
                     <label for="email">E-mail</label>

@@ -27,44 +27,30 @@ public class GondolaProdutoService {
 
         validarCampos(gondolaProduto);
 
-        if (gondolaService.buscarPorId(
-                gondolaProduto.getGondola().getId()
-        ) == null) {
+        if (gondolaService.buscarPorId(gondolaProduto.getGondola().getId()) == null) {
             throw new GondolaNotFoundException("Gôndola não encontrada");
         }
 
-        if (produtoService.buscarPorId(
-                gondolaProduto.getProduto().getId()
-        ) == null) {
+        if (produtoService.buscarPorId(gondolaProduto.getProduto().getId()) == null) {
             throw new ProdutoNotFoundException("Produto não encontrado");
         }
 
-        gondolaProdutoDAO.vincular(
-                gondolaProduto.getGondola(),
-                gondolaProduto.getProduto()
-        );
+        gondolaProdutoDAO.vincular(gondolaProduto.getGondola(), gondolaProduto.getProduto());
     }
 
     public void desvincular(GondolaProduto gondolaProduto) {
 
         validarCampos(gondolaProduto);
 
-        if (gondolaService.buscarPorId(
-                gondolaProduto.getGondola().getId()
-        ) == null) {
+        if (gondolaService.buscarPorId(gondolaProduto.getGondola().getId()) == null) {
             throw new GondolaNotFoundException("Gôndola não encontrada");
         }
 
-        if (produtoService.buscarPorId(
-                gondolaProduto.getProduto().getId()
-        ) == null) {
+        if (produtoService.buscarPorId(gondolaProduto.getProduto().getId()) == null) {
             throw new ProdutoNotFoundException("Produto não encontrado");
         }
 
-        gondolaProdutoDAO.desvincular(
-                gondolaProduto.getGondola(),
-                gondolaProduto.getProduto()
-        );
+        gondolaProdutoDAO.desvincular(gondolaProduto.getGondola(), gondolaProduto.getProduto());
     }
 
     public List<Produto> listarProdutosPorGondola(Gondola gondola) {

@@ -69,6 +69,7 @@ com\kairos\service\ProdutoService.class
 com\kairos\Main.class
 com\kairos\service\CadastroService.class
 com\kairos\utils\exceptions\quantity\StockQuantityException.class
+com\kairos\utils\PasswordHasher.class
 com\kairos\model\CompraProduto.class
 com\kairos\model\Setor.class
 com\kairos\model\Alerta.class

@@ -61,9 +61,10 @@ public class UsuarioReposicaoDAO {
     public List<Usuario> listarUsuariosPorReposicao(Reposicao reposicao) {
 
         String sql = """
-                     SELECT u.id as uid, u.cpf, u.senha, u.nome, u.sobrenome,
+                     SELECT u.id as uid, u.cpf, u.nome, u.sobrenome,
                             u.data_nascimento, u.cep, u.tipo_usuario, u.email,
-                            e.id as eid, e.cnpj, e.tipo_plano
+                            e.id as eid, e.nome as empresa_nome,
+                            e.cnpj, e.tipo_plano
                      FROM usuarios_reposicoes ur
                      JOIN usuarios u ON u.id = ur.usuario_id
                      JOIN empresas e ON e.id = u.empresa_id
@@ -84,6 +85,7 @@ public class UsuarioReposicaoDAO {
 
                     Empresa empresa = new Empresa(
                             rs.getInt("eid"),
+                            rs.getString("empresa_nome"),
                             rs.getString("cnpj"),
                             TipoPlano.valueOf(rs.getString("tipo_plano"))
                     );
@@ -91,7 +93,6 @@ public class UsuarioReposicaoDAO {
                     Usuario usuario = new Usuario(
                             rs.getInt("uid"),
                             rs.getString("cpf"),
-                            rs.getString("senha"),
                             rs.getString("nome"),
                             rs.getString("sobrenome"),
                             rs.getDate("data_nascimento").toLocalDate(),

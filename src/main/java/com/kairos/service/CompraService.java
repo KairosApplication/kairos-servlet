@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CompraService {
 
-    private CompraDAO compraDAO;
+    private final CompraDAO compraDAO;
 
     public CompraService() {
         this.compraDAO = new CompraDAO();
@@ -39,8 +39,6 @@ public class CompraService {
     }
 
     public List<Compra> listarTodos() {
-
-//
 
         return compraDAO.listarTodos();
     }

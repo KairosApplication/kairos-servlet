@@ -43,7 +43,8 @@
             </div>
 
             <form action="${pageContext.request.contextPath}/cadastro-page2"
-                  method="post">
+                  method="post"
+                  autocomplete="off">
 
                 <div class="field">
                     <label for="datadenascimento">Data de nascimento</label>

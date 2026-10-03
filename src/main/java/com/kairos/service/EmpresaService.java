@@ -4,6 +4,7 @@ import com.kairos.dao.EmpresaDAO;
 import com.kairos.model.Empresa;
 import com.kairos.utils.Regex;
 import com.kairos.utils.exceptions.exists.CnpjExistsException;
+import com.kairos.utils.exceptions.exists.NameExistsException;
 import com.kairos.utils.exceptions.notfound.EmpresaNotFoundException;
 import com.kairos.utils.exceptions.regex.InvalidCnpjRegexException;
 import com.kairos.utils.exceptions.system.ServiceException;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class EmpresaService {
 
-    private EmpresaDAO empresaDAO;
+    private final EmpresaDAO empresaDAO;
 
     public EmpresaService() {
         this.empresaDAO = new EmpresaDAO();
@@ -21,6 +22,10 @@ public class EmpresaService {
     public Empresa cadastrar(Empresa empresa) {
 
         validarCampos(empresa);
+
+        if (empresaDAO.existePorNome(empresa.getNome())) {
+            throw new NameExistsException("Nome já cadastrado");
+        }
 
         if (empresaDAO.existePorCnpj(empresa.getCnpj())) {
             throw new CnpjExistsException("CNPJ já cadastrado");
@@ -49,6 +54,21 @@ public class EmpresaService {
         return empresa;
     }
 
+    public Empresa buscarPorNome(String nome) {
+
+        if (nome == null || nome.isBlank()) {
+            throw new ServiceException("Nome da empresa é obrigatório");
+        }
+
+        Empresa empresa = empresaDAO.buscarPorNome(nome);
+
+        if (empresa == null) {
+            throw new EmpresaNotFoundException("Empresa não encontrada");
+        }
+
+        return empresa;
+    }
+
     public List<Empresa> listarTodas() {
 
         return empresaDAO.listarTodos();
@@ -60,6 +80,10 @@ public class EmpresaService {
 
         if (empresa.getId() <= 0) {
             throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        if (empresaDAO.existePorNomeExcetoId(empresa.getNome(), empresa.getId())) {
+            throw new NameExistsException("Nome já cadastrado");
         }
 
         if (empresaDAO.existePorCnpjExcetoId(empresa.getCnpj(), empresa.getId())) {
@@ -146,10 +170,36 @@ public class EmpresaService {
         return empresa;
     }
 
+    public boolean existePorNome(String nome) {
+
+        if (nome == null || nome.isBlank()) {
+            throw new ServiceException("Nome da empresa é obrigatório");
+        }
+
+        return empresaDAO.existePorNome(nome);
+    }
+
+    public boolean existePorNomeExcetoId(String nome, int id) {
+
+        if (nome == null || nome.isBlank()) {
+            throw new ServiceException("Nome da empresa é obrigatório");
+        }
+
+        if (id <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        return empresaDAO.existePorNomeExcetoId(nome, id);
+    }
+
     private void validarCampos(Empresa empresa) {
 
         if (empresa == null) {
             throw new ServiceException("Empresa não pode ser nula");
+        }
+
+        if (empresa.getNome() == null || empresa.getNome().isBlank()) {
+            throw new ServiceException("Nome da empresa é obrigatório");
         }
 
         if (empresa.getCnpj() == null || empresa.getCnpj().isBlank()) {
