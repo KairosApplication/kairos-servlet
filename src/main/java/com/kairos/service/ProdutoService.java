@@ -21,8 +21,8 @@ public class ProdutoService {
 
         validarCampos(produto);
 
-        if (produtoDAO.existePorNome(produto.getNome())) {
-            throw new NameExistsException("Nome já cadastrado");
+        if (produtoDAO.existePorNomeEMarca(produto.getNome(), produto.getMarca())) {
+            throw new NameExistsException("Produto já cadastrado para esta marca");
         }
 
         return produtoDAO.inserir(produto);
@@ -40,7 +40,7 @@ public class ProdutoService {
             throw new ProdutoNotFoundException("Produto não encontrado");
         }
 
-        return produtoDAO.inserir(produto);
+        return produto;
     }
 
     public Produto buscarPorNome(String nome) {
@@ -60,9 +60,26 @@ public class ProdutoService {
 
     public List<Produto> listarTodos() {
 
-//
-
         return produtoDAO.listarTodos();
+    }
+
+    public Produto buscarPorNomeEMarca(String nome, String marca) {
+
+        if (nome == null || nome.isBlank()) {
+            throw new ServiceException("Nome é obrigatório");
+        }
+
+        if (marca == null || marca.isBlank()) {
+            throw new ServiceException("Marca é obrigatória");
+        }
+
+        Produto produto = produtoDAO.buscarPorNomeEMarca(nome, marca);
+
+        if (produto == null) {
+            throw new ProdutoNotFoundException("Produto não encontrado");
+        }
+
+        return produto;
     }
 
     public void atualizar(Produto produto) {
@@ -113,6 +130,30 @@ public class ProdutoService {
         return produtoDAO.existeNomeExcetoId(nome, id);
     }
 
+    public boolean existePorNomeEMarca(String nome, String marca) {
+
+        if (nome == null || nome.isBlank()) {
+            throw new ServiceException("Nome é obrigatório");
+        }
+
+        if (marca == null || marca.isBlank()) {
+            throw new ServiceException("Marca é obrigatória");
+        }
+
+        return produtoDAO.existePorNomeEMarca(nome, marca);
+    }
+
+    public boolean existePorMarca(String marca) {
+
+        if (marca == null || marca.isBlank()) {
+            throw new ServiceException(
+                    "Marca é obrigatória"
+            );
+        }
+
+        return produtoDAO.existePorMarca(marca);
+    }
+
     private void validarCampos(Produto produto) {
 
         if (produto == null) {
@@ -130,5 +171,11 @@ public class ProdutoService {
         if (produto.getQuantidadeEstoque() < 0) {
             throw new StockQuantityException("A quantidade no estoque não pode ser menor que 0");
         }
+    }
+
+    public List<Produto> pesquisar(String pesquisa) {
+
+        return produtoDAO.pesquisar(pesquisa);
+
     }
 }

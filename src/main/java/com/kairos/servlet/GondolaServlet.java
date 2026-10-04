@@ -39,7 +39,8 @@ public class GondolaServlet extends HttpServlet {
             HttpServletResponse response
     ) throws ServletException, IOException {
 
-        String acao = request.getParameter("acao");
+        String acao =
+                request.getParameter("acao");
 
 
         // ==========================
@@ -48,13 +49,17 @@ public class GondolaServlet extends HttpServlet {
 
         if ("deletar".equals(acao)) {
 
-            String id = request.getParameter("id");
+            String id =
+                    request.getParameter("id");
 
             if (id != null && !id.isBlank()) {
 
-                int idGondola = Integer.parseInt(id);
+                int idGondola =
+                        Integer.parseInt(id);
 
-                gondolaService.deletarPorId(idGondola);
+                gondolaService.deletarPorId(
+                        idGondola
+                );
             }
 
             response.sendRedirect(
@@ -66,17 +71,25 @@ public class GondolaServlet extends HttpServlet {
 
 
         // ==========================
-        // LISTAR / PESQUISAR GÔNDOLAS
+        // PESQUISAR / LISTAR GÔNDOLAS
         // ==========================
 
-        String busca = request.getParameter("busca");
+        String busca =
+                request.getParameter("busca");
 
         List<Gondola> gondolas;
 
         if (busca != null && !busca.isBlank()) {
-            gondolas = gondolaService.pesquisar(busca.trim());
+
+            gondolas =
+                    gondolaService.pesquisar(
+                            busca.trim()
+                    );
+
         } else {
-            gondolas = gondolaService.listarTodos();
+
+            gondolas =
+                    gondolaService.listarTodos();
         }
 
 
@@ -91,7 +104,9 @@ public class GondolaServlet extends HttpServlet {
 
             List<Produto> produtos =
                     gondolaProdutoService
-                            .listarProdutosPorGondola(gondola);
+                            .listarProdutosPorGondola(
+                                    gondola
+                            );
 
             produtosPorGondola.put(
                     gondola.getId(),
@@ -101,41 +116,83 @@ public class GondolaServlet extends HttpServlet {
 
 
         // ==========================
-        // RECUPERAR ERRO DE VINCULAR PRODUTO
+        // RECUPERAR ERROS DE VINCULAR PRODUTO
         // ==========================
 
-        HttpSession session = request.getSession();
+        HttpSession session =
+                request.getSession();
 
-        Object erroVincularProduto =
-                session.getAttribute("erroVincularProduto");
+        String erroProdutoVincular =
+                (String) session.getAttribute(
+                        "erroProdutoVincular"
+                );
+
+        String erroMarcaVincular =
+                (String) session.getAttribute(
+                        "erroMarcaVincular"
+                );
 
         Object idGondolaVincularProduto =
-                session.getAttribute("idGondolaVincularProduto");
+                session.getAttribute(
+                        "idGondolaVincularProduto"
+                );
 
         Object nomeProdutoVincular =
-                session.getAttribute("nomeProdutoVincular");
+                session.getAttribute(
+                        "nomeProdutoVincular"
+                );
 
-        if (erroVincularProduto != null) {
+        Object marcaProdutoVincular =
+                session.getAttribute(
+                        "marcaProdutoVincular"
+                );
 
-            request.setAttribute(
-                    "erroVincularProduto",
-                    erroVincularProduto
-            );
 
-            request.setAttribute(
-                    "idGondolaVincularProduto",
-                    idGondolaVincularProduto
-            );
+        request.setAttribute(
+                "erroProdutoVincular",
+                erroProdutoVincular
+        );
 
-            request.setAttribute(
-                    "nomeProdutoVincular",
-                    nomeProdutoVincular
-            );
-        }
+        request.setAttribute(
+                "erroMarcaVincular",
+                erroMarcaVincular
+        );
 
-        session.removeAttribute("erroVincularProduto");
-        session.removeAttribute("idGondolaVincularProduto");
-        session.removeAttribute("nomeProdutoVincular");
+        request.setAttribute(
+                "idGondolaVincularProduto",
+                idGondolaVincularProduto
+        );
+
+        request.setAttribute(
+                "nomeProdutoVincular",
+                nomeProdutoVincular
+        );
+
+        request.setAttribute(
+                "marcaProdutoVincular",
+                marcaProdutoVincular
+        );
+
+
+        session.removeAttribute(
+                "erroProdutoVincular"
+        );
+
+        session.removeAttribute(
+                "erroMarcaVincular"
+        );
+
+        session.removeAttribute(
+                "idGondolaVincularProduto"
+        );
+
+        session.removeAttribute(
+                "nomeProdutoVincular"
+        );
+
+        session.removeAttribute(
+                "marcaProdutoVincular"
+        );
 
 
         // ==========================
@@ -169,13 +226,11 @@ public class GondolaServlet extends HttpServlet {
             HttpServletResponse response
     ) throws ServletException, IOException {
 
-        String id = request.getParameter("id");
+        String id =
+                request.getParameter("id");
 
         String capacidadeMaxima =
                 request.getParameter("capacidadeMaxima");
-
-        String nomeSetor =
-                request.getParameter("nomeSetor");
 
 
         // ==========================
@@ -184,23 +239,28 @@ public class GondolaServlet extends HttpServlet {
 
         if (id != null) {
 
-            int idGondola = Integer.parseInt(id);
+            int idGondola =
+                    Integer.parseInt(id);
 
             Gondola gondola =
-                    gondolaService.buscarPorId(idGondola);
+                    gondolaService.buscarPorId(
+                            idGondola
+                    );
 
             Map<String, String> erros =
                     new HashMap<>();
+
+            int capacidade = 0;
 
 
             // ==========================
             // CAPACIDADE MÁXIMA
             // ==========================
 
-            int capacidade = 0;
-
-            if (capacidadeMaxima == null
-                    || capacidadeMaxima.isBlank()) {
+            if (
+                    capacidadeMaxima == null
+                            || capacidadeMaxima.isBlank()
+            ) {
 
                 erros.put(
                         "capacidadeMaxima",
@@ -212,7 +272,9 @@ public class GondolaServlet extends HttpServlet {
                 try {
 
                     capacidade =
-                            Integer.parseInt(capacidadeMaxima);
+                            Integer.parseInt(
+                                    capacidadeMaxima
+                            );
 
                     if (capacidade < 1) {
 
@@ -227,38 +289,6 @@ public class GondolaServlet extends HttpServlet {
                     erros.put(
                             "capacidadeMaxima",
                             "Capacidade máxima deve ser um número válido"
-                    );
-                }
-            }
-
-
-            // ==========================
-            // SETOR
-            // ==========================
-
-            Setor setor = null;
-
-            if (nomeSetor == null || nomeSetor.isBlank()) {
-
-                erros.put(
-                        "setor",
-                        "Nome do setor é obrigatório"
-                );
-
-            } else {
-
-                try {
-
-                    setor =
-                            setorService.buscarPorNome(
-                                    nomeSetor.trim()
-                            );
-
-                } catch (SetorNotFoundException e) {
-
-                    erros.put(
-                            "setor",
-                            "Setor não encontrado"
                     );
                 }
             }
@@ -280,7 +310,6 @@ public class GondolaServlet extends HttpServlet {
                         idGondola
                 );
 
-
                 List<Gondola> gondolas =
                         gondolaService.listarTodos();
 
@@ -301,7 +330,6 @@ public class GondolaServlet extends HttpServlet {
                     );
                 }
 
-
                 request.setAttribute(
                         "gondolas",
                         gondolas
@@ -312,7 +340,6 @@ public class GondolaServlet extends HttpServlet {
                         produtosPorGondola
                 );
 
-
                 request.getRequestDispatcher(
                         "/WEB-INF/views/admin/gondolas.jsp"
                 ).forward(request, response);
@@ -322,15 +349,22 @@ public class GondolaServlet extends HttpServlet {
 
 
             // ==========================
-            // ATUALIZAR
+            // ATUALIZAR SOMENTE CAPACIDADE
             // ==========================
 
-            gondola.setCapacidadeMaxima(capacidade);
-            gondola.setSetor(setor);
+            gondola.setCapacidadeMaxima(
+                    capacidade
+            );
 
-            gondolaService.atualizar(gondola);
+            gondolaService.atualizar(
+                    gondola
+            );
+
 
         } else {
+
+            String nomeSetor =
+                    request.getParameter("nomeSetor");
 
 
             // ==========================
@@ -340,15 +374,17 @@ public class GondolaServlet extends HttpServlet {
             Map<String, String> erros =
                     new HashMap<>();
 
+            int capacidade = 0;
+
 
             // ==========================
             // CAPACIDADE MÁXIMA
             // ==========================
 
-            int capacidade = 0;
-
-            if (capacidadeMaxima == null
-                    || capacidadeMaxima.isBlank()) {
+            if (
+                    capacidadeMaxima == null
+                            || capacidadeMaxima.isBlank()
+            ) {
 
                 erros.put(
                         "capacidadeMaxima",
@@ -360,7 +396,9 @@ public class GondolaServlet extends HttpServlet {
                 try {
 
                     capacidade =
-                            Integer.parseInt(capacidadeMaxima);
+                            Integer.parseInt(
+                                    capacidadeMaxima
+                            );
 
                     if (capacidade < 1) {
 
@@ -386,7 +424,10 @@ public class GondolaServlet extends HttpServlet {
 
             Setor setor = null;
 
-            if (nomeSetor == null || nomeSetor.isBlank()) {
+            if (
+                    nomeSetor == null
+                            || nomeSetor.isBlank()
+            ) {
 
                 erros.put(
                         "setor",
@@ -423,7 +464,6 @@ public class GondolaServlet extends HttpServlet {
                         erros
                 );
 
-
                 List<Gondola> gondolas =
                         gondolaService.listarTodos();
 
@@ -444,7 +484,6 @@ public class GondolaServlet extends HttpServlet {
                     );
                 }
 
-
                 request.setAttribute(
                         "gondolas",
                         gondolas
@@ -454,7 +493,6 @@ public class GondolaServlet extends HttpServlet {
                         "produtosPorGondola",
                         produtosPorGondola
                 );
-
 
                 request.getRequestDispatcher(
                         "/WEB-INF/views/admin/gondolas.jsp"
@@ -468,17 +506,20 @@ public class GondolaServlet extends HttpServlet {
             // CRIAR GÔNDOLA
             // ==========================
 
-            Gondola gondola = new Gondola(
-                    capacidade,
-                    setor
-            );
+            Gondola gondola =
+                    new Gondola(
+                            capacidade,
+                            setor
+                    );
 
-            gondolaService.cadastrar(gondola);
+            gondolaService.cadastrar(
+                    gondola
+            );
         }
 
 
         // ==========================
-        // REDIRECT
+        // REDIRECIONAR
         // ==========================
 
         response.sendRedirect(

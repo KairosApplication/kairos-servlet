@@ -555,7 +555,7 @@
 
                 <div class="form-grid">
 
-                    <div class="form-field">
+                    <div class="form-field full-width">
 
                         <label for="capacidade-${gondola.id}">
                             Capacidade máxima
@@ -574,31 +574,6 @@
 
                             <div class="campo-erro">
                                     ${errosAtualizacao.capacidadeMaxima}
-                            </div>
-
-                        </c:if>
-
-                    </div>
-
-
-                    <div class="form-field">
-
-                        <label for="setor-${gondola.id}">
-                            Nome do setor
-                        </label>
-
-                        <input
-                                type="text"
-                                id="setor-${gondola.id}"
-                                name="nomeSetor"
-                                data-original="${gondola.setor.nome}"
-                                value="${idGondolaAtualizacao == gondola.id ? param.nomeSetor : gondola.setor.nome}"
-                        >
-
-                        <c:if test="${idGondolaAtualizacao == gondola.id and not empty errosAtualizacao.setor}">
-
-                            <div class="campo-erro">
-                                    ${errosAtualizacao.setor}
                             </div>
 
                         </c:if>
@@ -638,7 +613,7 @@
 
 <!-- ====================================================== -->
 <!-- POPUPS DE VINCULAR PRODUTO -->
-<!-- ASSOCIAÇÃO PELO NOME -->
+<!-- ASSOCIAÇÃO PELO NOME + MARCA -->
 <!-- ====================================================== -->
 
 <c:forEach
@@ -697,7 +672,35 @@
 
                 <div class="form-grid">
 
-                    <div class="form-field full-width">
+                    <!-- MARCA -->
+
+                    <div class="form-field">
+
+                        <label for="marca-produto-${gondola.id}">
+                            Marca do produto
+                        </label>
+
+                        <input
+                                type="text"
+                                id="marca-produto-${gondola.id}"
+                                name="marcaProduto"
+                                value="${idGondolaVincularProduto == gondola.id ? marcaProdutoVincular : ''}"
+                        >
+
+                        <c:if test="${idGondolaVincularProduto == gondola.id and not empty erroMarcaVincular}">
+
+                            <div class="campo-erro">
+                                    ${erroMarcaVincular}
+                            </div>
+
+                        </c:if>
+
+                    </div>
+
+
+                    <!-- NOME -->
+
+                    <div class="form-field">
 
                         <label for="nome-produto-${gondola.id}">
                             Nome do produto
@@ -708,14 +711,12 @@
                                 id="nome-produto-${gondola.id}"
                                 name="nomeProduto"
                                 value="${idGondolaVincularProduto == gondola.id ? nomeProdutoVincular : ''}"
-                                required
                         >
 
-
-                        <c:if test="${idGondolaVincularProduto == gondola.id and not empty erroVincularProduto}">
+                        <c:if test="${idGondolaVincularProduto == gondola.id and not empty erroProdutoVincular}">
 
                             <div class="campo-erro">
-                                    ${erroVincularProduto}
+                                    ${erroProdutoVincular}
                             </div>
 
                         </c:if>
@@ -829,6 +830,12 @@
                             type="hidden"
                             name="nomeProduto"
                             value="${produto.nome}"
+                    >
+
+                    <input
+                            type="hidden"
+                            name="marcaProduto"
+                            value="${produto.marca}"
                     >
 
 

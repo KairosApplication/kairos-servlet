@@ -17,6 +17,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/admin/gondolas-produtos")
 public class GondolaProdutoServlet extends HttpServlet {
@@ -48,15 +50,128 @@ public class GondolaProdutoServlet extends HttpServlet {
         String nomeProduto =
                 request.getParameter("nomeProduto");
 
+        String marcaProduto =
+                request.getParameter("marcaProduto");
+
 
         try {
 
             Gondola gondola =
-                    gondolaService.buscarPorId(idGondola);
+                    gondolaService.buscarPorId(
+                            idGondola
+                    );
+
+
+            // ==========================
+            // ERROS
+            // ==========================
+
+            Map<String, String> erros =
+                    new HashMap<>();
+
+
+            // ==========================
+            // VALIDAR PRODUTO
+            // ==========================
+
+            if (
+                    nomeProduto == null
+                            || nomeProduto.isBlank()
+            ) {
+
+                erros.put(
+                        "produto",
+                        "Nome do produto é obrigatório"
+                );
+
+            } else if (
+                    !produtoService.existePorNome(
+                            nomeProduto
+                    )
+            ) {
+
+                erros.put(
+                        "produto",
+                        "Produto não encontrado"
+                );
+            }
+
+
+            // ==========================
+            // VALIDAR MARCA
+            // ==========================
+
+            if (
+                    marcaProduto == null
+                            || marcaProduto.isBlank()
+            ) {
+
+                erros.put(
+                        "marca",
+                        "Marca do produto é obrigatória"
+                );
+
+            } else if (
+                    !produtoService.existePorMarca(
+                            marcaProduto
+                    )
+            ) {
+
+                erros.put(
+                        "marca",
+                        "Marca não encontrada"
+                );
+            }
+
+
+            // ==========================
+            // EXISTEM ERROS
+            // ==========================
+
+            if (!erros.isEmpty()) {
+
+                request.getSession().setAttribute(
+                        "erroProdutoVincular",
+                        erros.get("produto")
+                );
+
+                request.getSession().setAttribute(
+                        "erroMarcaVincular",
+                        erros.get("marca")
+                );
+
+                request.getSession().setAttribute(
+                        "idGondolaVincularProduto",
+                        idGondola
+                );
+
+                request.getSession().setAttribute(
+                        "nomeProdutoVincular",
+                        nomeProduto
+                );
+
+                request.getSession().setAttribute(
+                        "marcaProdutoVincular",
+                        marcaProduto
+                );
+
+                response.sendRedirect(
+                        request.getContextPath()
+                                + "/admin/gondolas"
+                );
+
+                return;
+            }
+
+
+            // ==========================
+            // BUSCAR PRODUTO
+            // ==========================
 
             Produto produto =
-                    produtoService.buscarPorNome(
-                            nomeProduto
+                    produtoService.buscarPorNomeEMarca(
+                            nomeProduto,
+                            marcaProduto
                     );
 
             GondolaProduto gondolaProduto =
@@ -106,8 +221,12 @@ public class GondolaProdutoServlet extends HttpServlet {
                 | ProdutoNotFoundException e
         ) {
 
+            // ==========================
+            // ERRO
+            // ==========================
+
             request.getSession().setAttribute(
-                    "erroVincularProduto",
+                    "erroProdutoVincular",
                     e.getMessage()
             );
 
@@ -120,6 +239,11 @@ public class GondolaProdutoServlet extends HttpServlet {
                     "nomeProdutoVincular",
                     nomeProduto
             );
+
+            request.getSession().setAttribute(
+                    "marcaProdutoVincular",
+                    marcaProduto
+            );
         }
 
 
@@ -128,7 +252,8 @@ public class GondolaProdutoServlet extends HttpServlet {
         // ==========================
 
         response.sendRedirect(
-                request.getContextPath() + "/admin/gondolas"
+                request.getContextPath()
+                        + "/admin/gondolas"
         );
     }
 }

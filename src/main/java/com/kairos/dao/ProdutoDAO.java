@@ -108,6 +108,41 @@ public class ProdutoDAO {
         }
     }
 
+    public Produto buscarPorNomeEMarca(String nome, String marca) {
+
+        String sql = """
+                 SELECT id, marca, nome, quantidade_estoque
+                 FROM produtos
+                 WHERE nome = ? AND marca = ?
+                 """;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, nome);
+            statement.setString(2, marca);
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                if (rs.next()) {
+
+                    return new Produto(
+                            rs.getInt("id"),
+                            rs.getString("marca"),
+                            rs.getString("nome"),
+                            rs.getInt("quantidade_estoque")
+                    );
+                }
+
+                return null;
+            }
+
+        } catch (SQLException e) {
+
+            throw new DAOException("Erro ao buscar produto por nome e marca", e);
+        }
+    }
+
     public List<Produto> listarTodos() {
 
         String sql = """
@@ -218,7 +253,7 @@ public class ProdutoDAO {
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, id);
-            statement.setString(1, nome);
+            statement.setString(2, nome);
 
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next();
@@ -226,6 +261,98 @@ public class ProdutoDAO {
 
         } catch (SQLException e) {
             throw new DAOException("Erro ao verificar nome de outro produto");
+        }
+    }
+
+    public boolean existePorNomeEMarca(String nome, String marca) {
+
+        String sql = """
+                 SELECT 1
+                 FROM produtos
+                 WHERE nome = ? AND marca = ?
+                 """;
+
+        try (
+                Connection connection = ConnectionFactory.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+
+            statement.setString(1, nome);
+            statement.setString(2, marca);
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+
+            throw new DAOException("Erro ao verificar produto por nome e marca");
+        }
+    }
+
+    public boolean existePorMarca(String marca) {
+
+        String sql = """
+             SELECT 1
+             FROM produtos
+             WHERE marca = ?
+             """;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, marca);
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao verificar existência da marca", e);
+        }
+    }
+
+    public List<Produto> pesquisar(String pesquisa) {
+
+        String sql = """
+                 SELECT id, marca, nome, quantidade_estoque
+                 FROM produtos
+                 WHERE CAST(id AS TEXT) ILIKE ?
+                       OR marca ILIKE ?
+                       OR nome ILIKE ?
+                       OR CAST(quantidade_estoque AS TEXT) ILIKE ?
+                 """;
+
+        List<Produto> produtos = new ArrayList<>();
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            for (int i = 1; i <= 4; i++) {
+                statement.setString(i, pesquisa);
+            }
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                while (rs.next()) {
+
+                    Produto produto = new Produto(
+                            rs.getInt("id"),
+                            rs.getString("marca"),
+                            rs.getString("nome"),
+                            rs.getInt("quantidade_estoque")
+                    );
+
+                    produtos.add(produto);
+                }
+
+                return produtos;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao listar produtos por pesquisa");
         }
     }
 }
