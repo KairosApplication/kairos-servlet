@@ -33,11 +33,15 @@ public class UsuarioReposicaoDAO {
             statement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao vincular usuário à reposição", e);
+            throw new DAOException(
+                    "Erro ao vincular usuário à reposição",
+                    e
+            );
         }
     }
 
-    public void desvincular(Usuario usuario, Reposicao reposicao) {
+
+    public void desvincular(int usuarioId, Reposicao reposicao) {
 
         String sql = """
                      DELETE FROM usuarios_reposicoes
@@ -48,15 +52,19 @@ public class UsuarioReposicaoDAO {
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, usuario.getId());
+            statement.setInt(1, usuarioId);
             statement.setInt(2, reposicao.getId());
 
             statement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao desvincular usuário da reposição", e);
+            throw new DAOException(
+                    "Erro ao desvincular usuário da reposição",
+                    e
+            );
         }
     }
+
 
     public List<Usuario> listarUsuariosPorReposicao(Reposicao reposicao) {
 
@@ -109,7 +117,10 @@ public class UsuarioReposicaoDAO {
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao listar usuários da reposição", e);
+            throw new DAOException(
+                    "Erro ao listar usuários da reposição",
+                    e
+            );
         }
     }
 }

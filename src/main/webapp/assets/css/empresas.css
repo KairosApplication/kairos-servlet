@@ -331,7 +331,7 @@ body {
     background: var(--green);
     color: #ffffff;
 
-    text-align: left;
+    text-align: center;
     white-space: nowrap;
 
     font-size: 13px;
@@ -348,15 +348,11 @@ body {
 
 .user-row td {
     height: 60px;
-
     padding: 0 16px;
-
     border-bottom: 1px solid #e5edf3;
-
     color: #355572;
-
+    text-align: center;
     white-space: nowrap;
-
     vertical-align: middle;
 }
 
@@ -370,11 +366,11 @@ body {
    ========================= */
 
 .actions {
+    min-width: 145px;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 7px;
-
-    min-width: 145px;
 }
 
 .update-button,
@@ -809,4 +805,37 @@ body {
 
 .logout-button:hover {
     background-color: #a61f1f;
+}
+
+/* =========================
+   AUTOFILL
+   ========================= */
+
+/* Inputs dos popups */
+.form-field input:-webkit-autofill,
+.form-field input:-webkit-autofill:hover,
+.form-field input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #f7fafc inset !important;
+    -webkit-text-fill-color: #294966 !important;
+}
+
+/* Campo Buscar */
+.search-input:-webkit-autofill,
+.search-input:-webkit-autofill:hover,
+.search-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #edf3f8 inset !important;
+    -webkit-text-fill-color: #294966 !important;
+}
+
+/* =========================
+   MENSAGEM DE TABELA VAZIA
+   ========================= */
+
+.users-table td.empty-message {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+    color: #6f8496 !important;
+    font-size: 14px;
+    font-weight: 400;
 }

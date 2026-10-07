@@ -1,6 +1,8 @@
 package com.kairos.service;
 
+import com.kairos.dao.HistoricoReposicaoDAO;
 import com.kairos.dao.ReposicaoDAO;
+import com.kairos.model.HistoricoReposicao;
 import com.kairos.model.Reposicao;
 import com.kairos.utils.exceptions.notfound.GondolaNotFoundException;
 import com.kairos.utils.exceptions.notfound.ProdutoNotFoundException;
@@ -14,11 +16,13 @@ import java.util.List;
 public class ReposicaoService {
 
     private final ReposicaoDAO reposicaoDAO;
+    private final HistoricoReposicaoDAO historicoReposicaoDAO;
     private final ProdutoService produtoService;
     private final GondolaService gondolaService;
 
     public ReposicaoService() {
         this.reposicaoDAO = new ReposicaoDAO();
+        this.historicoReposicaoDAO = new HistoricoReposicaoDAO();
         this.produtoService = new ProdutoService();
         this.gondolaService = new GondolaService();
     }
@@ -35,7 +39,22 @@ public class ReposicaoService {
             throw new GondolaNotFoundException("Gôndola não encontrada");
         }
 
-        return reposicaoDAO.inserir(reposicao);
+        Reposicao reposicaoSalva = reposicaoDAO.inserir(reposicao);
+
+        if (reposicaoSalva == null) {
+            throw new ServiceException("Não foi possível salvar a reposição");
+        }
+
+        HistoricoReposicao historico = new HistoricoReposicao(
+                reposicaoSalva.getId(),
+                reposicaoSalva.getProduto().getMarca(),
+                reposicaoSalva.getProduto().getNome(),
+                reposicaoSalva.getGondola().getId()
+        );
+
+        historicoReposicaoDAO.salvar(historico);
+
+        return reposicaoSalva;
     }
 
     public Reposicao buscarPorId(int id) {
@@ -123,5 +142,10 @@ public class ReposicaoService {
         if (reposicao.getMotivoReposicao() == null || reposicao.getMotivoReposicao().isBlank()) {
             throw new ServiceException("Motivo da reposição é obrigatório");
         }
+    }
+
+    public List<Reposicao> pesquisar(String pesquisa) {
+
+        return reposicaoDAO.pesquisar(pesquisa);
     }
 }

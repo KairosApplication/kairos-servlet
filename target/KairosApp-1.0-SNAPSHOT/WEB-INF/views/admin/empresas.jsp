@@ -11,7 +11,8 @@
 
     <title>Kairos - Empresas</title>
 
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/empresas.css">
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/assets/css/empresas.css">
 
 </head>
 
@@ -32,13 +33,16 @@
 
     <nav class="menu">
 
-        <a href="${pageContext.request.contextPath}/admin/usuarios" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/usuarios"
+           class="menu-item">
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/usuario.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Usuários</span>
@@ -46,13 +50,16 @@
         </a>
 
 
-        <a href="#" class="menu-item active">
+        <a href="#"
+           class="menu-item active">
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/empresa.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Empresa</span>
@@ -60,13 +67,16 @@
         </a>
 
 
-        <a href="${pageContext.request.contextPath}/admin/setores" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/setores"
+           class="menu-item">
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/setor.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Setor</span>
@@ -74,13 +84,16 @@
         </a>
 
 
-        <a href="${pageContext.request.contextPath}/admin/gondolas" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/gondolas"
+           class="menu-item">
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/gondola.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Gôndola</span>
@@ -88,13 +101,16 @@
         </a>
 
 
-        <a href="${pageContext.request.contextPath}/admin/produtos" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/produtos"
+           class="menu-item">
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/produto.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Produto</span>
@@ -102,13 +118,16 @@
         </a>
 
 
-        <a href="${pageContext.request.contextPath}/admin/reposicoes" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/reposicoes"
+           class="menu-item">
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/reposicao.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Reposição</span>
@@ -116,13 +135,16 @@
         </a>
 
 
-        <a href="${pageContext.request.contextPath}/admin/alertas" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/alertas"
+           class="menu-item">
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/alerta.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Alerta</span>
@@ -130,13 +152,16 @@
         </a>
 
 
-        <a href="${pageContext.request.contextPath}/admin/compras" class="menu-item">
+        <a href="${pageContext.request.contextPath}/admin/compras"
+           class="menu-item">
 
             <span class="menu-icon">
+
                 <img
                         src="${pageContext.request.contextPath}/assets/images/compra.svg"
                         alt=""
                 >
+
             </span>
 
             <span>Compra</span>
@@ -214,17 +239,35 @@
 
         <div class="table-wrapper">
 
-            <table class="users-table">
+            <table class="users-table ${empty empresas ? 'table-empty' : ''}">
 
                 <thead>
 
                 <tr>
 
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>CNPJ</th>
-                    <th>Tipo de plano</th>
-                    <th>Ações</th>
+                    <c:choose>
+
+                        <c:when test="${empty empresas}">
+
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+
+                        </c:when>
+
+                        <c:otherwise>
+
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>CNPJ</th>
+                            <th>Tipo de plano</th>
+                            <th>Ações</th>
+
+                        </c:otherwise>
+
+                    </c:choose>
 
                 </tr>
 
@@ -233,55 +276,79 @@
 
                 <tbody>
 
-                <c:forEach
-                        var="empresa"
-                        items="${empresas}"
-                >
+                <c:choose>
 
-                    <tr class="user-row">
+                    <c:when test="${empty empresas}">
 
-                        <td>
-                                ${empresa.id}
-                        </td>
+                        <tr>
 
-                        <td>
-                                ${empresa.nome}
-                        </td>
-
-                        <td>
-                                ${empresa.cnpj}
-                        </td>
-
-                        <td>
-                                ${empresa.tipoPlano}
-                        </td>
-
-                        <td class="actions">
-
-                            <!-- ATUALIZAR -->
-
-                            <label
-                                    for="update-company-${empresa.id}"
-                                    class="update-button"
+                            <td
+                                    colspan="5"
+                                    class="empty-message"
                             >
-                                Atualizar
-                            </label>
+                                Nenhuma empresa cadastrada.
+                            </td>
+
+                        </tr>
+
+                    </c:when>
 
 
-                            <!-- DELETAR -->
+                    <c:otherwise>
 
-                            <label
-                                    for="delete-company-${empresa.id}"
-                                    class="delete-button"
-                            >
-                                Deletar
-                            </label>
+                        <c:forEach
+                                var="empresa"
+                                items="${empresas}"
+                        >
 
-                        </td>
+                            <tr class="user-row">
 
-                    </tr>
+                                <td>
+                                        ${empresa.id}
+                                </td>
 
-                </c:forEach>
+                                <td>
+                                        ${empresa.nome}
+                                </td>
+
+                                <td>
+                                        ${empresa.cnpj}
+                                </td>
+
+                                <td>
+                                        ${empresa.tipoPlano}
+                                </td>
+
+                                <td class="actions">
+
+                                    <!-- ATUALIZAR -->
+
+                                    <label
+                                            for="update-company-${empresa.id}"
+                                            class="update-button"
+                                    >
+                                        Atualizar
+                                    </label>
+
+
+                                    <!-- DELETAR -->
+
+                                    <label
+                                            for="delete-company-${empresa.id}"
+                                            class="delete-button"
+                                    >
+                                        Deletar
+                                    </label>
+
+                                </td>
+
+                            </tr>
+
+                        </c:forEach>
+
+                    </c:otherwise>
+
+                </c:choose>
 
                 </tbody>
 
@@ -345,6 +412,7 @@
                         value="${empresa.id}"
                 >
 
+
                 <div class="form-grid">
 
                     <div class="form-field full-width">
@@ -357,7 +425,6 @@
                                 id="tipoPlano-${empresa.id}"
                                 name="tipoPlano"
                                 data-original="${empresa.tipoPlano != null ? empresa.tipoPlano.name() : ''}"
-
                         >
 
                             <option
@@ -367,6 +434,7 @@
                                 Selecione o tipo de plano
                             </option>
 
+
                             <option
                                     value="GRATUITO"
                                 ${idEmpresaAtualizacao == empresa.id && param.tipoPlano == 'GRATUITO' || idEmpresaAtualizacao != empresa.id && empresa.tipoPlano.name() == 'GRATUITO' ? 'selected' : ''}
@@ -374,12 +442,14 @@
                                 Gratuito
                             </option>
 
+
                             <option
                                     value="STANDART"
                                 ${idEmpresaAtualizacao == empresa.id && param.tipoPlano == 'STANDART' || idEmpresaAtualizacao != empresa.id && empresa.tipoPlano.name() == 'STANDART' ? 'selected' : ''}
                             >
                                 Standart
                             </option>
+
 
                             <option
                                     value="PREMIUM"
@@ -389,6 +459,7 @@
                             </option>
 
                         </select>
+
 
                         <c:if test="${idEmpresaAtualizacao == empresa.id and not empty errosAtualizacao.tipoPlano}">
 
@@ -412,6 +483,7 @@
                     >
                         Cancelar
                     </label>
+
 
                     <button
                             type="submit"
@@ -560,6 +632,7 @@ ${not empty erros ? 'checked' : ''}
                             value="${param.nome}"
                     >
 
+
                     <c:if test="${not empty erros.nome}">
 
                         <div class="campo-erro">
@@ -584,6 +657,7 @@ ${not empty erros ? 'checked' : ''}
                             value="${param.cnpj}"
                     >
 
+
                     <c:if test="${not empty erros.cnpj}">
 
                         <div class="campo-erro">
@@ -601,6 +675,7 @@ ${not empty erros ? 'checked' : ''}
                         Tipo de plano
                     </label>
 
+
                     <select
                             id="tipoPlano"
                             name="tipoPlano"
@@ -613,6 +688,7 @@ ${not empty erros ? 'checked' : ''}
                             Selecione o tipo de plano
                         </option>
 
+
                         <option
                                 value="GRATUITO"
                         ${param.tipoPlano == 'GRATUITO' ? 'selected' : ''}
@@ -620,12 +696,14 @@ ${not empty erros ? 'checked' : ''}
                             Gratuito
                         </option>
 
+
                         <option
                                 value="STANDART"
                         ${param.tipoPlano == 'STANDART' ? 'selected' : ''}
                         >
                             Standart
                         </option>
+
 
                         <option
                                 value="PREMIUM"
@@ -660,6 +738,7 @@ ${not empty erros ? 'checked' : ''}
                 >
                     Cancelar
                 </label>
+
 
                 <button
                         type="submit"
@@ -721,6 +800,7 @@ ${not empty erros ? 'checked' : ''}
             >
                 Cancelar
             </label>
+
 
             <a
                     href="${pageContext.request.contextPath}/logout"

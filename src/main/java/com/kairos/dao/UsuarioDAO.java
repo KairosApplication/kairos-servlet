@@ -174,15 +174,15 @@ public class UsuarioDAO {
     public int atualizar(Usuario usuario) {
 
         String sql = """
-                 UPDATE usuarios
-                 SET cpf = ?,
-                     nome = ?,
-                     sobrenome = ?,
-                     data_nascimento = ?,
-                     cep = ?,
-                     email = ?
-                 WHERE id = ?
-                 """;
+             UPDATE usuarios
+             SET cpf = ?,
+                 nome = ?,
+                 sobrenome = ?,
+                 data_nascimento = ?,
+                 cep = ?,
+                 email = ?
+             WHERE id = ?
+             """;
 
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {

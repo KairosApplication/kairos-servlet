@@ -1,16 +1,21 @@
 package com.kairos.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Reposicao {
+
     private int id;
     private Produto produto;
     private Timestamp dataReposicao;
     private int quantidadeReposto;
     private String motivoReposicao;
     private Gondola gondola;
+    private HistoricoReposicao historicoReposicao;
+    private List<HistoricoUsuarioReposicao> historicoUsuariosReposicoes;
 
-    public Reposicao(int id, Produto produto, Timestamp dataReposicao, int quantidadeReposto, String motivoReposicao, Gondola gondola) {
+    public Reposicao(int id, Produto produto, Timestamp dataReposicao,
+                     int quantidadeReposto, String motivoReposicao, Gondola gondola) {
         this.id = id;
         this.produto = produto;
         this.dataReposicao = dataReposicao;
@@ -19,7 +24,8 @@ public class Reposicao {
         this.gondola = gondola;
     }
 
-    public Reposicao(Produto produto, Timestamp dataReposicao, int quantidadeReposto, String motivoReposicao, Gondola gondola) {
+    public Reposicao(Produto produto, Timestamp dataReposicao,
+                     int quantidadeReposto, String motivoReposicao, Gondola gondola) {
         this.produto = produto;
         this.dataReposicao = dataReposicao;
         this.quantidadeReposto = quantidadeReposto;
@@ -27,7 +33,8 @@ public class Reposicao {
         this.gondola = gondola;
     }
 
-    public Reposicao(Produto produto, Timestamp dataReposicao, int quantidadeReposto, Gondola gondola) {
+    public Reposicao(Produto produto, Timestamp dataReposicao,
+                     int quantidadeReposto, Gondola gondola) {
         this.produto = produto;
         this.dataReposicao = dataReposicao;
         this.quantidadeReposto = quantidadeReposto;
@@ -59,6 +66,14 @@ public class Reposicao {
         return gondola;
     }
 
+    public HistoricoReposicao getHistoricoReposicao() {
+        return historicoReposicao;
+    }
+
+    public List<HistoricoUsuarioReposicao> getHistoricoUsuariosReposicoes() {
+        return historicoUsuariosReposicoes;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -83,23 +98,54 @@ public class Reposicao {
         this.gondola = gondola;
     }
 
+    public void setHistoricoReposicao(HistoricoReposicao historicoReposicao) {
+        this.historicoReposicao = historicoReposicao;
+    }
+
+    public void setHistoricoUsuariosReposicoes(
+            List<HistoricoUsuarioReposicao> historicoUsuariosReposicoes) {
+        this.historicoUsuariosReposicoes = historicoUsuariosReposicoes;
+    }
+
     @Override
     public String toString() {
+
+        String produto;
+
+        if (getProduto() != null) {
+            produto = "\n   ID: " + getProduto().getId() +
+                    "\n   Marca: " + getProduto().getMarca() +
+                    "\n   Nome: " + getProduto().getNome() +
+                    "\n   Quantidade no estoque: " + getProduto().getQuantidadeEstoque();
+        } else {
+            produto = "\n   Marca: " + getHistoricoReposicao().getProdutoMarca() +
+                    "\n   Nome: " + getHistoricoReposicao().getProdutoNome();
+        }
+
+        String gondola;
+
+        if (getGondola() != null) {
+            gondola = "\n   ID: " + getGondola().getId() +
+                    "\n   Capacidade máxima: " + getGondola().getCapacidadeMaxima();
+
+            if (getGondola().getSetor() != null) {
+                gondola +=
+                        "\n   Setor:" +
+                                "\n      ID: " + getGondola().getSetor().getId() +
+                                "\n      Nome: " + getGondola().getSetor().getNome() +
+                                "\n      Categoria setor: " + getGondola().getSetor().getCategoria();
+            }
+        } else {
+            gondola = "\n   ID: " + getHistoricoReposicao().getGondolaId();
+        }
+
         return "\n-= Reposição =- " +
                 "\nID: " + getId() +
-                "\nProduto: " +
-                "\n   ID: " + getProduto().getId() +
-                "\n   Marca: " + getProduto().getMarca() +
-                "\n   Nome: " + getProduto().getNome() +
-                "\n   Quantidade no estoque: " + getProduto().getQuantidadeEstoque() +
+                "\nProduto:" +
+                produto +
                 "\nQuantidade reposto: " + getQuantidadeReposto() +
                 "\nMotivo reposição: " + getMotivoReposicao() +
                 "\nGôndola:" +
-                "\n   ID: " + getGondola().getId() +
-                "\n   Capacidade máxima: " + getGondola().getCapacidadeMaxima() +
-                "\n   Setor:" +
-                "\n      ID: " + getGondola().getSetor().getId() +
-                "\n      Nome: " + getGondola().getSetor().getNome() +
-                "\n      Categoria setor: " + getGondola().getSetor().getCategoria();
+                gondola;
     }
 }

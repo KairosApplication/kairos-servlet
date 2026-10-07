@@ -260,10 +260,27 @@
 
                 <tr>
 
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Categoria</th>
-                    <th>Ações</th>
+                    <c:choose>
+
+                        <c:when test="${empty setores}">
+
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+
+                        </c:when>
+
+                        <c:otherwise>
+
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Ações</th>
+
+                        </c:otherwise>
+
+                    </c:choose>
 
                 </tr>
 
@@ -272,51 +289,75 @@
 
                 <tbody>
 
-                <c:forEach
-                        var="setor"
-                        items="${setores}"
-                >
+                <c:choose>
 
-                    <tr class="user-row">
+                    <c:when test="${empty setores}">
 
-                        <td>
-                                ${setor.id}
-                        </td>
+                        <tr>
 
-                        <td>
-                                ${setor.nome}
-                        </td>
-
-                        <td>
-                                ${setor.categoria}
-                        </td>
-
-                        <td class="actions">
-
-                            <!-- ATUALIZAR -->
-
-                            <label
-                                    for="update-sector-${setor.id}"
-                                    class="update-button"
+                            <td
+                                    colspan="4"
+                                    class="empty-message"
                             >
-                                Atualizar
-                            </label>
+                                Nenhum setor cadastrado.
+                            </td>
+
+                        </tr>
+
+                    </c:when>
 
 
-                            <!-- DELETAR -->
+                    <c:otherwise>
 
-                            <label
-                                    for="delete-sector-${setor.id}"
-                                    class="delete-button"
-                            >
-                                Deletar
-                            </label>
+                        <c:forEach
+                                var="setor"
+                                items="${setores}"
+                        >
 
-                        </td>
+                            <tr class="user-row">
 
-                    </tr>
+                                <td>
+                                        ${setor.id}
+                                </td>
 
-                </c:forEach>
+                                <td>
+                                        ${setor.nome}
+                                </td>
+
+                                <td>
+                                        ${setor.categoria}
+                                </td>
+
+                                <td class="actions">
+
+                                    <!-- ATUALIZAR -->
+
+                                    <label
+                                            for="update-sector-${setor.id}"
+                                            class="update-button"
+                                    >
+                                        Atualizar
+                                    </label>
+
+
+                                    <!-- DELETAR -->
+
+                                    <label
+                                            for="delete-sector-${setor.id}"
+                                            class="delete-button"
+                                    >
+                                        Deletar
+                                    </label>
+
+                                </td>
+
+                            </tr>
+
+                        </c:forEach>
+
+                    </c:otherwise>
+
+                </c:choose>
 
                 </tbody>
 

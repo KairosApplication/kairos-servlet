@@ -197,7 +197,7 @@
 
         <div class="table-wrapper">
 
-            <table class="users-table">
+            <table class="users-table ${empty usuarios ? 'table-empty' : ''}">
 
                 <thead>
 
@@ -221,214 +221,252 @@
 
                 <tbody>
 
-                <c:forEach
-                        var="usuario"
-                        items="${usuarios}"
-                >
+                <c:choose>
 
-                    <tr class="user-row">
+                    <c:when test="${empty usuarios}">
 
-                        <td>${usuario.id}</td>
+                        <tr>
 
-                        <td>${usuario.cpfFormatado}</td>
-
-                        <td>${usuario.nome}</td>
-
-                        <td>${usuario.sobrenome}</td>
-
-                        <td>${usuario.dataNascimentoFormatada}</td>
-
-                        <td>${usuario.cepFormatado}</td>
-
-                        <td>${usuario.tipoUsuario}</td>
-
-                        <td>${usuario.email}</td>
-
-                        <td>${usuario.empresa.nome}</td>
-
-                        <td class="actions">
-
-                            <!-- VER MAIS: somente FUNCIONARIO -->
-
-                            <c:choose>
-
-                                <c:when test="${usuario.tipoUsuario.name() == 'FUNCIONARIO'}">
-
-                                    <input
-                                            type="checkbox"
-                                            id="details-${usuario.id}"
-                                            class="details-toggle"
-                                    >
-
-                                    <label
-                                            for="details-${usuario.id}"
-                                            class="details-button"
-                                    >
-
-                                        <span class="button-text">
-                                            Ver mais
-                                        </span>
-
-                                        <span class="arrow">
-                                            ▼
-                                        </span>
-
-                                    </label>
-
-                                </c:when>
-
-                                <c:otherwise>
-
-                                    <span class="details-button-placeholder"></span>
-
-                                </c:otherwise>
-
-                            </c:choose>
-
-
-                            <!-- ATUALIZAR: FUNCIONARIO e GERENTE -->
-
-                            <label
-                                    for="update-user-${usuario.id}"
-                                    class="update-button"
-                                    onclick="limparFormularioAtualizacao(${usuario.id})"
+                            <td
+                                    colspan="10"
+                                    class="empty-message"
                             >
-                                Atualizar
-                            </label>
-
-
-                            <!-- DELETAR: FUNCIONARIO e GERENTE -->
-
-                            <label
-                                    for="delete-user-${usuario.id}"
-                                    class="delete-button"
-                            >
-                                Deletar
-                            </label>
-
-                        </td>
-
-                    </tr>
-
-
-                    <!-- DETALHES: somente FUNCIONARIO -->
-
-                    <c:if test="${usuario.tipoUsuario.name() == 'FUNCIONARIO'}">
-
-                        <tr
-                                class="details-row"
-                                id="details-row-${usuario.id}"
-                        >
-
-                            <td colspan="10">
-
-                                <div class="details-box">
-
-                                    <div class="details-header">
-
-                                        <h2>
-                                            Gôndolas Associadas
-                                        </h2>
-
-                                        <label
-                                                for="link-gondola-${usuario.id}"
-                                                class="link-button"
-                                        >
-                                            Vincular
-                                        </label>
-
-                                    </div>
-
-
-                                    <table class="details-table">
-
-                                        <thead>
-
-                                        <tr>
-
-                                            <th>Campo</th>
-                                            <th>Informação</th>
-                                            <th>Ação</th>
-
-                                        </tr>
-
-                                        </thead>
-
-
-                                        <tbody>
-
-                                        <c:forEach
-                                                var="gondola"
-                                                items="${gondolasPorUsuario[usuario.id]}"
-                                        >
-
-                                            <tr>
-
-                                                <td>
-                                                    ID da gôndola
-                                                </td>
-
-                                                <td class="id-gondola">
-                                                        ${gondola.id}
-                                                </td>
-
-                                                <td
-                                                        rowspan="3"
-                                                        class="gondola-action-cell"
-                                                >
-
-                                                    <label
-                                                            for="unlink-gondola-${usuario.id}-${gondola.id}"
-                                                            class="unlink-button"
-                                                    >
-                                                        Desvincular
-                                                    </label>
-
-                                                </td>
-
-                                            </tr>
-
-
-                                            <tr>
-
-                                                <td>
-                                                    Capacidade máxima da gôndola
-                                                </td>
-
-                                                <td>
-                                                        ${gondola.capacidadeMaxima}
-                                                </td>
-
-                                            </tr>
-
-
-                                            <tr>
-
-                                                <td>
-                                                    Nome do setor
-                                                </td>
-
-                                                <td>
-                                                        ${gondola.setor.nome}
-                                                </td>
-
-                                            </tr>
-
-                                        </c:forEach>
-
-                                        </tbody>
-
-                                    </table>
-
-                                </div>
-
+                                Nenhum usuário cadastrado.
                             </td>
 
                         </tr>
 
-                    </c:if>
+                    </c:when>
 
-                </c:forEach>
+                    <c:otherwise>
+
+                        <c:forEach
+                                var="usuario"
+                                items="${usuarios}"
+                        >
+
+                            <tr class="user-row">
+
+                                <td>${usuario.id}</td>
+
+                                <td>${usuario.cpfFormatado}</td>
+
+                                <td>${usuario.nome}</td>
+
+                                <td>${usuario.sobrenome}</td>
+
+                                <td>${usuario.dataNascimentoFormatada}</td>
+
+                                <td>${usuario.cepFormatado}</td>
+
+                                <td>${usuario.tipoUsuario}</td>
+
+                                <td>${usuario.email}</td>
+
+                                <td>${usuario.empresa.nome}</td>
+
+                                <td class="actions">
+
+                                    <c:choose>
+
+                                        <c:when test="${usuario.tipoUsuario.name() == 'FUNCIONARIO'}">
+
+                                            <input
+                                                    type="checkbox"
+                                                    id="details-${usuario.id}"
+                                                    class="details-toggle"
+                                            >
+
+                                            <label
+                                                    for="details-${usuario.id}"
+                                                    class="details-button"
+                                            >
+
+                                                <span class="button-text">
+                                                    Ver mais
+                                                </span>
+
+                                                <span class="arrow">
+                                                    ▼
+                                                </span>
+
+                                            </label>
+
+                                        </c:when>
+
+                                        <c:otherwise>
+
+                                            <span class="details-button-placeholder"></span>
+
+                                        </c:otherwise>
+
+                                    </c:choose>
+
+
+                                    <label
+                                            for="update-user-${usuario.id}"
+                                            class="update-button"
+                                            onclick="limparFormularioAtualizacao(${usuario.id})"
+                                    >
+                                        Atualizar
+                                    </label>
+
+
+                                    <label
+                                            for="delete-user-${usuario.id}"
+                                            class="delete-button"
+                                    >
+                                        Deletar
+                                    </label>
+
+                                </td>
+
+                            </tr>
+
+
+                            <c:if test="${usuario.tipoUsuario.name() == 'FUNCIONARIO'}">
+
+                                <tr
+                                        class="details-row"
+                                        id="details-row-${usuario.id}"
+                                >
+
+                                    <td colspan="10">
+
+                                        <div class="details-box">
+
+                                            <div class="details-header">
+
+                                                <h2>
+                                                    Gôndolas Associadas
+                                                </h2>
+
+                                                <label
+                                                        for="link-gondola-${usuario.id}"
+                                                        class="link-button"
+                                                >
+                                                    Vincular
+                                                </label>
+
+                                            </div>
+
+
+                                            <table class="details-table ${empty gondolasPorUsuario[usuario.id] ? 'table-empty' : ''}">
+
+                                                <thead>
+
+                                                <tr>
+
+                                                    <th>Campo</th>
+                                                    <th>Informação</th>
+                                                    <th>Ação</th>
+
+                                                </tr>
+
+                                                </thead>
+
+
+                                                <tbody>
+
+                                                <c:choose>
+
+                                                    <c:when test="${empty gondolasPorUsuario[usuario.id]}">
+
+                                                        <tr>
+
+                                                            <td
+                                                                    colspan="3"
+                                                                    class="empty-message"
+                                                            >
+                                                                Nenhuma gôndola associada a este usuário.
+                                                            </td>
+
+                                                        </tr>
+
+                                                    </c:when>
+
+                                                    <c:otherwise>
+
+                                                        <c:forEach
+                                                                var="gondola"
+                                                                items="${gondolasPorUsuario[usuario.id]}"
+                                                        >
+
+                                                            <tr>
+
+                                                                <td>
+                                                                    ID da gôndola
+                                                                </td>
+
+                                                                <td class="id-gondola">
+                                                                        ${gondola.id}
+                                                                </td>
+
+                                                                <td
+                                                                        rowspan="3"
+                                                                        class="gondola-action-cell"
+                                                                >
+
+                                                                    <label
+                                                                            for="unlink-gondola-${usuario.id}-${gondola.id}"
+                                                                            class="unlink-button"
+                                                                    >
+                                                                        Desvincular
+                                                                    </label>
+
+                                                                </td>
+
+                                                            </tr>
+
+
+                                                            <tr>
+
+                                                                <td>
+                                                                    Capacidade máxima da gôndola
+                                                                </td>
+
+                                                                <td>
+                                                                        ${gondola.capacidadeMaxima}
+                                                                </td>
+
+                                                            </tr>
+
+
+                                                            <tr>
+
+                                                                <td>
+                                                                    Nome do setor
+                                                                </td>
+
+                                                                <td>
+                                                                        ${gondola.setor.nome}
+                                                                </td>
+
+                                                            </tr>
+
+                                                        </c:forEach>
+
+                                                    </c:otherwise>
+
+                                                </c:choose>
+
+                                                </tbody>
+
+                                            </table>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            </c:if>
+
+                        </c:forEach>
+
+                    </c:otherwise>
+
+                </c:choose>
 
                 </tbody>
 
@@ -440,11 +478,6 @@
 
 </main>
 
-
-<!-- ====================================================== -->
-<!-- POPUPS DE ATUALIZAÇÃO -->
-<!-- FUNCIONARIO e GERENTE -->
-<!-- ====================================================== -->
 
 <c:forEach
         var="usuario"
@@ -548,56 +581,6 @@
 
                     <div class="form-field">
 
-                        <label for="cpf-${usuario.id}">
-                            CPF
-                        </label>
-
-                        <input
-                                type="text"
-                                id="cpf-${usuario.id}"
-                                name="cpf"
-                                data-original="${usuario.cpf}"
-                                value="${idUsuarioAtualizacao == usuario.id ? param.cpf : usuario.cpf}"
-                        >
-
-                        <c:if test="${idUsuarioAtualizacao == usuario.id and not empty errosAtualizacao.cpf}">
-
-                            <div class="campo-erro">
-                                    ${errosAtualizacao.cpf}
-                            </div>
-
-                        </c:if>
-
-                    </div>
-
-
-                    <div class="form-field">
-
-                        <label for="nascimento-${usuario.id}">
-                            Data de nascimento
-                        </label>
-
-                        <input
-                                type="date"
-                                id="nascimento-${usuario.id}"
-                                name="nascimento"
-                                data-original="${usuario.dataNascimento}"
-                                value="${idUsuarioAtualizacao == usuario.id ? param.nascimento : usuario.dataNascimento}"
-                        >
-
-                        <c:if test="${idUsuarioAtualizacao == usuario.id and not empty errosAtualizacao.nascimento}">
-
-                            <div class="campo-erro">
-                                    ${errosAtualizacao.nascimento}
-                            </div>
-
-                        </c:if>
-
-                    </div>
-
-
-                    <div class="form-field">
-
                         <label for="cep-${usuario.id}">
                             CEP
                         </label>
@@ -675,11 +658,6 @@
 
 </c:forEach>
 
-
-<!-- ====================================================== -->
-<!-- POPUPS DE VINCULAR GÔNDOLA -->
-<!-- SOMENTE FUNCIONARIO -->
-<!-- ====================================================== -->
 
 <c:forEach
         var="usuario"
@@ -798,11 +776,6 @@
 </c:forEach>
 
 
-<!-- ====================================================== -->
-<!-- POPUPS DE CONFIRMAÇÃO DE DESVINCULAR GÔNDOLA -->
-<!-- SOMENTE FUNCIONARIO -->
-<!-- ====================================================== -->
-
 <c:forEach
         var="usuario"
         items="${usuarios}"
@@ -905,11 +878,6 @@
 </c:forEach>
 
 
-<!-- ====================================================== -->
-<!-- POPUPS DE CONFIRMAÇÃO DE DELETAR USUÁRIO -->
-<!-- FUNCIONARIO e GERENTE -->
-<!-- ====================================================== -->
-
 <c:forEach
         var="usuario"
         items="${usuarios}"
@@ -975,10 +943,6 @@
 </c:forEach>
 
 
-<!-- ====================================================== -->
-<!-- POPUP DE ADICIONAR USUÁRIO -->
-<!-- ====================================================== -->
-
 <input
         type="checkbox"
         id="add-user-toggle"
@@ -1016,7 +980,6 @@ ${not empty erros ? 'checked' : ''}
         >
 
             <div class="form-grid">
-
 
                 <div class="form-field">
 
@@ -1258,10 +1221,6 @@ ${not empty erros ? 'checked' : ''}
 
 </div>
 
-
-<!-- ====================================================== -->
-<!-- POPUP LOGOUT -->
-<!-- ====================================================== -->
 
 <input
         type="checkbox"
