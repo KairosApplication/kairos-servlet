@@ -1,3 +1,4 @@
+
 package com.kairos.model;
 
 import com.kairos.model.enums.StatusAlerta;
@@ -15,8 +16,11 @@ public class Alerta {
     private String descricaoAlerta;
     private StatusAlerta statusAlerta;
     private Timestamp dataResolucao;
+    private HistoricoAlerta historicoAlerta;
 
-    public Alerta(int id, Usuario usuario, Gondola gondola, Produto produto, Date dataRuptura, String descricaoAlerta, StatusAlerta statusAlerta, Timestamp dataResolucao) {
+    public Alerta(int id, Usuario usuario, Gondola gondola, Produto produto,
+                  Date dataRuptura, String descricaoAlerta,
+                  StatusAlerta statusAlerta, Timestamp dataResolucao) {
         this.id = id;
         this.usuario = usuario;
         this.gondola = gondola;
@@ -27,7 +31,9 @@ public class Alerta {
         this.dataResolucao = dataResolucao;
     }
 
-    public Alerta(Usuario usuario, Gondola gondola, Produto produto, Date dataRuptura, String descricaoAlerta, StatusAlerta statusAlerta, Timestamp dataResolucao) {
+    public Alerta(Usuario usuario, Gondola gondola, Produto produto,
+                  Date dataRuptura, String descricaoAlerta,
+                  StatusAlerta statusAlerta, Timestamp dataResolucao) {
         this.usuario = usuario;
         this.gondola = gondola;
         this.produto = produto;
@@ -69,6 +75,10 @@ public class Alerta {
         return dataResolucao;
     }
 
+    public HistoricoAlerta getHistoricoAlerta() {
+        return historicoAlerta;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -101,36 +111,104 @@ public class Alerta {
         this.dataResolucao = dataResolucao;
     }
 
+    public void setHistoricoAlerta(HistoricoAlerta historicoAlerta) {
+        this.historicoAlerta = historicoAlerta;
+    }
+
     @Override
     public String toString() {
+
+        String usuarioInfo;
+
+        if (getUsuario() != null) {
+
+            usuarioInfo =
+                    "\n   - ID: " + getUsuario().getId() +
+                            "\n   - CPF: " + getUsuario().getCpf() +
+                            "\n   - Nome: " + getUsuario().getNome() +
+                            "\n   - Sobrenome: " + getUsuario().getSobrenome() +
+                            "\n   - Data de nascimento: " + getUsuario().getDataNascimento() +
+                            "\n   - CEP: " + getUsuario().getCep() +
+                            "\n   - Tipo Usuário: " + getUsuario().getTipoUsuario() +
+                            "\n   - Email: " + getUsuario().getEmail();
+
+            if (getUsuario().getEmpresa() != null) {
+
+                usuarioInfo +=
+                        "\n   - Empresa:" +
+                                "\n      - ID: " + getUsuario().getEmpresa().getId() +
+                                "\n      - CNPJ: " + getUsuario().getEmpresa().getCnpj() +
+                                "\n      - Tipo Plano: " + getUsuario().getEmpresa().getTipoPlano();
+            }
+
+        } else if (getHistoricoAlerta() != null) {
+
+            usuarioInfo =
+                    "\n   - ID: " + getHistoricoAlerta().getUsuarioId() +
+                            "\n   - Usuário excluído";
+
+        } else {
+
+            usuarioInfo = "\n   - Usuário indisponível";
+        }
+
+
+        String gondolaInfo;
+
+        if (getGondola() != null) {
+
+            gondolaInfo =
+                    "\n   - ID: " + getGondola().getId() +
+                            "\n   - Capacidade máxima: " + getGondola().getCapacidadeMaxima();
+
+            if (getGondola().getSetor() != null) {
+
+                gondolaInfo +=
+                        "\n   - Setor:" +
+                                "\n      - ID: " + getGondola().getSetor().getId() +
+                                "\n      - Nome: " + getGondola().getSetor().getNome() +
+                                "\n      - Categoria do setor: " + getGondola().getSetor().getCategoria();
+            }
+
+        } else if (getHistoricoAlerta() != null) {
+
+            gondolaInfo =
+                    "\n   - ID: " + getHistoricoAlerta().getGondolaId() +
+                            "\n   - Gôndola excluída";
+
+        } else {
+
+            gondolaInfo = "\n   - Gôndola indisponível";
+        }
+
+
+        String produtoInfo;
+
+        if (getProduto() != null) {
+
+            produtoInfo =
+                    "\n   - ID: " + getProduto().getId() +
+                            "\n   - Marca: " + getProduto().getMarca() +
+                            "\n   - Nome: " + getProduto().getNome() +
+                            "\n   - Quantidade no estoque: " + getProduto().getQuantidadeEstoque();
+
+        } else if (getHistoricoAlerta() != null) {
+
+            produtoInfo =
+                    "\n   - ID: " + getHistoricoAlerta().getProdutoId() +
+                            "\n   - Produto excluído";
+
+        } else {
+
+            produtoInfo = "\n   - Produto indisponível";
+        }
+
+
         return "\n-= Alerta =-" +
                 "\nID: " + getId() +
-                "\nUsuário: " +
-                "\n   - ID: " + usuario.getId() +
-                "\n   - CPF: " + usuario.getCpf() +
-                "\n   - Senha: " + usuario.getSenha() +
-                "\n   - Nome: " + usuario.getNome() +
-                "\n   - Sobrenome: " + usuario.getSobrenome() +
-                "\n   - Data de nascimento: " + usuario.getDataNascimento() +
-                "\n   - CEP: " + usuario.getCep() +
-                "\n   - Tipo Usuario: " + usuario.getTipoUsuario() +
-                "\n   - Email: " + usuario.getEmail() +
-                "\n   - Empresa: " +
-                "\n      - ID: " + usuario.getEmpresa().getId() +
-                "\n      - CNPJ: " + usuario.getEmpresa().getCnpj() +
-                "\n      - Tipo Plano: " + usuario.getEmpresa().getTipoPlano() +
-                "\nGôndola: " +
-                "\n   - ID: " + gondola.getId() +
-                "\n   - Capacidade máxima: " + gondola.getCapacidadeMaxima() +
-                "\n   - Setor: " +
-                "\n      - ID: " + gondola.getSetor().getId() +
-                "\n      - Nome: " + gondola.getSetor().getNome() +
-                "\n      - Categoria do setor: " + gondola.getSetor().getCategoria() +
-                "\nProduto: " +
-                "\n   - ID: " + produto.getId() +
-                "\n   - Marca: " + produto.getMarca() +
-                "\n   - Nome: " + produto.getNome() +
-                "\n   - Quantidade no estoque: " + produto.getQuantidadeEstoque() +
+                "\nUsuário:" + usuarioInfo +
+                "\nGôndola:" + gondolaInfo +
+                "\nProduto:" + produtoInfo +
                 "\nData da ruptura: " + getDataRuptura() +
                 "\nDescrição do alerta: " + getDescricaoAlerta() +
                 "\nStatus do alerta: " + getStatusAlerta() +
