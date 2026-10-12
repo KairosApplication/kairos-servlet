@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class CompraDAO {
 
     public Compra inserir(Compra compra) {
@@ -31,12 +30,14 @@ public class CompraDAO {
 
                 if (rs.next()) {
                     return new Compra(
+                            rs.getInt("id"),
                             rs.getTimestamp("data_compra")
                     );
-
                 }
+
                 return null;
             }
+
         } catch (SQLException e) {
             throw new DAOException("Erro ao inserir a compra", e);
         }
@@ -63,6 +64,7 @@ public class CompraDAO {
                             rs.getTimestamp("data_compra")
                     );
                 }
+
                 return null;
             }
 
@@ -86,18 +88,60 @@ public class CompraDAO {
 
             try (ResultSet rs = statement.executeQuery()) {
 
-                if (rs.next()) {
+                while (rs.next()) {
+
                     Compra compra = new Compra(
                             rs.getInt("id"),
                             rs.getTimestamp("data_compra")
                     );
+
                     compras.add(compra);
                 }
+
                 return compras;
             }
 
         } catch (SQLException e) {
             throw new DAOException("Erro ao listar compras", e);
+        }
+    }
+
+    public List<Compra> pesquisar(String pesquisa) {
+
+        String sql = """
+                     SELECT id, data_compra
+                     FROM compras
+                     WHERE CAST(id AS TEXT) ILIKE ?
+                        OR CAST(data_compra AS TEXT) ILIKE ?
+                     ORDER BY id
+                     """;
+
+        List<Compra> compras = new ArrayList<>();
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            for (int i = 1; i <= 2; i++) {
+                statement.setString(i, pesquisa);
+            }
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                while (rs.next()) {
+
+                    Compra compra = new Compra(
+                            rs.getInt("id"),
+                            rs.getTimestamp("data_compra")
+                    );
+
+                    compras.add(compra);
+                }
+
+                return compras;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao pesquisar compras", e);
         }
     }
 

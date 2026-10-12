@@ -8,7 +8,6 @@ public class Compra {
 
     private int id;
     private Timestamp dataCompra;
-    private int quantidadeItem;
 
 //    Construtores
 

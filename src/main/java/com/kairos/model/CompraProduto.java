@@ -1,3 +1,4 @@
+
 package com.kairos.model;
 
 public class CompraProduto {
@@ -6,6 +7,7 @@ public class CompraProduto {
     private Produto produto;
     private Compra compra;
     private int quantidadeItem;
+    private HistoricoCompraProduto historicoCompraProduto;
 
     public CompraProduto(int id, Produto produto, Compra compra, int quantidadeItem) {
         this.id = id;
@@ -36,6 +38,10 @@ public class CompraProduto {
         return quantidadeItem;
     }
 
+    public HistoricoCompraProduto getHistoricoCompraProduto() {
+        return historicoCompraProduto;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -52,15 +58,32 @@ public class CompraProduto {
         this.quantidadeItem = quantidadeItem;
     }
 
+    public void setHistoricoCompraProduto(HistoricoCompraProduto historicoCompraProduto) {
+        this.historicoCompraProduto = historicoCompraProduto;
+    }
+
     @Override
     public String toString() {
+
+        String produto;
+
+        if (getProduto() != null) {
+            produto = "\n   - ID: " + getProduto().getId() +
+                    "\n   - Marca: " + getProduto().getMarca() +
+                    "\n   - Nome: " + getProduto().getNome() +
+                    "\n   - Quantidade no estoque: " + getProduto().getQuantidadeEstoque();
+        } else if (getHistoricoCompraProduto() != null) {
+            produto = "\n   - ID: " + getHistoricoCompraProduto().getProdutoId() +
+                    "\n   - Marca: " + getHistoricoCompraProduto().getProdutoMarca() +
+                    "\n   - Nome: " + getHistoricoCompraProduto().getProdutoNome();
+        } else {
+            produto = "\n   - Produto não encontrado";
+        }
+
         return "\n-= Compra Produto =-" +
                 "\nID: " + getId() +
                 "\nProduto: " +
-                "\n   - ID: " + produto.getId() +
-                "\n   - Marca: " + produto.getMarca() +
-                "\n   - Nome: " + produto.getNome() +
-                "\n   - Quantidade no estoque: " + produto.getQuantidadeEstoque() +
+                produto +
                 "\nCompra: " +
                 "\n   - ID: " + compra.getId() +
                 "\n   - Data da compra: " + compra.getDataCompra() +
