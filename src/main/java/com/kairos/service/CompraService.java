@@ -8,7 +8,6 @@ import com.kairos.utils.exceptions.system.ServiceException;
 import java.sql.Timestamp;
 import java.util.List;
 
-
 public class CompraService {
 
     private final CompraDAO compraDAO;
@@ -35,12 +34,18 @@ public class CompraService {
         if (compra == null) {
             throw new CompraNotFoundException("Compra não encontrada");
         }
+
         return compra;
     }
 
     public List<Compra> listarTodos() {
 
         return compraDAO.listarTodos();
+    }
+
+    public List<Compra> pesquisar(String busca) {
+
+        return compraDAO.pesquisar(busca);
     }
 
     public void atualizar(Compra compra) {
@@ -52,6 +57,19 @@ public class CompraService {
         }
 
         compraDAO.atualizar(compra);
+    }
+
+    public void deletarPorId(int id) {
+
+        if (id <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        if (compraDAO.buscarPorId(id) == null) {
+            throw new CompraNotFoundException("Compra não encontrada");
+        }
+
+        compraDAO.deletarPorId(id);
     }
 
     private void validarCampos(Compra compra) {

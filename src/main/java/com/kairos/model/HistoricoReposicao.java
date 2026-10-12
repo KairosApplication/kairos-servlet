@@ -8,9 +8,6 @@ public class HistoricoReposicao {
     private String produtoNome;
     private int gondolaId;
 
-    public HistoricoReposicao() {
-    }
-
     public HistoricoReposicao(int id, int reposicaoId, String produtoMarca, String produtoNome, int gondolaId) {
         this.id = id;
         this.reposicaoId = reposicaoId;

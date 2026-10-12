@@ -8,6 +8,10 @@ function toggleDetails(id) {
         "details-row-" + id
     );
 
+    if (!checkbox || !row) {
+        return;
+    }
+
     row.style.display = checkbox.checked
         ? "table-row"
         : "none";
@@ -63,10 +67,6 @@ function bloquearControlesPopup(elemento) {
         controle.style.cursor = "not-allowed";
         controle.dataset.bloqueado = "true";
 
-        /*
-         * Impede o clique sem remover
-         * o elemento da área do mouse.
-         */
         controle.addEventListener("click", function (event) {
 
             if (controle.dataset.bloqueado === "true") {
@@ -89,31 +89,37 @@ function bloquearControlesPopup(elemento) {
 }
 
 
+/*
+ * Impede envios e cliques múltiplos.
+ */
 document.addEventListener("DOMContentLoaded", function () {
 
     /*
-     * Impede o envio múltiplo dos formulários.
-     * Funciona para criar, atualizar, vincular e desvincular.
+     * Funciona para adicionar, atualizar,
+     * vincular e desvincular produtos.
      */
     document.querySelectorAll("form").forEach(function (form) {
 
         form.addEventListener("submit", function (event) {
 
-            /*
-             * Bloqueia Cancelar, X e campos do popup
-             * antes de enviar a ação.
-             */
-            bloquearControlesPopup(form);
-
-
             if (form.dataset.enviado === "true") {
 
                 event.preventDefault();
+                return;
 
+            }
+
+            /*
+             * Bloqueia os controles somente
+             * quando o formulário for válido.
+             */
+            if (!form.checkValidity()) {
                 return;
             }
 
             form.dataset.enviado = "true";
+
+            bloquearControlesPopup(form);
 
 
             const botao = form.querySelector(
@@ -134,8 +140,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /*
-     * Impede cliques múltiplos em links que executam ações.
-     * Exemplo: Deletar.
+     * Impede cliques múltiplos em links
+     * que executam ações, como Deletar.
      */
     document.querySelectorAll(
         "a.delete-confirm-button"
@@ -143,21 +149,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         link.addEventListener("click", function (event) {
 
-            /*
-             * Bloqueia Cancelar, X e campos do popup
-             * antes de executar a ação.
-             */
-            bloquearControlesPopup(link);
-
-
             if (link.dataset.clicado === "true") {
 
                 event.preventDefault();
-
                 return;
+
             }
 
             link.dataset.clicado = "true";
+
+            bloquearControlesPopup(link);
 
             link.style.opacity = "0.6";
             link.style.cursor = "not-allowed";
@@ -170,12 +171,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 /*
- * Limpa o formulário de adicionar usuário.
+ * Limpa o formulário de adicionar compra.
  */
 function limparFormularioAdicionar() {
 
     const formulario = document.getElementById(
-        "add-user-form"
+        "add-compra-form"
     );
 
     if (!formulario) {
@@ -184,99 +185,8 @@ function limparFormularioAdicionar() {
 
 
     /*
-     * Não limpa o formulário depois que
-     * a ação já foi confirmada.
-     */
-    if (formulario.dataset.enviado === "true") {
-        return;
-    }
-
-
-    formulario.querySelectorAll("input").forEach(function (input) {
-
-        input.removeAttribute("value");
-        input.value = "";
-
-    });
-
-    formulario.querySelectorAll("select").forEach(function (select) {
-
-        select.value = "";
-
-    });
-
-    formulario.querySelectorAll(
-        ".campo-erro"
-    ).forEach(function (erro) {
-
-        erro.remove();
-
-    });
-}
-
-
-/*
- * Limpa erros e restaura os dados originais
- * do usuário no formulário de atualização.
- */
-function limparFormularioAtualizacao(id) {
-
-    const formulario = document.getElementById(
-        "update-user-form-" + id
-    );
-
-    if (!formulario) {
-        return;
-    }
-
-
-    /*
-     * Não limpa nem restaura os campos depois
-     * que a atualização já foi confirmada.
-     */
-    if (formulario.dataset.enviado === "true") {
-        return;
-    }
-
-
-    formulario.querySelectorAll("input").forEach(function (input) {
-
-        if (input.dataset.original !== undefined) {
-
-            input.value = input.dataset.original;
-
-        }
-
-    });
-
-    formulario.querySelectorAll(
-        ".campo-erro"
-    ).forEach(function (erro) {
-
-        erro.remove();
-
-    });
-}
-
-
-/*
- * Limpa o formulário de vincular gôndola.
- * Remove o ID digitado e os erros de validação.
- */
-function limparFormularioVincular(id) {
-
-    const formulario = document.getElementById(
-        "link-gondola-form-" + id
-    );
-
-    if (!formulario) {
-        return;
-    }
-
-
-    /*
-     * Não limpa o formulário depois que
-     * a ação já foi confirmada.
+     * Não limpa depois que a ação
+     * já foi confirmada.
      */
     if (formulario.dataset.enviado === "true") {
         return;
@@ -294,11 +204,6 @@ function limparFormularioVincular(id) {
 
     });
 
-    formulario.querySelectorAll("select").forEach(function (select) {
-
-        select.value = "";
-
-    });
 
     formulario.querySelectorAll(
         ".campo-erro"
@@ -307,15 +212,118 @@ function limparFormularioVincular(id) {
         erro.remove();
 
     });
+
 }
 
 
 /*
- * Bloqueia os campos do popup depois que
- * a ação foi confirmada.
+ * Limpa erros e restaura os dados originais
+ * da compra no formulário de atualização.
+ */
+function limparFormularioAtualizacao(id) {
+
+    const formulario = document.getElementById(
+        "update-compra-form-" + id
+    );
+
+    if (!formulario) {
+        return;
+    }
+
+
+    /*
+     * Não restaura os campos depois
+     * que a atualização foi confirmada.
+     */
+    if (formulario.dataset.enviado === "true") {
+        return;
+    }
+
+
+    formulario.querySelectorAll("input").forEach(function (input) {
+
+        if (input.dataset.original !== undefined) {
+
+            input.value = input.dataset.original;
+
+        }
+
+    });
+
+
+    formulario.querySelectorAll(
+        ".campo-erro"
+    ).forEach(function (erro) {
+
+        erro.remove();
+
+    });
+
+}
+
+
+/*
+ * Limpa o formulário de vincular produto.
  *
- * Os campos não recebem disabled=true,
- * pois seus valores ainda precisam ser
+ * Remove o ID do produto, a quantidade
+ * comprada e os erros de validação.
+ */
+function limparFormularioVincular(id) {
+
+    const formulario = document.getElementById(
+        "link-produto-form-" + id
+    );
+
+    if (!formulario) {
+        return;
+    }
+
+
+    /*
+     * Não limpa depois que a ação
+     * já foi confirmada.
+     */
+    if (formulario.dataset.enviado === "true") {
+        return;
+    }
+
+
+    formulario.querySelectorAll("input").forEach(function (input) {
+
+        if (input.type !== "hidden") {
+
+            input.removeAttribute("value");
+            input.value = "";
+
+        }
+
+    });
+
+
+    formulario.querySelectorAll("select").forEach(function (select) {
+
+        select.value = "";
+
+    });
+
+
+    formulario.querySelectorAll(
+        ".campo-erro"
+    ).forEach(function (erro) {
+
+        erro.remove();
+
+    });
+
+}
+
+
+/*
+ * Bloqueia os campos do popup depois
+ * que a ação foi confirmada.
+ *
+ * Não utiliza disabled=true nos campos,
+ * pois os valores ainda precisam ser
  * enviados pelo formulário.
  */
 function bloquearCamposPopup(popup) {
@@ -329,8 +337,7 @@ function bloquearCamposPopup(popup) {
 
 
         /*
-         * Impede interação pelo mouse antes
-         * mesmo que o evento de click aconteça.
+         * Impede interação pelo mouse.
          */
         campo.addEventListener("mousedown", function (event) {
 
