@@ -1,9 +1,8 @@
+
 package com.kairos.dao;
 
 import com.kairos.model.Empresa;
-import com.kairos.model.Usuario;
 import com.kairos.model.enums.TipoPlano;
-import com.kairos.model.enums.TipoUsuario;
 import com.kairos.utils.connection.ConnectionFactory;
 import com.kairos.utils.exceptions.system.DAOException;
 
@@ -16,6 +15,7 @@ import java.util.List;
 
 public class EmpresaDAO {
 
+    // Insere uma nova empresa
     public Empresa inserir(Empresa empresa) {
 
         String sql = """
@@ -34,6 +34,7 @@ public class EmpresaDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Empresa(
                             rs.getInt("id"),
                             rs.getString("nome"),
@@ -50,6 +51,7 @@ public class EmpresaDAO {
         }
     }
 
+    // Busca uma empresa pelo ID
     public Empresa buscarPorId(int id) {
 
         String sql = """
@@ -66,6 +68,7 @@ public class EmpresaDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Empresa(
                             rs.getInt("id"),
                             rs.getString("nome"),
@@ -82,6 +85,7 @@ public class EmpresaDAO {
         }
     }
 
+    // Busca uma empresa pelo nome
     public Empresa buscarPorNome(String nome) {
 
         String sql = """
@@ -98,6 +102,7 @@ public class EmpresaDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Empresa(
                             rs.getInt("id"),
                             rs.getString("nome"),
@@ -114,6 +119,7 @@ public class EmpresaDAO {
         }
     }
 
+    // Lista todas as empresas cadastradas
     public List<Empresa> listarTodos() {
 
         String sql = """
@@ -148,6 +154,7 @@ public class EmpresaDAO {
         }
     }
 
+    // Atualiza os dados de uma empresa
     public int atualizar(Empresa empresa) {
 
         String sql = """
@@ -173,6 +180,7 @@ public class EmpresaDAO {
         }
     }
 
+    // Exclui uma empresa pelo ID
     public void deletarPorId(int id) {
 
         String sql = """
@@ -192,6 +200,7 @@ public class EmpresaDAO {
         }
     }
 
+    // Verifica se existe uma empresa cadastrada com o CNPJ informado
     public boolean existePorCnpj(String cnpj) {
 
         String sql = """
@@ -214,6 +223,7 @@ public class EmpresaDAO {
         }
     }
 
+    // Verifica se o CNPJ pertence a outra empresa
     public boolean existePorCnpjExcetoId(String cnpj, int id) {
 
         String sql = """
@@ -237,6 +247,7 @@ public class EmpresaDAO {
         }
     }
 
+    // Busca uma empresa pelo CNPJ
     public Empresa buscarPorCnpj(String cnpj) {
 
         String sql = """
@@ -253,6 +264,7 @@ public class EmpresaDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Empresa(
                             rs.getInt("id"),
                             rs.getString("nome"),
@@ -269,6 +281,7 @@ public class EmpresaDAO {
         }
     }
 
+    // Verifica se existe uma empresa cadastrada com o nome informado
     public boolean existePorNome(String nome) {
 
         String sql = """
@@ -283,7 +296,6 @@ public class EmpresaDAO {
             statement.setString(1, nome);
 
             try (ResultSet rs = statement.executeQuery()) {
-
                 return rs.next();
             }
 
@@ -292,6 +304,7 @@ public class EmpresaDAO {
         }
     }
 
+    // Verifica se o nome pertence a outra empresa
     public boolean existePorNomeExcetoId(String nome, int id) {
 
         String sql = """
@@ -307,7 +320,6 @@ public class EmpresaDAO {
             statement.setInt(2, id);
 
             try (ResultSet rs = statement.executeQuery()) {
-
                 return rs.next();
             }
 
@@ -316,16 +328,17 @@ public class EmpresaDAO {
         }
     }
 
+    // Pesquisa empresas pelo ID, nome, CNPJ ou tipo de plano
     public List<Empresa> pesquisar(String pesquisa) {
 
         String sql = """
-                 SELECT id, nome, cnpj, tipo_plano
-                 FROM empresas
-                 WHERE CAST(id AS TEXT) ILIKE ?
-                       OR nome ILIKE ?
-                       OR cnpj ILIKE ?
-                       OR tipo_plano ILIKE ?
-                 """;
+                     SELECT id, nome, cnpj, tipo_plano
+                     FROM empresas
+                     WHERE CAST(id AS TEXT) ILIKE ?
+                           OR nome ILIKE ?
+                           OR cnpj ILIKE ?
+                           OR tipo_plano ILIKE ?
+                     """;
 
         List<Empresa> empresas = new ArrayList<>();
 
@@ -354,7 +367,7 @@ public class EmpresaDAO {
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao listar empresas por pesquisa");
+            throw new DAOException("Erro ao listar empresas por pesquisa", e);
         }
     }
 }

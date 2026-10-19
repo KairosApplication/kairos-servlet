@@ -1,7 +1,7 @@
+
 package com.kairos.dao;
 
 import com.kairos.model.Produto;
-import com.kairos.model.Setor;
 import com.kairos.utils.connection.ConnectionFactory;
 import com.kairos.utils.exceptions.system.DAOException;
 
@@ -14,6 +14,7 @@ import java.util.List;
 
 public class ProdutoDAO {
 
+    // Insere um novo produto
     public Produto inserir(Produto produto) {
 
         String sql = """
@@ -32,6 +33,7 @@ public class ProdutoDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Produto(
                             rs.getInt("id"),
                             rs.getString("marca"),
@@ -39,14 +41,18 @@ public class ProdutoDAO {
                             rs.getInt("quantidade_estoque")
                     );
                 }
+
                 return null;
             }
+
         } catch (SQLException e) {
             throw new DAOException("Erro ao inserir produto", e);
         }
     }
 
+    // Busca um produto pelo ID
     public Produto buscarPorId(int id) {
+
         String sql = """
                      SELECT id, marca, nome, quantidade_estoque
                      FROM produtos
@@ -61,6 +67,7 @@ public class ProdutoDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Produto(
                             rs.getInt("id"),
                             rs.getString("marca"),
@@ -68,13 +75,16 @@ public class ProdutoDAO {
                             rs.getInt("quantidade_estoque")
                     );
                 }
+
                 return null;
             }
+
         } catch (SQLException e) {
             throw new DAOException("Erro ao buscar produto por id", e);
         }
     }
 
+    // Busca um produto pelo nome
     public Produto buscarPorNome(String nome) {
 
         String sql = """
@@ -98,8 +108,8 @@ public class ProdutoDAO {
                             rs.getString("nome"),
                             rs.getInt("quantidade_estoque")
                     );
-
                 }
+
                 return null;
             }
 
@@ -108,13 +118,14 @@ public class ProdutoDAO {
         }
     }
 
+    // Busca um produto pelo nome e pela marca
     public Produto buscarPorNomeEMarca(String nome, String marca) {
 
         String sql = """
-                 SELECT id, marca, nome, quantidade_estoque
-                 FROM produtos
-                 WHERE nome = ? AND marca = ?
-                 """;
+                     SELECT id, marca, nome, quantidade_estoque
+                     FROM produtos
+                     WHERE nome = ? AND marca = ?
+                     """;
 
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -138,11 +149,11 @@ public class ProdutoDAO {
             }
 
         } catch (SQLException e) {
-
             throw new DAOException("Erro ao buscar produto por nome e marca", e);
         }
     }
 
+    // Lista todos os produtos cadastrados
     public List<Produto> listarTodos() {
 
         String sql = """
@@ -165,17 +176,21 @@ public class ProdutoDAO {
                             rs.getString("nome"),
                             rs.getInt("quantidade_estoque")
                     );
+
                     produtos.add(produto);
                 }
+
                 return produtos;
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao listar todos os produtos");
+            throw new DAOException("Erro ao listar todos os produtos", e);
         }
     }
 
+    // Atualiza os dados de um produto
     public int atualizar(Produto produto) {
+
         String sql = """
                      UPDATE produtos
                      SET marca = ?,
@@ -190,7 +205,6 @@ public class ProdutoDAO {
             statement.setString(1, produto.getMarca());
             statement.setString(2, produto.getNome());
             statement.setInt(3, produto.getQuantidadeEstoque());
-
             statement.setInt(4, produto.getId());
 
             return statement.executeUpdate();
@@ -200,6 +214,7 @@ public class ProdutoDAO {
         }
     }
 
+    // Exclui um produto pelo ID
     public void deletarPorId(int id) {
 
         String sql = """
@@ -219,6 +234,7 @@ public class ProdutoDAO {
         }
     }
 
+    // Verifica se existe um produto cadastrado com o nome informado
     public boolean existePorNome(String nome) {
 
         String sql = """
@@ -237,10 +253,11 @@ public class ProdutoDAO {
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao buscar produto por nome");
+            throw new DAOException("Erro ao buscar produto por nome", e);
         }
     }
 
+    // Verifica se o nome pertence a outro produto
     public boolean existeNomeExcetoId(String nome, int id) {
 
         String sql = """
@@ -260,44 +277,42 @@ public class ProdutoDAO {
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao verificar nome de outro produto");
+            throw new DAOException("Erro ao verificar nome de outro produto", e);
         }
     }
 
+    // Verifica se existe um produto com o nome e a marca informados
     public boolean existePorNomeEMarca(String nome, String marca) {
 
         String sql = """
-                 SELECT 1
-                 FROM produtos
-                 WHERE nome = ? AND marca = ?
-                 """;
+                     SELECT 1
+                     FROM produtos
+                     WHERE nome = ? AND marca = ?
+                     """;
 
-        try (
-                Connection connection = ConnectionFactory.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)
-        ) {
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, nome);
             statement.setString(2, marca);
 
             try (ResultSet rs = statement.executeQuery()) {
-
                 return rs.next();
             }
 
         } catch (SQLException e) {
-
-            throw new DAOException("Erro ao verificar produto por nome e marca");
+            throw new DAOException("Erro ao verificar produto por nome e marca", e);
         }
     }
 
+    // Verifica se existe algum produto cadastrado com a marca informada
     public boolean existePorMarca(String marca) {
 
         String sql = """
-             SELECT 1
-             FROM produtos
-             WHERE marca = ?
-             """;
+                     SELECT 1
+                     FROM produtos
+                     WHERE marca = ?
+                     """;
 
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -305,7 +320,6 @@ public class ProdutoDAO {
             statement.setString(1, marca);
 
             try (ResultSet rs = statement.executeQuery()) {
-
                 return rs.next();
             }
 
@@ -314,16 +328,17 @@ public class ProdutoDAO {
         }
     }
 
+    // Pesquisa produtos pelo ID, marca, nome ou quantidade em estoque
     public List<Produto> pesquisar(String pesquisa) {
 
         String sql = """
-                 SELECT id, marca, nome, quantidade_estoque
-                 FROM produtos
-                 WHERE CAST(id AS TEXT) ILIKE ?
-                       OR marca ILIKE ?
-                       OR nome ILIKE ?
-                       OR CAST(quantidade_estoque AS TEXT) ILIKE ?
-                 """;
+                     SELECT id, marca, nome, quantidade_estoque
+                     FROM produtos
+                     WHERE CAST(id AS TEXT) ILIKE ?
+                           OR marca ILIKE ?
+                           OR nome ILIKE ?
+                           OR CAST(quantidade_estoque AS TEXT) ILIKE ?
+                     """;
 
         List<Produto> produtos = new ArrayList<>();
 
@@ -352,7 +367,7 @@ public class ProdutoDAO {
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao listar produtos por pesquisa");
+            throw new DAOException("Erro ao listar produtos por pesquisa", e);
         }
     }
 }

@@ -1,3 +1,4 @@
+
 package com.kairos.dao;
 
 import com.kairos.model.Gondola;
@@ -13,114 +14,90 @@ import java.util.List;
 
 public class GondolaProdutoDAO {
 
-    public boolean existeVinculo(
-            Gondola gondola,
-            Produto produto
-    ) {
+    // Verifica se existe um vínculo entre uma gôndola e um produto
+    public boolean existeVinculo(Gondola gondola, Produto produto) {
 
         String sql = """
-                SELECT 1
-                FROM gondolas_produtos
-                WHERE gondola_id = ? AND produto_id = ?
-                """;
+                     SELECT 1
+                     FROM gondolas_produtos
+                     WHERE gondola_id = ? AND produto_id = ?
+                     """;
 
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            stmt.setInt(1, gondola.getId());
-            stmt.setInt(2, produto.getId());
+            statement.setInt(1, gondola.getId());
+            statement.setInt(2, produto.getId());
 
-            try (ResultSet rs = stmt.executeQuery()) {
-
+            try (ResultSet rs = statement.executeQuery()) {
                 return rs.next();
             }
 
         } catch (SQLException e) {
-
-            throw new RuntimeException(
-                    "Erro ao verificar vínculo entre produto e gôndola.",
-                    e
-            );
+            throw new RuntimeException("Erro ao verificar vínculo entre produto e gôndola", e);
         }
     }
 
-
-    public void vincular(
-            Gondola gondola,
-            Produto produto
-    ) {
+    // Vincula um produto a uma gôndola
+    public void vincular(Gondola gondola, Produto produto) {
 
         String sql = """
-                INSERT INTO gondolas_produtos (gondola_id, produto_id)
-                VALUES (?, ?)
-                """;
+                     INSERT INTO gondolas_produtos (gondola_id, produto_id)
+                     VALUES (?, ?)
+                     """;
 
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            stmt.setInt(1, gondola.getId());
-            stmt.setInt(2, produto.getId());
+            statement.setInt(1, gondola.getId());
+            statement.setInt(2, produto.getId());
 
-            stmt.executeUpdate();
+            statement.executeUpdate();
 
         } catch (SQLException e) {
-
-            throw new RuntimeException(
-                    "Erro ao vincular produto à gôndola.",
-                    e
-            );
+            throw new RuntimeException("Erro ao vincular produto à gôndola", e);
         }
     }
 
-
-    public void desvincular(
-            Gondola gondola,
-            Produto produto
-    ) {
+    // Desvincula um produto de uma gôndola
+    public void desvincular(Gondola gondola, Produto produto) {
 
         String sql = """
-                DELETE FROM gondolas_produtos
-                WHERE gondola_id = ? AND produto_id = ?
-                """;
+                     DELETE FROM gondolas_produtos
+                     WHERE gondola_id = ? AND produto_id = ?
+                     """;
 
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            stmt.setInt(1, gondola.getId());
-            stmt.setInt(2, produto.getId());
+            statement.setInt(1, gondola.getId());
+            statement.setInt(2, produto.getId());
 
-            stmt.executeUpdate();
+            statement.executeUpdate();
 
         } catch (SQLException e) {
-
-            throw new RuntimeException(
-                    "Erro ao desvincular produto da gôndola.",
-                    e
-            );
+            throw new RuntimeException("Erro ao desvincular produto da gôndola", e);
         }
     }
 
-
-    public List<Produto> listarProdutosPorGondola(
-            Gondola gondola
-    ) {
+    // Lista todos os produtos vinculados a uma gôndola
+    public List<Produto> listarProdutosPorGondola(Gondola gondola) {
 
         String sql = """
-                SELECT p.id, p.marca, p.nome, p.quantidade_estoque
-                FROM produtos p
-                INNER JOIN gondolas_produtos gp
-                    ON gp.produto_id = p.id
-                WHERE gp.gondola_id = ?
-                """;
+                     SELECT p.id, p.marca, p.nome, p.quantidade_estoque
+                     FROM produtos p
+                     INNER JOIN gondolas_produtos gp ON gp.produto_id = p.id
+                     WHERE gp.gondola_id = ?
+                     """;
 
         List<Produto> produtos = new ArrayList<>();
 
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            stmt.setInt(1, gondola.getId());
+            statement.setInt(1, gondola.getId());
 
-            try (ResultSet rs = stmt.executeQuery()) {
+            try (ResultSet rs = statement.executeQuery()) {
 
                 while (rs.next()) {
 
@@ -130,20 +107,14 @@ public class GondolaProdutoDAO {
                             rs.getInt("quantidade_estoque")
                     );
 
-                    produto.setId(
-                            rs.getInt("id")
-                    );
+                    produto.setId(rs.getInt("id"));
 
                     produtos.add(produto);
                 }
             }
 
         } catch (SQLException e) {
-
-            throw new RuntimeException(
-                    "Erro ao listar produtos da gôndola.",
-                    e
-            );
+            throw new RuntimeException("Erro ao listar produtos da gôndola", e);
         }
 
         return produtos;

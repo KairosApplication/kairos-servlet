@@ -14,13 +14,15 @@ import java.util.List;
 
 public class HistoricoCompraProdutoDAO {
 
+    // Busca um histórico de compra de produto pelo ID
     public HistoricoCompraProduto buscarPorId(int id) {
 
         String sql = """
-                     SELECT id, compra_produto_id, compra_id,
-                            produto_id, produto_marca, produto_nome
-                     FROM historico_compras_produtos
-                     WHERE id = ?
+                     SELECT h.id, h.compra_produto_id, cp.compra_id,
+                            h.id_produto AS produto_id, h.produto_marca, h.produto_nome
+                     FROM historico_compras_produtos h
+                     JOIN compras_produtos cp ON cp.id = h.compra_produto_id
+                     WHERE h.id = ?
                      """;
 
         try (Connection connection = ConnectionFactory.getConnection();
@@ -31,6 +33,7 @@ public class HistoricoCompraProdutoDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new HistoricoCompraProduto(
                             rs.getInt("id"),
                             rs.getInt("compra_produto_id"),
@@ -49,13 +52,15 @@ public class HistoricoCompraProdutoDAO {
         }
     }
 
+    // Busca o histórico associado a um produto de uma compra
     public HistoricoCompraProduto buscarPorCompraProdutoId(int compraProdutoId) {
 
         String sql = """
-                     SELECT id, compra_produto_id, compra_id,
-                            produto_id, produto_marca, produto_nome
-                     FROM historico_compras_produtos
-                     WHERE compra_produto_id = ?
+                     SELECT h.id, h.compra_produto_id, cp.compra_id,
+                            h.id_produto AS produto_id, h.produto_marca, h.produto_nome
+                     FROM historico_compras_produtos h
+                     JOIN compras_produtos cp ON cp.id = h.compra_produto_id
+                     WHERE h.compra_produto_id = ?
                      """;
 
         try (Connection connection = ConnectionFactory.getConnection();
@@ -66,6 +71,7 @@ public class HistoricoCompraProdutoDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new HistoricoCompraProduto(
                             rs.getInt("id"),
                             rs.getInt("compra_produto_id"),
@@ -84,13 +90,15 @@ public class HistoricoCompraProdutoDAO {
         }
     }
 
+    // Lista todos os históricos de produtos das compras
     public List<HistoricoCompraProduto> listarTodos() {
 
         String sql = """
-                     SELECT id, compra_produto_id, compra_id,
-                            produto_id, produto_marca, produto_nome
-                     FROM historico_compras_produtos
-                     ORDER BY id
+                     SELECT h.id, h.compra_produto_id, cp.compra_id,
+                            h.id_produto AS produto_id, h.produto_marca, h.produto_nome
+                     FROM historico_compras_produtos h
+                     JOIN compras_produtos cp ON cp.id = h.compra_produto_id
+                     ORDER BY h.id
                      """;
 
         List<HistoricoCompraProduto> historicos = new ArrayList<>();
@@ -122,14 +130,16 @@ public class HistoricoCompraProdutoDAO {
         }
     }
 
+    // Lista os históricos dos produtos vinculados a uma compra
     public List<HistoricoCompraProduto> listarPorCompraId(int compraId) {
 
         String sql = """
-                     SELECT id, compra_produto_id, compra_id,
-                            produto_id, produto_marca, produto_nome
-                     FROM historico_compras_produtos
-                     WHERE compra_id = ?
-                     ORDER BY id
+                     SELECT h.id, h.compra_produto_id, cp.compra_id,
+                            h.id_produto AS produto_id, h.produto_marca, h.produto_nome
+                     FROM historico_compras_produtos h
+                     JOIN compras_produtos cp ON cp.id = h.compra_produto_id
+                     WHERE cp.compra_id = ?
+                     ORDER BY h.id
                      """;
 
         List<HistoricoCompraProduto> historicos = new ArrayList<>();

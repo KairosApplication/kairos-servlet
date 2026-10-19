@@ -1,3 +1,4 @@
+
 package com.kairos.dao;
 
 import com.kairos.model.HistoricoUsuarioReposicao;
@@ -13,40 +14,22 @@ import java.util.List;
 
 public class HistoricoUsuarioReposicaoDAO {
 
+    // Salva o histórico de um usuário vinculado a uma reposição
     public HistoricoUsuarioReposicao salvar(int reposicaoId, int usuarioId) {
 
         String sql = """
-                     INSERT INTO historico_usuarios_reposicoes
-                     (
-                         reposicao_id,
-                         usuario_id,
-                         usuario_nome,
-                         usuario_sobrenome,
-                         empresa_nome,
-                         vinculo_ativo
+                     INSERT INTO historicos_reposicoes_usuarios (
+                         reposicao_id, id_usuario, usuario_nome,
+                         usuario_sobrenome, empresa_nome, vinculo_ativo
                      )
-                     SELECT
-                         ?,
-                         u.id,
-                         u.nome,
-                         u.sobrenome,
-                         e.nome,
-                         TRUE
+                     SELECT ?, u.id, u.nome, u.sobrenome, e.nome, TRUE
                      FROM usuarios u
-                     JOIN empresas e
-                       ON e.id = u.empresa_id
+                     JOIN empresas e ON e.id = u.empresa_id
                      WHERE u.id = ?
-                     ON CONFLICT (reposicao_id, usuario_id)
-                     DO UPDATE SET
-                         vinculo_ativo = TRUE
-                     RETURNING
-                         id,
-                         reposicao_id,
-                         usuario_id,
-                         usuario_nome,
-                         usuario_sobrenome,
-                         empresa_nome,
-                         vinculo_ativo
+                     ON CONFLICT (reposicao_id, id_usuario)
+                     DO UPDATE SET vinculo_ativo = TRUE
+                     RETURNING id, reposicao_id, id_usuario, usuario_nome,
+                               usuario_sobrenome, empresa_nome, vinculo_ativo
                      """;
 
         try (Connection connection = ConnectionFactory.getConnection();
@@ -62,7 +45,7 @@ public class HistoricoUsuarioReposicaoDAO {
                     return new HistoricoUsuarioReposicao(
                             rs.getInt("id"),
                             rs.getInt("reposicao_id"),
-                            rs.getInt("usuario_id"),
+                            rs.getInt("id_usuario"),
                             rs.getString("usuario_nome"),
                             rs.getString("usuario_sobrenome"),
                             rs.getString("empresa_nome"),
@@ -74,22 +57,18 @@ public class HistoricoUsuarioReposicaoDAO {
             }
 
         } catch (SQLException e) {
-
-            throw new DAOException(
-                    "Erro ao salvar histórico do usuário na reposição",
-                    e
-            );
+            throw new DAOException("Erro ao salvar histórico do usuário na reposição", e);
         }
     }
 
-
+    // Desativa o vínculo de um usuário com uma reposição
     public void desativarVinculo(int reposicaoId, int usuarioId) {
 
         String sql = """
-                     UPDATE historico_usuarios_reposicoes
+                     UPDATE historicos_reposicoes_usuarios
                      SET vinculo_ativo = FALSE
                      WHERE reposicao_id = ?
-                       AND usuario_id = ?
+                       AND id_usuario = ?
                      """;
 
         try (Connection connection = ConnectionFactory.getConnection();
@@ -101,28 +80,22 @@ public class HistoricoUsuarioReposicaoDAO {
             statement.executeUpdate();
 
         } catch (SQLException e) {
-
-            throw new DAOException(
-                    "Erro ao desativar vínculo do usuário na reposição",
-                    e
-            );
+            throw new DAOException("Erro ao desativar vínculo do usuário na reposição", e);
         }
     }
 
-
+    // Atualiza os dados do usuário no histórico das reposições
     public void atualizarDadosUsuario(int usuarioId) {
 
         String sql = """
-                     UPDATE historico_usuarios_reposicoes h
-                     SET
-                         usuario_nome = u.nome,
+                     UPDATE historicos_reposicoes_usuarios h
+                     SET usuario_nome = u.nome,
                          usuario_sobrenome = u.sobrenome,
                          empresa_nome = e.nome
                      FROM usuarios u
-                     JOIN empresas e
-                       ON e.id = u.empresa_id
-                     WHERE h.usuario_id = u.id
-                       AND h.usuario_id = ?
+                     JOIN empresas e ON e.id = u.empresa_id
+                     WHERE h.id_usuario = u.id
+                       AND h.id_usuario = ?
                      """;
 
         try (Connection connection = ConnectionFactory.getConnection();
@@ -133,29 +106,17 @@ public class HistoricoUsuarioReposicaoDAO {
             statement.executeUpdate();
 
         } catch (SQLException e) {
-
-            throw new DAOException(
-                    "Erro ao atualizar dados do usuário no histórico das reposições",
-                    e
-            );
+            throw new DAOException("Erro ao atualizar dados do usuário no histórico das reposições", e);
         }
     }
 
-
-    public List<HistoricoUsuarioReposicao> buscarPorReposicaoId(
-            int reposicaoId
-    ) {
+    // Busca os históricos ativos dos usuários vinculados a uma reposição
+    public List<HistoricoUsuarioReposicao> buscarPorReposicaoId(int reposicaoId) {
 
         String sql = """
-                     SELECT
-                         id,
-                         reposicao_id,
-                         usuario_id,
-                         usuario_nome,
-                         usuario_sobrenome,
-                         empresa_nome,
-                         vinculo_ativo
-                     FROM historico_usuarios_reposicoes
+                     SELECT id, reposicao_id, id_usuario, usuario_nome,
+                            usuario_sobrenome, empresa_nome, vinculo_ativo
+                     FROM historicos_reposicoes_usuarios
                      WHERE reposicao_id = ?
                        AND vinculo_ativo = TRUE
                      ORDER BY id
@@ -176,7 +137,7 @@ public class HistoricoUsuarioReposicaoDAO {
                             new HistoricoUsuarioReposicao(
                                     rs.getInt("id"),
                                     rs.getInt("reposicao_id"),
-                                    rs.getInt("usuario_id"),
+                                    rs.getInt("id_usuario"),
                                     rs.getString("usuario_nome"),
                                     rs.getString("usuario_sobrenome"),
                                     rs.getString("empresa_nome"),
@@ -189,11 +150,7 @@ public class HistoricoUsuarioReposicaoDAO {
             return historicos;
 
         } catch (SQLException e) {
-
-            throw new DAOException(
-                    "Erro ao buscar histórico de usuários da reposição",
-                    e
-            );
+            throw new DAOException("Erro ao buscar histórico de usuários da reposição", e);
         }
     }
 }

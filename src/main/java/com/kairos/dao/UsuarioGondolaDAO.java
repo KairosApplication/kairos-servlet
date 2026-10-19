@@ -1,3 +1,4 @@
+
 package com.kairos.dao;
 
 import com.kairos.model.Empresa;
@@ -18,10 +19,11 @@ import java.util.List;
 
 public class UsuarioGondolaDAO {
 
+    // Vincula um usuário a uma gôndola
     public void vincular(Usuario usuario, Gondola gondola) {
 
         String sql = """
-                     INSERT INTO usuarios_gondolas (usuario_id, gondola_id)
+                     INSERT INTO gondolas_usuarios (usuario_id, gondola_id)
                      VALUES (?, ?)
                      """;
 
@@ -38,10 +40,11 @@ public class UsuarioGondolaDAO {
         }
     }
 
+    // Desvincula um usuário de uma gôndola
     public void desvincular(Usuario usuario, Gondola gondola) {
 
         String sql = """
-                     DELETE FROM usuarios_gondolas
+                     DELETE FROM gondolas_usuarios
                      WHERE usuario_id = ?
                        AND gondola_id = ?
                      """;
@@ -59,12 +62,13 @@ public class UsuarioGondolaDAO {
         }
     }
 
+    // Lista todas as gôndolas vinculadas a um usuário
     public List<Gondola> listarGondolasPorUsuario(Usuario usuario) {
 
         String sql = """
                      SELECT g.id as gid, g.capacidade_maxima,
                             s.id as sid, s.nome as setor_nome, s.categoria_setor
-                     FROM usuarios_gondolas ug
+                     FROM gondolas_usuarios ug
                      JOIN gondolas g ON g.id = ug.gondola_id
                      JOIN setores s ON s.id = g.setor_id
                      WHERE ug.usuario_id = ?
@@ -105,14 +109,14 @@ public class UsuarioGondolaDAO {
         }
     }
 
+    // Lista todos os usuários vinculados a uma gôndola
     public List<Usuario> listarUsuariosPorGondola(Gondola gondola) {
 
         String sql = """
                      SELECT u.id as uid, u.cpf, u.senha, u.nome, u.sobrenome,
                             u.data_nascimento, u.cep, u.tipo_usuario, u.email,
-                            e.id as eid, e.nome as empresa_nome,
-                            e.cnpj, e.tipo_plano
-                     FROM usuarios_gondolas ug
+                            e.id as eid, e.nome as empresa_nome, e.cnpj, e.tipo_plano
+                     FROM gondolas_usuarios ug
                      JOIN usuarios u ON u.id = ug.usuario_id
                      JOIN empresas e ON e.id = u.empresa_id
                      WHERE ug.gondola_id = ?
@@ -160,14 +164,15 @@ public class UsuarioGondolaDAO {
         }
     }
 
+    // Verifica se existe um vínculo entre um usuário e uma gôndola
     public boolean existeVinculo(Usuario usuario, Gondola gondola) {
 
         String sql = """
-                 SELECT 1
-                 FROM usuarios_gondolas
-                 WHERE usuario_id = ?
-                   AND gondola_id = ?
-                 """;
+                     SELECT 1
+                     FROM gondolas_usuarios
+                     WHERE usuario_id = ?
+                       AND gondola_id = ?
+                     """;
 
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -180,10 +185,7 @@ public class UsuarioGondolaDAO {
             }
 
         } catch (SQLException e) {
-            throw new DAOException(
-                    "Erro ao verificar vínculo entre usuário e gôndola",
-                    e
-            );
+            throw new DAOException("Erro ao verificar vínculo entre usuário e gôndola", e);
         }
     }
 }

@@ -1,3 +1,4 @@
+
 package com.kairos.dao;
 
 import com.kairos.model.HistoricoAlerta;
@@ -11,15 +12,14 @@ import java.sql.SQLException;
 
 public class HistoricoAlertaDAO {
 
+    // Salva o histórico de um alerta, evitando registros duplicados
     public HistoricoAlerta salvar(HistoricoAlerta historico) {
 
         String sql = """
-                     INSERT INTO historico_alertas
-                     (alerta_id, usuario_id, gondola_id, produto_id)
+                     INSERT INTO alertas_historicos (alerta_id, id_usuario, id_gondola, id_produto)
                      VALUES (?, ?, ?, ?)
                      ON CONFLICT (alerta_id) DO NOTHING
-                     RETURNING id, alerta_id, usuario_id,
-                               gondola_id, produto_id
+                     RETURNING id, alerta_id, id_usuario, id_gondola, id_produto
                      """;
 
         try (Connection connection = ConnectionFactory.getConnection();
@@ -33,12 +33,13 @@ public class HistoricoAlertaDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new HistoricoAlerta(
                             rs.getInt("id"),
                             rs.getInt("alerta_id"),
-                            rs.getInt("usuario_id"),
-                            rs.getInt("gondola_id"),
-                            rs.getInt("produto_id")
+                            rs.getInt("id_usuario"),
+                            rs.getInt("id_gondola"),
+                            rs.getInt("id_produto")
                     );
                 }
 
@@ -50,15 +51,12 @@ public class HistoricoAlertaDAO {
         }
     }
 
+    // Busca o histórico associado a um alerta pelo ID
     public HistoricoAlerta buscarPorAlertaId(int alertaId) {
 
         String sql = """
-                     SELECT id,
-                            alerta_id,
-                            usuario_id,
-                            gondola_id,
-                            produto_id
-                     FROM historico_alertas
+                     SELECT id, alerta_id, id_usuario, id_gondola, id_produto
+                     FROM alertas_historicos
                      WHERE alerta_id = ?
                      """;
 
@@ -70,12 +68,13 @@ public class HistoricoAlertaDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new HistoricoAlerta(
                             rs.getInt("id"),
                             rs.getInt("alerta_id"),
-                            rs.getInt("usuario_id"),
-                            rs.getInt("gondola_id"),
-                            rs.getInt("produto_id")
+                            rs.getInt("id_usuario"),
+                            rs.getInt("id_gondola"),
+                            rs.getInt("id_produto")
                     );
                 }
 

@@ -1,10 +1,18 @@
+
 package com.kairos.dao;
 
-import com.kairos.model.*;
+import com.kairos.model.Gondola;
+import com.kairos.model.HistoricoReposicao;
+import com.kairos.model.Produto;
+import com.kairos.model.Reposicao;
+import com.kairos.model.Setor;
 import com.kairos.utils.connection.ConnectionFactory;
 import com.kairos.utils.exceptions.system.DAOException;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,16 +21,15 @@ public class ReposicaoDAO {
     private final HistoricoUsuarioReposicaoDAO historicoUsuarioReposicaoDAO;
 
     public ReposicaoDAO() {
-        this.historicoUsuarioReposicaoDAO =
-                new HistoricoUsuarioReposicaoDAO();
+        this.historicoUsuarioReposicaoDAO = new HistoricoUsuarioReposicaoDAO();
     }
 
+    // Insere uma nova reposição
     public Reposicao inserir(Reposicao reposicao) {
 
         String sql = """
                      INSERT INTO reposicoes (produto_id, data_reposicao,
-                                             quantidade_reposto, motivo_reposicao,
-                                             gondola_id)
+                                             quantidade_reposto, motivo_reposicao, gondola_id)
                      VALUES (?, ?, ?, ?, ?)
                      RETURNING id, produto_id, data_reposicao,
                                quantidade_reposto, motivo_reposicao, gondola_id
@@ -40,6 +47,7 @@ public class ReposicaoDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Reposicao(
                             rs.getInt("id"),
                             reposicao.getProduto(),
@@ -58,49 +66,24 @@ public class ReposicaoDAO {
         }
     }
 
+    // Busca uma reposição pelo ID
     public Reposicao buscarPorId(int id) {
 
         String sql = """
-                     SELECT r.id AS rid,
-                            r.produto_id,
-                            r.data_reposicao,
-                            r.quantidade_reposto,
-                            r.motivo_reposicao,
-                            r.gondola_id,
-
-                            p.id AS pid,
-                            p.marca,
-                            p.nome,
-                            p.quantidade_estoque,
-
-                            g.id AS gid,
-                            g.capacidade_maxima,
-                            g.setor_id,
-
-                            s.id AS sid,
-                            s.nome AS setor_nome,
-                            s.categoria_setor,
-
-                            h.id AS historico_id,
-                            h.reposicao_id AS historico_reposicao_id,
+                     SELECT r.id AS rid, r.produto_id, r.data_reposicao,
+                            r.quantidade_reposto, r.motivo_reposicao, r.gondola_id,
+                            p.id AS pid, p.marca, p.nome, p.quantidade_estoque,
+                            g.id AS gid, g.capacidade_maxima, g.setor_id,
+                            s.id AS sid, s.nome AS setor_nome, s.categoria_setor,
+                            h.id AS historico_id, h.reposicao_id AS historico_reposicao_id,
                             h.produto_marca AS historico_produto_marca,
                             h.produto_nome AS historico_produto_nome,
-                            h.gondola_id AS historico_gondola_id
-
+                            h.id_gondola AS historico_gondola_id
                      FROM reposicoes r
-
-                     LEFT JOIN produtos p
-                            ON p.id = r.produto_id
-
-                     LEFT JOIN gondolas g
-                            ON g.id = r.gondola_id
-
-                     LEFT JOIN setores s
-                            ON s.id = g.setor_id
-
-                     LEFT JOIN historico_reposicoes h
-                            ON h.reposicao_id = r.id
-
+                     LEFT JOIN produtos p ON p.id = r.produto_id
+                     LEFT JOIN gondolas g ON g.id = r.gondola_id
+                     LEFT JOIN setores s ON s.id = g.setor_id
+                     LEFT JOIN historico_reposicoes h ON h.reposicao_id = r.id
                      WHERE r.id = ?
                      """;
 
@@ -116,6 +99,7 @@ public class ReposicaoDAO {
                     Produto produto = null;
 
                     if (rs.getObject("pid") != null) {
+
                         produto = new Produto(
                                 rs.getInt("pid"),
                                 rs.getString("marca"),
@@ -131,6 +115,7 @@ public class ReposicaoDAO {
                         Setor setor = null;
 
                         if (rs.getObject("sid") != null) {
+
                             setor = new Setor(
                                     rs.getInt("sid"),
                                     rs.getString("setor_nome"),
@@ -167,10 +152,7 @@ public class ReposicaoDAO {
                         reposicao.setHistoricoReposicao(historico);
                     }
 
-                    reposicao.setHistoricoUsuariosReposicoes(
-                            historicoUsuarioReposicaoDAO
-                                    .buscarPorReposicaoId(reposicao.getId())
-                    );
+                    reposicao.setHistoricoUsuariosReposicoes(historicoUsuarioReposicaoDAO.buscarPorReposicaoId(reposicao.getId()));
 
                     return reposicao;
                 }
@@ -183,49 +165,24 @@ public class ReposicaoDAO {
         }
     }
 
+    // Lista todas as reposições cadastradas
     public List<Reposicao> listarTodos() {
 
         String sql = """
-                     SELECT r.id AS rid,
-                            r.produto_id,
-                            r.data_reposicao,
-                            r.quantidade_reposto,
-                            r.motivo_reposicao,
-                            r.gondola_id,
-
-                            p.id AS pid,
-                            p.marca,
-                            p.nome,
-                            p.quantidade_estoque,
-
-                            g.id AS gid,
-                            g.capacidade_maxima,
-                            g.setor_id,
-
-                            s.id AS sid,
-                            s.nome AS setor_nome,
-                            s.categoria_setor,
-
-                            h.id AS historico_id,
-                            h.reposicao_id AS historico_reposicao_id,
+                     SELECT r.id AS rid, r.produto_id, r.data_reposicao,
+                            r.quantidade_reposto, r.motivo_reposicao, r.gondola_id,
+                            p.id AS pid, p.marca, p.nome, p.quantidade_estoque,
+                            g.id AS gid, g.capacidade_maxima, g.setor_id,
+                            s.id AS sid, s.nome AS setor_nome, s.categoria_setor,
+                            h.id AS historico_id, h.reposicao_id AS historico_reposicao_id,
                             h.produto_marca AS historico_produto_marca,
                             h.produto_nome AS historico_produto_nome,
-                            h.gondola_id AS historico_gondola_id
-
+                            h.id_gondola AS historico_gondola_id
                      FROM reposicoes r
-
-                     LEFT JOIN produtos p
-                            ON p.id = r.produto_id
-
-                     LEFT JOIN gondolas g
-                            ON g.id = r.gondola_id
-
-                     LEFT JOIN setores s
-                            ON s.id = g.setor_id
-
-                     LEFT JOIN historico_reposicoes h
-                            ON h.reposicao_id = r.id
-
+                     LEFT JOIN produtos p ON p.id = r.produto_id
+                     LEFT JOIN gondolas g ON g.id = r.gondola_id
+                     LEFT JOIN setores s ON s.id = g.setor_id
+                     LEFT JOIN historico_reposicoes h ON h.reposicao_id = r.id
                      ORDER BY r.id
                      """;
 
@@ -241,6 +198,7 @@ public class ReposicaoDAO {
                     Produto produto = null;
 
                     if (rs.getObject("pid") != null) {
+
                         produto = new Produto(
                                 rs.getInt("pid"),
                                 rs.getString("marca"),
@@ -256,6 +214,7 @@ public class ReposicaoDAO {
                         Setor setor = null;
 
                         if (rs.getObject("sid") != null) {
+
                             setor = new Setor(
                                     rs.getInt("sid"),
                                     rs.getString("setor_nome"),
@@ -292,10 +251,7 @@ public class ReposicaoDAO {
                         reposicao.setHistoricoReposicao(historico);
                     }
 
-                    reposicao.setHistoricoUsuariosReposicoes(
-                            historicoUsuarioReposicaoDAO
-                                    .buscarPorReposicaoId(reposicao.getId())
-                    );
+                    reposicao.setHistoricoUsuariosReposicoes(historicoUsuarioReposicaoDAO.buscarPorReposicaoId(reposicao.getId()));
 
                     reposicoes.add(reposicao);
                 }
@@ -308,6 +264,7 @@ public class ReposicaoDAO {
         }
     }
 
+    // Atualiza os dados de uma reposição
     public int atualizar(Reposicao reposicao) {
 
         String sql = """
@@ -337,6 +294,7 @@ public class ReposicaoDAO {
         }
     }
 
+    // Exclui uma reposição pelo ID
     public void deletarPorId(int id) {
 
         String sql = """
@@ -356,66 +314,40 @@ public class ReposicaoDAO {
         }
     }
 
+    // Pesquisa reposições por seus dados e informações relacionadas
     public List<Reposicao> pesquisar(String pesquisa) {
 
         String sql = """
-                 SELECT r.id AS reposicao_id,
-                        r.produto_id,
-                        r.data_reposicao,
-                        r.quantidade_reposto,
-                        r.motivo_reposicao,
-                        r.gondola_id,
-
-                        p.id AS produto_id,
-                        p.marca,
-                        p.nome,
-                        p.quantidade_estoque,
-
-                        g.id AS gondola_id,
-                        g.capacidade_maxima,
-                        g.setor_id,
-
-                        s.id AS setor_id,
-                        s.nome AS setor_nome,
-                        s.categoria_setor,
-
-                        h.id AS historico_id,
-                        h.reposicao_id AS historico_reposicao_id,
-                        h.produto_marca AS historico_produto_marca,
-                        h.produto_nome AS historico_produto_nome,
-                        h.gondola_id AS historico_gondola_id
-
-                 FROM reposicoes r
-
-                 LEFT JOIN produtos p
-                        ON p.id = r.produto_id
-
-                 LEFT JOIN gondolas g
-                        ON g.id = r.gondola_id
-
-                 LEFT JOIN setores s
-                        ON s.id = g.setor_id
-
-                 LEFT JOIN historico_reposicoes h
-                        ON h.reposicao_id = r.id
-
-                 WHERE CAST(r.id AS TEXT) ILIKE ?
-                    OR CAST(r.produto_id AS TEXT) ILIKE ?
-                    OR COALESCE(p.marca, '') ILIKE ?
-                    OR COALESCE(p.nome, '') ILIKE ?
-                    OR COALESCE(h.produto_marca, '') ILIKE ?
-                    OR COALESCE(h.produto_nome, '') ILIKE ?
-                    OR TO_CHAR(r.data_reposicao, 'DD/MM/YYYY') ILIKE ?
-                    OR CAST(r.quantidade_reposto AS TEXT) ILIKE ?
-                    OR r.motivo_reposicao ILIKE ?
-                    OR CAST(r.gondola_id AS TEXT) ILIKE ?
-                    OR COALESCE(CAST(g.capacidade_maxima AS TEXT), '') ILIKE ?
-                    OR COALESCE(s.nome, '') ILIKE ?
-                    OR COALESCE(s.categoria_setor, '') ILIKE ?
-                    OR COALESCE(CAST(h.gondola_id AS TEXT), '') ILIKE ?
-
-                 ORDER BY r.id
-                 """;
+                     SELECT r.id AS reposicao_id, r.produto_id, r.data_reposicao,
+                            r.quantidade_reposto, r.motivo_reposicao, r.gondola_id,
+                            p.id AS produto_id, p.marca, p.nome, p.quantidade_estoque,
+                            g.id AS gondola_id, g.capacidade_maxima, g.setor_id,
+                            s.id AS setor_id, s.nome AS setor_nome, s.categoria_setor,
+                            h.id AS historico_id, h.reposicao_id AS historico_reposicao_id,
+                            h.produto_marca AS historico_produto_marca,
+                            h.produto_nome AS historico_produto_nome,
+                            h.id_gondola AS historico_gondola_id
+                     FROM reposicoes r
+                     LEFT JOIN produtos p ON p.id = r.produto_id
+                     LEFT JOIN gondolas g ON g.id = r.gondola_id
+                     LEFT JOIN setores s ON s.id = g.setor_id
+                     LEFT JOIN historico_reposicoes h ON h.reposicao_id = r.id
+                     WHERE CAST(r.id AS TEXT) ILIKE ?
+                        OR CAST(r.produto_id AS TEXT) ILIKE ?
+                        OR COALESCE(p.marca, '') ILIKE ?
+                        OR COALESCE(p.nome, '') ILIKE ?
+                        OR COALESCE(h.produto_marca, '') ILIKE ?
+                        OR COALESCE(h.produto_nome, '') ILIKE ?
+                        OR TO_CHAR(r.data_reposicao, 'DD/MM/YYYY') ILIKE ?
+                        OR CAST(r.quantidade_reposto AS TEXT) ILIKE ?
+                        OR r.motivo_reposicao ILIKE ?
+                        OR CAST(r.gondola_id AS TEXT) ILIKE ?
+                        OR COALESCE(CAST(g.capacidade_maxima AS TEXT), '') ILIKE ?
+                        OR COALESCE(s.nome, '') ILIKE ?
+                        OR COALESCE(s.categoria_setor, '') ILIKE ?
+                        OR COALESCE(CAST(h.id_gondola AS TEXT), '') ILIKE ?
+                     ORDER BY r.id
+                     """;
 
         List<Reposicao> reposicoes = new ArrayList<>();
 
@@ -433,6 +365,7 @@ public class ReposicaoDAO {
                     Produto produto = null;
 
                     if (rs.getObject("produto_id") != null) {
+
                         produto = new Produto(
                                 rs.getInt("produto_id"),
                                 rs.getString("marca"),
@@ -448,6 +381,7 @@ public class ReposicaoDAO {
                         Setor setor = null;
 
                         if (rs.getObject("setor_id") != null) {
+
                             setor = new Setor(
                                     rs.getInt("setor_id"),
                                     rs.getString("setor_nome"),
@@ -484,10 +418,7 @@ public class ReposicaoDAO {
                         reposicao.setHistoricoReposicao(historico);
                     }
 
-                    reposicao.setHistoricoUsuariosReposicoes(
-                            historicoUsuarioReposicaoDAO
-                                    .buscarPorReposicaoId(reposicao.getId())
-                    );
+                    reposicao.setHistoricoUsuariosReposicoes(historicoUsuarioReposicaoDAO.buscarPorReposicaoId(reposicao.getId()));
 
                     reposicoes.add(reposicao);
                 }

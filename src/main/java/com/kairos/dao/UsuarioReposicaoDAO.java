@@ -1,3 +1,4 @@
+
 package com.kairos.dao;
 
 import com.kairos.model.Empresa;
@@ -17,10 +18,11 @@ import java.util.List;
 
 public class UsuarioReposicaoDAO {
 
+    // Vincula um usuário a uma reposição
     public void vincular(Usuario usuario, Reposicao reposicao) {
 
         String sql = """
-                     INSERT INTO usuarios_reposicoes (usuario_id, reposicao_id)
+                     INSERT INTO reposicoes_usuarios (usuario_id, reposicao_id)
                      VALUES (?, ?)
                      """;
 
@@ -33,18 +35,15 @@ public class UsuarioReposicaoDAO {
             statement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException(
-                    "Erro ao vincular usuário à reposição",
-                    e
-            );
+            throw new DAOException("Erro ao vincular usuário à reposição", e);
         }
     }
 
-
+    // Desvincula um usuário de uma reposição
     public void desvincular(int usuarioId, Reposicao reposicao) {
 
         String sql = """
-                     DELETE FROM usuarios_reposicoes
+                     DELETE FROM reposicoes_usuarios
                      WHERE usuario_id = ?
                        AND reposicao_id = ?
                      """;
@@ -58,22 +57,18 @@ public class UsuarioReposicaoDAO {
             statement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException(
-                    "Erro ao desvincular usuário da reposição",
-                    e
-            );
+            throw new DAOException("Erro ao desvincular usuário da reposição", e);
         }
     }
 
-
+    // Lista todos os usuários vinculados a uma reposição
     public List<Usuario> listarUsuariosPorReposicao(Reposicao reposicao) {
 
         String sql = """
                      SELECT u.id as uid, u.cpf, u.nome, u.sobrenome,
                             u.data_nascimento, u.cep, u.tipo_usuario, u.email,
-                            e.id as eid, e.nome as empresa_nome,
-                            e.cnpj, e.tipo_plano
-                     FROM usuarios_reposicoes ur
+                            e.id as eid, e.nome as empresa_nome, e.cnpj, e.tipo_plano
+                     FROM reposicoes_usuarios ur
                      JOIN usuarios u ON u.id = ur.usuario_id
                      JOIN empresas e ON e.id = u.empresa_id
                      WHERE ur.reposicao_id = ?
@@ -117,10 +112,7 @@ public class UsuarioReposicaoDAO {
             }
 
         } catch (SQLException e) {
-            throw new DAOException(
-                    "Erro ao listar usuários da reposição",
-                    e
-            );
+            throw new DAOException("Erro ao listar usuários da reposição", e);
         }
     }
 }

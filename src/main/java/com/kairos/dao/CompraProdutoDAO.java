@@ -1,16 +1,23 @@
 
 package com.kairos.dao;
 
-import com.kairos.model.*;
+import com.kairos.model.Compra;
+import com.kairos.model.CompraProduto;
+import com.kairos.model.HistoricoCompraProduto;
+import com.kairos.model.Produto;
 import com.kairos.utils.connection.ConnectionFactory;
 import com.kairos.utils.exceptions.system.DAOException;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompraProdutoDAO {
 
+    // Insere um produto em uma compra e registra seu histórico
     public CompraProduto inserir(CompraProduto compraProduto) {
 
         String sql = """
@@ -21,10 +28,10 @@ public class CompraProdutoDAO {
 
         String sqlHistorico = """
                               INSERT INTO historico_compras_produtos (
-                                  compra_produto_id, compra_id, produto_id,
+                                  compra_produto_id, id_produto,
                                   produto_marca, produto_nome
                               )
-                              SELECT ?, ?, p.id, p.marca, p.nome
+                              SELECT ?, p.id, p.marca, p.nome
                               FROM produtos p
                               WHERE p.id = ?
                               ON CONFLICT (compra_produto_id) DO NOTHING
@@ -47,6 +54,7 @@ public class CompraProdutoDAO {
                     try (ResultSet rs = statement.executeQuery()) {
 
                         if (rs.next()) {
+
                             resultado = new CompraProduto(
                                     rs.getInt("id"),
                                     compraProduto.getProduto(),
@@ -65,8 +73,7 @@ public class CompraProdutoDAO {
                 try (PreparedStatement statement = connection.prepareStatement(sqlHistorico)) {
 
                     statement.setInt(1, resultado.getId());
-                    statement.setInt(2, resultado.getCompra().getId());
-                    statement.setInt(3, resultado.getProduto().getId());
+                    statement.setInt(2, resultado.getProduto().getId());
 
                     statement.executeUpdate();
                 }
@@ -85,6 +92,7 @@ public class CompraProdutoDAO {
         }
     }
 
+    // Busca um produto vinculado a uma compra pelo ID
     public CompraProduto buscarPorId(int id) {
 
         String sql = """
@@ -93,8 +101,8 @@ public class CompraProdutoDAO {
                             p.id AS pid, p.marca, p.nome, p.quantidade_estoque,
                             h.id AS historico_id,
                             h.compra_produto_id AS historico_compra_produto_id,
-                            h.compra_id AS historico_compra_id,
-                            h.produto_id AS historico_produto_id,
+                            cp.compra_id AS historico_compra_id,
+                            h.id_produto AS historico_produto_id,
                             h.produto_marca AS historico_produto_marca,
                             h.produto_nome AS historico_produto_nome,
                             c.id AS cid, c.data_compra
@@ -118,6 +126,7 @@ public class CompraProdutoDAO {
                     Produto produto = null;
 
                     if (rs.getObject("pid") != null) {
+
                         produto = new Produto(
                                 rs.getInt("pid"),
                                 rs.getString("marca"),
@@ -161,6 +170,7 @@ public class CompraProdutoDAO {
         }
     }
 
+    // Lista todos os produtos vinculados às compras
     public List<CompraProduto> listarTodos() {
 
         String sql = """
@@ -169,8 +179,8 @@ public class CompraProdutoDAO {
                             p.id AS pid, p.marca, p.nome, p.quantidade_estoque,
                             h.id AS historico_id,
                             h.compra_produto_id AS historico_compra_produto_id,
-                            h.compra_id AS historico_compra_id,
-                            h.produto_id AS historico_produto_id,
+                            cp.compra_id AS historico_compra_id,
+                            h.id_produto AS historico_produto_id,
                             h.produto_marca AS historico_produto_marca,
                             h.produto_nome AS historico_produto_nome,
                             c.id AS cid, c.data_compra
@@ -194,6 +204,7 @@ public class CompraProdutoDAO {
                     Produto produto = null;
 
                     if (rs.getObject("pid") != null) {
+
                         produto = new Produto(
                                 rs.getInt("pid"),
                                 rs.getString("marca"),
@@ -237,6 +248,7 @@ public class CompraProdutoDAO {
         }
     }
 
+    // Verifica se um produto já está vinculado a uma compra
     public boolean existeVinculo(int compraId, int produtoId) {
 
         String sql = """
@@ -261,6 +273,7 @@ public class CompraProdutoDAO {
         }
     }
 
+    // Atualiza a quantidade de um produto em uma compra
     public int atualizar(CompraProduto compraProduto) {
 
         String sql = """
@@ -282,6 +295,7 @@ public class CompraProdutoDAO {
         }
     }
 
+    // Exclui o vínculo de um produto com uma compra pelo ID
     public void deletarPorId(int id) {
 
         String sql = """
