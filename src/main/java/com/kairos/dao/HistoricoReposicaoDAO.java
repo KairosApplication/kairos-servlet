@@ -1,3 +1,4 @@
+
 package com.kairos.dao;
 
 import com.kairos.model.HistoricoReposicao;
@@ -11,14 +12,13 @@ import java.sql.SQLException;
 
 public class HistoricoReposicaoDAO {
 
+    // Salva o histórico de uma reposição
     public HistoricoReposicao salvar(HistoricoReposicao historico) {
 
         String sql = """
-                     INSERT INTO historico_reposicoes
-                     (reposicao_id, produto_marca, produto_nome, gondola_id)
+                     INSERT INTO historico_reposicoes (reposicao_id, produto_marca, produto_nome, id_gondola)
                      VALUES (?, ?, ?, ?)
-                     RETURNING id, reposicao_id, produto_marca,
-                               produto_nome, gondola_id
+                     RETURNING id, reposicao_id, produto_marca, produto_nome, id_gondola
                      """;
 
         try (Connection connection = ConnectionFactory.getConnection();
@@ -32,12 +32,13 @@ public class HistoricoReposicaoDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new HistoricoReposicao(
                             rs.getInt("id"),
                             rs.getInt("reposicao_id"),
                             rs.getString("produto_marca"),
                             rs.getString("produto_nome"),
-                            rs.getInt("gondola_id")
+                            rs.getInt("id_gondola")
                     );
                 }
 
@@ -49,14 +50,11 @@ public class HistoricoReposicaoDAO {
         }
     }
 
+    // Busca o histórico associado a uma reposição pelo ID
     public HistoricoReposicao buscarPorReposicaoId(int reposicaoId) {
 
         String sql = """
-                     SELECT id,
-                            reposicao_id,
-                            produto_marca,
-                            produto_nome,
-                            gondola_id
+                     SELECT id, reposicao_id, produto_marca, produto_nome, id_gondola
                      FROM historico_reposicoes
                      WHERE reposicao_id = ?
                      """;
@@ -69,12 +67,13 @@ public class HistoricoReposicaoDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new HistoricoReposicao(
                             rs.getInt("id"),
                             rs.getInt("reposicao_id"),
                             rs.getString("produto_marca"),
                             rs.getString("produto_nome"),
-                            rs.getInt("gondola_id")
+                            rs.getInt("id_gondola")
                     );
                 }
 

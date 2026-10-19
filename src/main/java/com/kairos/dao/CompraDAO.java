@@ -1,3 +1,4 @@
+
 package com.kairos.dao;
 
 import com.kairos.model.Compra;
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class CompraDAO {
 
+    // Insere uma nova compra
     public Compra inserir(Compra compra) {
 
         String sql = """
@@ -29,6 +31,7 @@ public class CompraDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Compra(
                             rs.getInt("id"),
                             rs.getTimestamp("data_compra")
@@ -43,6 +46,7 @@ public class CompraDAO {
         }
     }
 
+    // Busca uma compra pelo ID
     public Compra buscarPorId(int id) {
 
         String sql = """
@@ -59,6 +63,7 @@ public class CompraDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Compra(
                             rs.getInt("id"),
                             rs.getTimestamp("data_compra")
@@ -73,6 +78,7 @@ public class CompraDAO {
         }
     }
 
+    // Lista todas as compras cadastradas
     public List<Compra> listarTodos() {
 
         String sql = """
@@ -106,6 +112,7 @@ public class CompraDAO {
         }
     }
 
+    // Pesquisa compras pelo ID ou pela data
     public List<Compra> pesquisar(String pesquisa) {
 
         String sql = """
@@ -145,6 +152,7 @@ public class CompraDAO {
         }
     }
 
+    // Atualiza os dados de uma compra
     public int atualizar(Compra compra) {
 
         String sql = """
@@ -166,6 +174,7 @@ public class CompraDAO {
         }
     }
 
+    // Exclui uma compra pelo ID
     public void deletarPorId(int id) {
 
         String sql = """

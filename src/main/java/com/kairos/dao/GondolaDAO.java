@@ -1,3 +1,4 @@
+
 package com.kairos.dao;
 
 import com.kairos.model.Gondola;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class GondolaDAO {
 
+    // Insere uma nova gôndola
     public Gondola inserir(Gondola gondola) {
 
         String sql = """
@@ -31,6 +33,7 @@ public class GondolaDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Gondola(
                             rs.getInt("gondola_id"),
                             rs.getInt("capacidade_maxima"),
@@ -46,15 +49,12 @@ public class GondolaDAO {
         }
     }
 
+    // Busca uma gôndola pelo ID
     public Gondola buscarPorId(int id) {
 
         String sql = """
-                     SELECT g.id as gondola_id,
-                            g.capacidade_maxima,
-                            g.setor_id,
-                            s.id as setor_id,
-                            s.nome,
-                            s.categoria_setor
+                     SELECT g.id as gondola_id, g.capacidade_maxima, g.setor_id,
+                            s.id as setor_id, s.nome, s.categoria_setor
                      FROM gondolas g
                      JOIN setores s ON s.id = g.setor_id
                      WHERE g.id = ?
@@ -68,6 +68,7 @@ public class GondolaDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Gondola(
                             rs.getInt("gondola_id"),
                             rs.getInt("capacidade_maxima"),
@@ -87,15 +88,12 @@ public class GondolaDAO {
         }
     }
 
+    // Lista todas as gôndolas cadastradas
     public List<Gondola> listarTodos() {
 
         String sql = """
-                     SELECT g.id as gondola_id,
-                            g.capacidade_maxima,
-                            g.setor_id,
-                            s.id as setor_id,
-                            s.nome,
-                            s.categoria_setor
+                     SELECT g.id as gondola_id, g.capacidade_maxima, g.setor_id,
+                            s.id as setor_id, s.nome, s.categoria_setor
                      FROM gondolas g
                      JOIN setores s ON s.id = g.setor_id
                      """;
@@ -130,6 +128,7 @@ public class GondolaDAO {
         }
     }
 
+    // Atualiza os dados de uma gôndola
     public int atualizar(Gondola gondola) {
 
         String sql = """
@@ -153,6 +152,7 @@ public class GondolaDAO {
         }
     }
 
+    // Exclui uma gôndola pelo ID
     public void deletarPorId(int id) {
 
         String sql = """
@@ -172,17 +172,18 @@ public class GondolaDAO {
         }
     }
 
+    // Pesquisa gôndolas pelo ID, capacidade máxima ou nome do setor
     public List<Gondola> pesquisar(String pesquisa) {
 
         String sql = """
-                 SELECT g.id as gondola_id, g.capacidade_maxima, g.setor_id,
-                        s.id as setor_id, s.nome, s.categoria_setor
-                 FROM gondolas g
-                 JOIN setores s ON s.id = g.setor_id
-                 WHERE CAST(g.id AS TEXT) ILIKE ?
-                       OR CAST(g.capacidade_maxima AS TEXT) ILIKE ?
-                       OR s.nome ILIKE ?
-                 """;
+                     SELECT g.id as gondola_id, g.capacidade_maxima, g.setor_id,
+                            s.id as setor_id, s.nome, s.categoria_setor
+                     FROM gondolas g
+                     JOIN setores s ON s.id = g.setor_id
+                     WHERE CAST(g.id AS TEXT) ILIKE ?
+                           OR CAST(g.capacidade_maxima AS TEXT) ILIKE ?
+                           OR s.nome ILIKE ?
+                     """;
 
         List<Gondola> gondolas = new ArrayList<>();
 
@@ -214,7 +215,7 @@ public class GondolaDAO {
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao listar setores por pesquisa");
+            throw new DAOException("Erro ao listar setores por pesquisa", e);
         }
     }
 }

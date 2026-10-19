@@ -1,3 +1,4 @@
+
 package com.kairos.dao;
 
 import com.kairos.model.Admin;
@@ -11,18 +12,17 @@ import java.sql.SQLException;
 
 public class AdminDAO {
 
+    // Busca um administrador pelo email
     public Admin buscarPorEmail(String email) {
 
         String sql = """
-                SELECT id, email, senha
-                FROM admins
-                WHERE email = ?
-                """;
+                     SELECT id, email, senha
+                     FROM admins
+                     WHERE email = ?
+                     """;
 
-        try (
-                Connection connection = ConnectionFactory.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)
-        ) {
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, email);
 
@@ -41,11 +41,7 @@ public class AdminDAO {
             }
 
         } catch (SQLException e) {
-
-            throw new DAOException(
-                    "Erro ao buscar administrador pelo email " + email,
-                    e
-            );
+            throw new DAOException("Erro ao buscar administrador pelo email " + email, e);
         }
     }
 }

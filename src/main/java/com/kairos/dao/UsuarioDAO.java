@@ -1,34 +1,32 @@
+
 package com.kairos.dao;
 
 import com.kairos.model.Empresa;
+import com.kairos.model.Usuario;
 import com.kairos.model.enums.TipoPlano;
 import com.kairos.model.enums.TipoUsuario;
-import com.kairos.model.Usuario;
 import com.kairos.utils.PasswordHasher;
 import com.kairos.utils.connection.ConnectionFactory;
 import com.kairos.utils.exceptions.system.DAOException;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioDAO {
 
-    // Metodo para inserir um usuario
+    // Insere um novo usuário com a senha criptografada
     public Usuario inserir(Usuario usuario) {
 
         String senhaHash = PasswordHasher.hash(usuario.getSenha());
 
         String sql = """
-                     INSERT INTO usuarios (
-                                           cpf, senha, nome, sobrenome, data_nascimento,
-                                           cep, tipo_usuario, email, empresa_id
-                                          )
+                     INSERT INTO usuarios (cpf, senha, nome, sobrenome, data_nascimento,
+                                          cep, tipo_usuario, email, empresa_id)
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                      RETURNING id, cpf, senha, nome, sobrenome, data_nascimento,
                                cep, tipo_usuario, email
@@ -50,6 +48,7 @@ public class UsuarioDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Usuario(
                             rs.getInt("id"),
                             rs.getString("cpf"),
@@ -72,14 +71,13 @@ public class UsuarioDAO {
         }
     }
 
-    // Metodo que busca usuario pelo id
+    // Busca um usuário pelo ID
     public Usuario buscarPorId(int id) {
 
         String sql = """
                      SELECT u.id as usuario_id, u.cpf, u.senha, u.nome, u.sobrenome,
                             u.data_nascimento, u.cep, u.tipo_usuario, u.email,
-                            e.id as empresa_id, e.nome as empresa_nome,
-                            e.cnpj, e.tipo_plano
+                            e.id as empresa_id, e.nome as empresa_nome, e.cnpj, e.tipo_plano
                      FROM usuarios u
                      JOIN empresas e ON e.id = u.empresa_id
                      WHERE u.id = ?
@@ -93,6 +91,7 @@ public class UsuarioDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Usuario(
                             rs.getInt("usuario_id"),
                             rs.getString("cpf"),
@@ -120,14 +119,13 @@ public class UsuarioDAO {
         }
     }
 
-    // Metodo que busca todos os usuarios
+    // Lista todos os usuários cadastrados
     public List<Usuario> listarTodos() {
 
         String sql = """
                      SELECT u.id as usuario_id, u.cpf, u.nome, u.sobrenome,
                             u.data_nascimento, u.cep, u.tipo_usuario, u.email,
-                            e.id as empresa_id, e.nome as empresa_nome,
-                            e.cnpj, e.tipo_plano
+                            e.id as empresa_id, e.nome as empresa_nome, e.cnpj, e.tipo_plano
                      FROM usuarios u
                      JOIN empresas e ON e.id = u.empresa_id
                      ORDER BY u.id
@@ -170,19 +168,19 @@ public class UsuarioDAO {
         }
     }
 
-    // Metodo que atualiza um usuario
+    // Atualiza os dados de um usuário
     public int atualizar(Usuario usuario) {
 
         String sql = """
-             UPDATE usuarios
-             SET cpf = ?,
-                 nome = ?,
-                 sobrenome = ?,
-                 data_nascimento = ?,
-                 cep = ?,
-                 email = ?
-             WHERE id = ?
-             """;
+                     UPDATE usuarios
+                     SET cpf = ?,
+                         nome = ?,
+                         sobrenome = ?,
+                         data_nascimento = ?,
+                         cep = ?,
+                         email = ?
+                     WHERE id = ?
+                     """;
 
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -202,7 +200,7 @@ public class UsuarioDAO {
         }
     }
 
-    // Metodo que deleta um usuario por id
+    // Exclui um usuário pelo ID
     public void deletarPorId(int id) {
 
         String sql = """
@@ -222,6 +220,7 @@ public class UsuarioDAO {
         }
     }
 
+    // Verifica se existe um usuário cadastrado com o email informado
     public boolean existePorEmail(String email) {
 
         String sql = """
@@ -244,6 +243,7 @@ public class UsuarioDAO {
         }
     }
 
+    // Verifica se existe um usuário cadastrado com o CPF informado
     public boolean existePorCpf(String cpf) {
 
         String sql = """
@@ -266,7 +266,7 @@ public class UsuarioDAO {
         }
     }
 
-    // Metodo que busca o email de outro usuario
+    // Verifica se o email pertence a outro usuário
     public boolean existePorEmailExcetoId(String email, int id) {
 
         String sql = """
@@ -290,6 +290,7 @@ public class UsuarioDAO {
         }
     }
 
+    // Verifica se o CPF pertence a outro usuário
     public boolean existePorCpfExcetoId(String cpf, int id) {
 
         String sql = """
@@ -313,17 +314,17 @@ public class UsuarioDAO {
         }
     }
 
+    // Busca um usuário pelo email
     public Usuario buscarPorEmail(String email) {
 
         String sql = """
-                 SELECT u.id as usuario_id, u.cpf, u.senha, u.nome, u.sobrenome,
-                        u.data_nascimento, u.cep, u.tipo_usuario, u.email,
-                        e.id as empresa_id, e.nome as empresa_nome,
-                        e.cnpj, e.tipo_plano
-                 FROM usuarios u
-                 JOIN empresas e ON e.id = u.empresa_id
-                 WHERE u.email = ?
-                 """;
+                     SELECT u.id as usuario_id, u.cpf, u.senha, u.nome, u.sobrenome,
+                            u.data_nascimento, u.cep, u.tipo_usuario, u.email,
+                            e.id as empresa_id, e.nome as empresa_nome, e.cnpj, e.tipo_plano
+                     FROM usuarios u
+                     JOIN empresas e ON e.id = u.empresa_id
+                     WHERE u.email = ?
+                     """;
 
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -333,6 +334,7 @@ public class UsuarioDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Usuario(
                             rs.getInt("usuario_id"),
                             rs.getString("cpf"),
@@ -360,26 +362,26 @@ public class UsuarioDAO {
         }
     }
 
+    // Pesquisa usuários por seus dados e informações da empresa
     public List<Usuario> pesquisar(String pesquisa) {
 
         String sql = """
-            SELECT u.id AS usuario_id, u.cpf, u.nome, u.sobrenome,
-                   u.data_nascimento, u.cep, u.tipo_usuario,
-                   u.email, e.id AS empresa_id, e.nome AS empresa_nome,
-                   e.cnpj, e.tipo_plano
-            FROM usuarios u
-            JOIN empresas e ON e.id = u.empresa_id
-            WHERE CAST(u.id AS TEXT) ILIKE ?
-               OR u.cpf ILIKE ?
-               OR u.nome ILIKE ?
-               OR u.sobrenome ILIKE ?
-               OR TO_CHAR(u.data_nascimento, 'DD/MM/YYYY') ILIKE ?
-               OR u.cep ILIKE ?
-               OR u.email ILIKE ?
-               OR u.tipo_usuario ILIKE ?
-               OR e.nome ILIKE ?
-            ORDER BY u.id
-            """;
+                     SELECT u.id AS usuario_id, u.cpf, u.nome, u.sobrenome,
+                            u.data_nascimento, u.cep, u.tipo_usuario, u.email,
+                            e.id AS empresa_id, e.nome AS empresa_nome, e.cnpj, e.tipo_plano
+                     FROM usuarios u
+                     JOIN empresas e ON e.id = u.empresa_id
+                     WHERE CAST(u.id AS TEXT) ILIKE ?
+                        OR u.cpf ILIKE ?
+                        OR u.nome ILIKE ?
+                        OR u.sobrenome ILIKE ?
+                        OR TO_CHAR(u.data_nascimento, 'DD/MM/YYYY') ILIKE ?
+                        OR u.cep ILIKE ?
+                        OR u.email ILIKE ?
+                        OR u.tipo_usuario ILIKE ?
+                        OR e.nome ILIKE ?
+                     ORDER BY u.id
+                     """;
 
         List<Usuario> usuarios = new ArrayList<>();
 
