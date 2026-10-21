@@ -2,10 +2,12 @@ package com.kairos.model;
 
 public class UsuarioGondola {
 
+    // Atributos
     private int id;
     private Gondola gondola;
     private Usuario usuario;
 
+    // Construtores
     public UsuarioGondola(int id, Gondola gondola, Usuario usuario) {
         this.id = id;
         this.gondola = gondola;
@@ -17,6 +19,7 @@ public class UsuarioGondola {
         this.usuario = usuario;
     }
 
+    // Getters
     public int getId() {
         return id;
     }
@@ -29,6 +32,7 @@ public class UsuarioGondola {
         return usuario;
     }
 
+    // Setters
     public void setId(int id) {
         this.id = id;
     }
@@ -41,6 +45,7 @@ public class UsuarioGondola {
         this.usuario = usuario;
     }
 
+    // to String
     @Override
     public String toString() {
         return "\n-= Usuario Gôndola =-" +

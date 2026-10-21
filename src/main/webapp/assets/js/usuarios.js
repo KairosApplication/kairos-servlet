@@ -1,3 +1,5 @@
+
+// Exibe ou oculta os detalhes do usuário
 function toggleDetails(id) {
 
     const checkbox = document.getElementById(
@@ -14,11 +16,7 @@ function toggleDetails(id) {
 }
 
 
-/*
- * Impede qualquer interação com os botões
- * de cancelar e fechar do popup depois
- * que uma ação foi confirmada.
- */
+// Bloqueia os controles do popup após a confirmação
 function bloquearControlesPopup(elemento) {
 
     const popup = elemento.closest(".popup");
@@ -33,10 +31,7 @@ function bloquearControlesPopup(elemento) {
         return;
     }
 
-
-    /*
-     * Não aplica ao popup de logout.
-     */
+    // Ignora o popup de logout
     const logout = document.getElementById(
         "logout-popup"
     );
@@ -51,10 +46,7 @@ function bloquearControlesPopup(elemento) {
 
     }
 
-
-    /*
-     * Bloqueia Cancelar e X.
-     */
+    // Bloqueia os botões de cancelar e fechar
     popup.querySelectorAll(
         ".cancel-button, .popup-close"
     ).forEach(function (controle) {
@@ -63,10 +55,6 @@ function bloquearControlesPopup(elemento) {
         controle.style.cursor = "not-allowed";
         controle.dataset.bloqueado = "true";
 
-        /*
-         * Impede o clique sem remover
-         * o elemento da área do mouse.
-         */
         controle.addEventListener("click", function (event) {
 
             if (controle.dataset.bloqueado === "true") {
@@ -80,31 +68,21 @@ function bloquearControlesPopup(elemento) {
 
     });
 
-
-    /*
-     * Bloqueia os campos do formulário.
-     */
+    // Bloqueia os campos do formulário
     bloquearCamposPopup(popup);
 
 }
 
 
+// Impede envios e cliques duplicados
 document.addEventListener("DOMContentLoaded", function () {
 
-    /*
-     * Impede o envio múltiplo dos formulários.
-     * Funciona para criar, atualizar, vincular e desvincular.
-     */
+    // Bloqueia o envio múltiplo de formulários
     document.querySelectorAll("form").forEach(function (form) {
 
         form.addEventListener("submit", function (event) {
 
-            /*
-             * Bloqueia Cancelar, X e campos do popup
-             * antes de enviar a ação.
-             */
             bloquearControlesPopup(form);
-
 
             if (form.dataset.enviado === "true") {
 
@@ -114,7 +92,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             form.dataset.enviado = "true";
-
 
             const botao = form.querySelector(
                 'button[type="submit"], input[type="submit"]'
@@ -133,22 +110,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    /*
-     * Impede cliques múltiplos em links que executam ações.
-     * Exemplo: Deletar.
-     */
+    // Bloqueia cliques múltiplos em links de exclusão
     document.querySelectorAll(
         "a.delete-confirm-button"
     ).forEach(function (link) {
 
         link.addEventListener("click", function (event) {
 
-            /*
-             * Bloqueia Cancelar, X e campos do popup
-             * antes de executar a ação.
-             */
             bloquearControlesPopup(link);
-
 
             if (link.dataset.clicado === "true") {
 
@@ -169,9 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-/*
- * Limpa o formulário de adicionar usuário.
- */
+// Limpa o formulário de cadastro
 function limparFormularioAdicionar() {
 
     const formulario = document.getElementById(
@@ -182,15 +149,9 @@ function limparFormularioAdicionar() {
         return;
     }
 
-
-    /*
-     * Não limpa o formulário depois que
-     * a ação já foi confirmada.
-     */
     if (formulario.dataset.enviado === "true") {
         return;
     }
-
 
     formulario.querySelectorAll("input").forEach(function (input) {
 
@@ -215,10 +176,7 @@ function limparFormularioAdicionar() {
 }
 
 
-/*
- * Limpa erros e restaura os dados originais
- * do usuário no formulário de atualização.
- */
+// Restaura os dados do formulário de atualização
 function limparFormularioAtualizacao(id) {
 
     const formulario = document.getElementById(
@@ -229,15 +187,9 @@ function limparFormularioAtualizacao(id) {
         return;
     }
 
-
-    /*
-     * Não limpa nem restaura os campos depois
-     * que a atualização já foi confirmada.
-     */
     if (formulario.dataset.enviado === "true") {
         return;
     }
-
 
     formulario.querySelectorAll("input").forEach(function (input) {
 
@@ -259,10 +211,7 @@ function limparFormularioAtualizacao(id) {
 }
 
 
-/*
- * Limpa o formulário de vincular gôndola.
- * Remove o ID digitado e os erros de validação.
- */
+// Limpa o formulário de vinculação de gôndola
 function limparFormularioVincular(id) {
 
     const formulario = document.getElementById(
@@ -273,15 +222,9 @@ function limparFormularioVincular(id) {
         return;
     }
 
-
-    /*
-     * Não limpa o formulário depois que
-     * a ação já foi confirmada.
-     */
     if (formulario.dataset.enviado === "true") {
         return;
     }
-
 
     formulario.querySelectorAll("input").forEach(function (input) {
 
@@ -310,95 +253,106 @@ function limparFormularioVincular(id) {
 }
 
 
-/*
- * Bloqueia os campos do popup depois que
- * a ação foi confirmada.
- *
- * Os campos não recebem disabled=true,
- * pois seus valores ainda precisam ser
- * enviados pelo formulário.
- */
+// Bloqueia os campos sem impedir o envio dos valores
 function bloquearCamposPopup(popup) {
 
     popup.querySelectorAll(
         "input:not([type='hidden']), select, textarea"
     ).forEach(function (campo) {
 
+        if (campo.dataset.bloqueado === "true") {
+            return;
+        }
+
         campo.style.opacity = "0.6";
+        campo.style.cursor = "not-allowed";
         campo.dataset.bloqueado = "true";
 
+        [
+            "mousedown",
+            "keydown",
+            "beforeinput",
+            "click",
+            "change",
+            "paste",
+            "drop"
+        ].forEach(function (tipo) {
 
-        /*
-         * Impede interação pelo mouse antes
-         * mesmo que o evento de click aconteça.
-         */
-        campo.addEventListener("mousedown", function (event) {
+            campo.addEventListener(tipo, function (event) {
 
-            if (campo.dataset.bloqueado === "true") {
+                if (campo.dataset.bloqueado === "true") {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
 
-                event.preventDefault();
-
-            }
-
-        });
-
-
-        /*
-         * Impede alterações pelo teclado.
-         */
-        campo.addEventListener("keydown", function (event) {
-
-            if (campo.dataset.bloqueado === "true") {
-
-                event.preventDefault();
-
-            }
-
-        });
-
-
-        /*
-         * Impede entrada de texto.
-         */
-        campo.addEventListener("beforeinput", function (event) {
-
-            if (campo.dataset.bloqueado === "true") {
-
-                event.preventDefault();
-
-            }
-
-        });
-
-
-        /*
-         * Impede cliques no campo.
-         */
-        campo.addEventListener("click", function (event) {
-
-            if (campo.dataset.bloqueado === "true") {
-
-                event.preventDefault();
-
-            }
-
-        });
-
-
-        /*
-         * Impede alterações em selects
-         * e outros campos.
-         */
-        campo.addEventListener("change", function (event) {
-
-            if (campo.dataset.bloqueado === "true") {
-
-                event.preventDefault();
-
-            }
+            });
 
         });
 
     });
 
 }
+
+
+// Mantém a posição da página ao abrir e fechar popups
+document.addEventListener("DOMContentLoaded", function () {
+
+    let posicaoScroll = 0;
+
+    function atualizarScrollPopup() {
+
+        const popupAberto = document.querySelector(
+            ".popup-toggle:checked"
+        );
+
+        if (popupAberto) {
+
+            if (document.body.style.position !== "fixed") {
+
+                posicaoScroll = window.scrollY;
+
+                document.body.style.position = "fixed";
+                document.body.style.top = `-${posicaoScroll}px`;
+                document.body.style.width = "100%";
+
+            }
+
+        } else if (document.body.style.position === "fixed") {
+
+            document.body.style.position = "";
+            document.body.style.top = "";
+            document.body.style.width = "";
+
+            window.scrollTo(0, posicaoScroll);
+
+        }
+
+    }
+
+    document.querySelectorAll("label[for]").forEach(function (label) {
+
+        const checkbox = document.getElementById(label.htmlFor);
+
+        if (!checkbox || !checkbox.classList.contains("popup-toggle")) {
+            return;
+        }
+
+        label.addEventListener("click", function (event) {
+
+            event.preventDefault();
+
+            if (label.dataset.bloqueado === "true") {
+                return;
+            }
+
+            checkbox.checked = !checkbox.checked;
+
+            atualizarScrollPopup();
+
+        });
+
+    });
+
+    atualizarScrollPopup();
+
+});

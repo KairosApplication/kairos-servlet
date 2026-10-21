@@ -17,10 +17,12 @@ public class ConnectionFactory {
     private static final String PASSWORD = dotenv.get("DB_PASSWORD");
 
     public static Connection getConnection() throws SQLException {
-        try {
-            Class.forName(DRIVER);
 
+        try {
+
+            Class.forName(DRIVER);
             return DriverManager.getConnection(URL, USER, PASSWORD);
+
         } catch (ClassNotFoundException e) {
             throw new SQLException("Driver não encontrado: " + DRIVER, e);
         }

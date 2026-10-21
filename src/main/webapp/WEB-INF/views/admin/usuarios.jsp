@@ -991,7 +991,7 @@ ${not empty erros ? 'checked' : ''}
                             type="text"
                             id="nome"
                             name="nome"
-                            value="${param.nome}"
+                            value="${not empty erros ? param.nome : ''}"
                     >
 
                     <c:if test="${not empty erros.nome}">
@@ -1015,7 +1015,7 @@ ${not empty erros ? 'checked' : ''}
                             type="text"
                             id="sobrenome"
                             name="sobrenome"
-                            value="${param.sobrenome}"
+                            value="${not empty erros ? param.sobrenome : ''}"
                     >
 
                     <c:if test="${not empty erros.sobrenome}">
@@ -1039,7 +1039,7 @@ ${not empty erros ? 'checked' : ''}
                             type="text"
                             id="cpf"
                             name="cpf"
-                            value="${param.cpf}"
+                            value="${not empty erros ? param.cpf : ''}"
                     >
 
                     <c:if test="${not empty erros.cpf}">
@@ -1063,7 +1063,7 @@ ${not empty erros ? 'checked' : ''}
                             type="date"
                             id="nascimento"
                             name="nascimento"
-                            value="${param.nascimento}"
+                            value="${not empty erros ? param.nascimento : ''}"
                     >
 
                     <c:if test="${not empty erros.nascimento}">
@@ -1087,7 +1087,7 @@ ${not empty erros ? 'checked' : ''}
                             type="text"
                             id="cep"
                             name="cep"
-                            value="${param.cep}"
+                            value="${not empty erros ? param.cep : ''}"
                     >
 
                     <c:if test="${not empty erros.cep}">
@@ -1111,7 +1111,7 @@ ${not empty erros ? 'checked' : ''}
                             type="email"
                             id="email"
                             name="email"
-                            value="${param.email}"
+                            value="${not empty erros ? param.email : ''}"
                     >
 
                     <c:if test="${not empty erros.email}">
@@ -1138,21 +1138,21 @@ ${not empty erros ? 'checked' : ''}
 
                         <option
                                 value=""
-                        ${empty param.tipoUsuario ? 'selected' : ''}
+                        ${empty erros or empty param.tipoUsuario ? 'selected' : ''}
                         >
                             Selecione o tipo de usuário
                         </option>
 
                         <option
                                 value="FUNCIONARIO"
-                        ${param.tipoUsuario == 'FUNCIONARIO' ? 'selected' : ''}
+                        ${not empty erros and param.tipoUsuario == 'FUNCIONARIO' ? 'selected' : ''}
                         >
                             Funcionário
                         </option>
 
                         <option
                                 value="GERENTE"
-                        ${param.tipoUsuario == 'GERENTE' ? 'selected' : ''}
+                        ${not empty erros and param.tipoUsuario == 'GERENTE' ? 'selected' : ''}
                         >
                             Gerente
                         </option>
@@ -1180,7 +1180,7 @@ ${not empty erros ? 'checked' : ''}
                             type="text"
                             id="empresa"
                             name="nomeEmpresa"
-                            value="${param.nomeEmpresa}"
+                            value="${not empty erros ? param.nomeEmpresa : ''}"
                     >
 
                     <c:if test="${not empty erros.empresa}">

@@ -239,7 +239,7 @@ public class UsuarioService {
             );
         }
 
-        cpf = cpf.replaceAll("^[0-9]", "");
+        cpf = cpf.replaceAll("[^0-9]", "");
 
         return usuarioDAO.existePorCpfExcetoId(cpf, id);
     }
