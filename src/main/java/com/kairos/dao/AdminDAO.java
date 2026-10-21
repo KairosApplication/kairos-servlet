@@ -1,4 +1,3 @@
-
 package com.kairos.dao;
 
 import com.kairos.model.Admin;

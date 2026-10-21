@@ -1,14 +1,13 @@
 package com.kairos.model;
 
-import java.time.LocalDate;
-
 import com.kairos.model.enums.TipoUsuario;
 import com.kairos.utils.Formatter;
 
+import java.time.LocalDate;
+
 public class Usuario {
 
-//    Atributos
-
+    // Atributos
     private int id;
     private String cpf;
     private String senha;
@@ -20,9 +19,7 @@ public class Usuario {
     private String email;
     private Empresa empresa;
 
-//    Construtuores
-
-
+    // Construtores
     public Usuario(int id, String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, TipoUsuario tipoUsuario, String email, Empresa empresa) {
         this.id = id;
         this.cpf = cpf;
@@ -60,6 +57,7 @@ public class Usuario {
         this.empresa = empresa;
     }
 
+    // Getters
     public int getId() {
         return id;
     }
@@ -100,6 +98,7 @@ public class Usuario {
         return empresa;
     }
 
+    // Setters
     public void setId(int id) {
         this.id = id;
     }
@@ -140,35 +139,37 @@ public class Usuario {
         this.empresa = empresa;
     }
 
+    // Retorna o CPF formatado
     public String getCpfFormatado() {
         return Formatter.cpf(cpf);
     }
 
+    // Retorna o CEP formatado
     public String getCepFormatado() {
         return Formatter.cep(cep);
     }
 
+    // Retorna a data de nascimento formatada
     public String getDataNascimentoFormatada() {
         return Formatter.data(dataNascimento);
     }
 
-    //    toString
-
+    // to String
     @Override
     public String toString() {
         return "\n-= USUARIO =-" +
-               "\nID: " + getId() +
-               "\nCPF: " + getCpf() +
-               "\nSenha: " + getSenha() +
-               "\nNome: " + getNome() +
-               "\nSobrenome: " + getSobrenome() +
-               "\nData de nascimento: " + getDataNascimento() +
-               "\nCEP: " + getCep() +
-               "\nTipo Usuario: " + getTipoUsuario() +
-               "\nEmail: " + getEmail() +
-               "\nEmpresa: " +
-               "\n   - ID: " + getEmpresa().getId() +
-               "\n   - CNPJ: " + empresa.getCnpj() +
-               "\n   - Tipo Plano: " + empresa.getTipoPlano() ;
+                "\nID: " + getId() +
+                "\nCPF: " + getCpf() +
+                "\nSenha: " + getSenha() +
+                "\nNome: " + getNome() +
+                "\nSobrenome: " + getSobrenome() +
+                "\nData de nascimento: " + getDataNascimento() +
+                "\nCEP: " + getCep() +
+                "\nTipo Usuario: " + getTipoUsuario() +
+                "\nEmail: " + getEmail() +
+                "\nEmpresa: " +
+                "\n   - ID: " + getEmpresa().getId() +
+                "\n   - CNPJ: " + empresa.getCnpj() +
+                "\n   - Tipo Plano: " + empresa.getTipoPlano();
     }
 }
