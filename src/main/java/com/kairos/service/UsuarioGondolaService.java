@@ -11,31 +11,32 @@ import java.util.List;
 
 public class UsuarioGondolaService {
 
+    // Atributos
     private final UsuarioGondolaDAO usuarioGondolaDAO;
     private final UsuarioService usuarioService;
     private final GondolaService gondolaService;
 
+    // Construtor
     public UsuarioGondolaService() {
         this.usuarioGondolaDAO = new UsuarioGondolaDAO();
         this.usuarioService = new UsuarioService();
         this.gondolaService = new GondolaService();
     }
 
+    // Valida e vincula um usuário a uma gôndola
     public void vincular(Usuario usuario, Gondola gondola) {
 
         validarUsuario(usuario);
         validarGondola(gondola);
 
         if (usuarioGondolaDAO.existeVinculo(usuario, gondola)) {
-
-            throw new ServiceException(
-                    "Esta gôndola já está vinculada a este usuário."
-            );
+            throw new ServiceException("Esta gôndola já está vinculada a este usuário.");
         }
 
         usuarioGondolaDAO.vincular(usuario, gondola);
     }
 
+    // Desvincula um usuário de uma gôndola
     public void desvincular(Usuario usuario, Gondola gondola) {
 
         validarUsuario(usuario);
@@ -44,6 +45,7 @@ public class UsuarioGondolaService {
         usuarioGondolaDAO.desvincular(usuario, gondola);
     }
 
+    // Lista as gôndolas vinculadas a um usuário
     public List<Gondola> listarGondolasPorUsuario(Usuario usuario) {
 
         validarUsuario(usuario);
@@ -51,6 +53,7 @@ public class UsuarioGondolaService {
         return usuarioGondolaDAO.listarGondolasPorUsuario(usuario);
     }
 
+    // Lista os usuários vinculados a uma gôndola
     public List<Usuario> listarUsuariosPorGondola(Gondola gondola) {
 
         validarGondola(gondola);
@@ -58,6 +61,7 @@ public class UsuarioGondolaService {
         return usuarioGondolaDAO.listarUsuariosPorGondola(gondola);
     }
 
+    // Valida a existência e o ID do usuário
     private void validarUsuario(Usuario usuario) {
 
         if (usuario == null) {
@@ -73,6 +77,7 @@ public class UsuarioGondolaService {
         }
     }
 
+    // Valida a existência e o ID da gôndola
     private void validarGondola(Gondola gondola) {
 
         if (gondola == null) {
@@ -88,6 +93,7 @@ public class UsuarioGondolaService {
         }
     }
 
+    // Verifica se existe um vínculo entre usuário e gôndola
     public boolean existeVinculo(Usuario usuario, Gondola gondola) {
 
         validarUsuario(usuario);

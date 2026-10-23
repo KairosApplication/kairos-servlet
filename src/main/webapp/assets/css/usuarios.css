@@ -611,7 +611,11 @@ body {
 
 
 .popup-toggle {
-    position: absolute;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
     opacity: 0;
     pointer-events: none;
 }
@@ -989,7 +993,6 @@ body {
     background-color: #a61f1f;
 }
 
-/* Inputs dos popups */
 .form-field input:-webkit-autofill,
 .form-field input:-webkit-autofill:hover,
 .form-field input:-webkit-autofill:active {
@@ -997,7 +1000,6 @@ body {
     -webkit-text-fill-color: #294966 !important;
 }
 
-/* Campo Buscar */
 .search-input:-webkit-autofill,
 .search-input:-webkit-autofill:hover,
 .search-input:-webkit-autofill:active {

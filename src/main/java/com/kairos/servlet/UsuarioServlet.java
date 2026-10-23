@@ -1,7 +1,8 @@
+
 package com.kairos.servlet;
 
-import com.kairos.model.Gondola;
 import com.kairos.model.Empresa;
+import com.kairos.model.Gondola;
 import com.kairos.model.Usuario;
 import com.kairos.model.enums.TipoUsuario;
 import com.kairos.service.EmpresaService;
@@ -19,8 +20,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @WebServlet("/admin/usuarios")
@@ -29,15 +30,11 @@ public class UsuarioServlet extends HttpServlet {
     private final UsuarioService usuarioService = new UsuarioService();
     private final EmpresaService empresaService = new EmpresaService();
 
-
+    // Processa a exclusão, pesquisa e listagem de usuários
     @Override
-    protected void doGet(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String acao = request.getParameter("acao");
-
 
         if ("deletar".equals(acao)) {
 
@@ -50,108 +47,57 @@ public class UsuarioServlet extends HttpServlet {
                 usuarioService.deletarPorId(idUsuario);
             }
 
-            response.sendRedirect(
-                    request.getContextPath() + "/admin/usuarios"
-            );
+            response.sendRedirect(request.getContextPath() + "/admin/usuarios");
 
             return;
         }
-
 
         String busca = request.getParameter("busca");
 
         List<Usuario> usuarios;
 
         if (busca != null && !busca.isBlank()) {
-
             usuarios = usuarioService.pesquisar(busca.trim());
-
         } else {
-
             usuarios = usuarioService.listarTodos();
         }
 
-
-        Map<Integer, List<Gondola>> gondolasPorUsuario =
-                new HashMap<>();
-
+        // Recupera as gôndolas vinculadas a cada usuário
+        Map<Integer, List<Gondola>> gondolasPorUsuario = new HashMap<>();
 
         for (Usuario usuario : usuarios) {
 
-            List<Gondola> gondolas =
-                    usuarioService.listarGondolasPorUsuario(usuario);
+            List<Gondola> gondolas = usuarioService.listarGondolasPorUsuario(usuario);
 
-            gondolasPorUsuario.put(
-                    usuario.getId(),
-                    gondolas
-            );
+            gondolasPorUsuario.put(usuario.getId(), gondolas);
         }
 
-
-        String erroVincularGondola =
-                (String) request.getSession()
-                        .getAttribute("erroVincularGondola");
-
-        Integer idUsuarioVincular =
-                (Integer) request.getSession()
-                        .getAttribute("idUsuarioVincular");
-
-        Integer idGondolaVincular =
-                (Integer) request.getSession()
-                        .getAttribute("idGondolaVincular");
-
+        // Recupera possíveis erros de vinculação armazenados na sessão
+        String erroVincularGondola = (String) request.getSession().getAttribute("erroVincularGondola");
+        Integer idUsuarioVincular = (Integer) request.getSession().getAttribute("idUsuarioVincular");
+        Integer idGondolaVincular = (Integer) request.getSession().getAttribute("idGondolaVincular");
 
         if (erroVincularGondola != null) {
 
-            request.setAttribute(
-                    "erroVincularGondola",
-                    erroVincularGondola
-            );
+            request.setAttribute("erroVincularGondola", erroVincularGondola);
+            request.setAttribute("idUsuarioVincular", idUsuarioVincular);
+            request.setAttribute("idGondolaVincular", idGondolaVincular);
 
-            request.setAttribute(
-                    "idUsuarioVincular",
-                    idUsuarioVincular
-            );
-
-            request.setAttribute(
-                    "idGondolaVincular",
-                    idGondolaVincular
-            );
-
-
-            request.getSession()
-                    .removeAttribute("erroVincularGondola");
-
-            request.getSession()
-                    .removeAttribute("idUsuarioVincular");
-
-            request.getSession()
-                    .removeAttribute("idGondolaVincular");
+            request.getSession().removeAttribute("erroVincularGondola");
+            request.getSession().removeAttribute("idUsuarioVincular");
+            request.getSession().removeAttribute("idGondolaVincular");
         }
 
+        request.setAttribute("usuarios", usuarios);
+        request.setAttribute("gondolasPorUsuario", gondolasPorUsuario);
 
-        request.setAttribute(
-                "usuarios",
-                usuarios
-        );
-
-        request.setAttribute(
-                "gondolasPorUsuario",
-                gondolasPorUsuario
-        );
-
-
-        request.getRequestDispatcher(
-                "/WEB-INF/views/admin/usuarios.jsp"
-        ).forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/admin/usuarios.jsp")
+                .forward(request, response);
     }
 
-
+    // Processa o cadastro ou a atualização de usuários
     @Override
-    protected void doPost(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String id = request.getParameter("id");
 
@@ -163,182 +109,76 @@ public class UsuarioServlet extends HttpServlet {
         String cep = request.getParameter("cep");
         String email = request.getParameter("email");
 
-
         if (id != null) {
 
-            // ==========================
-            // ATUALIZAR USUÁRIO
-            // ==========================
-
+            // Atualiza os dados de um usuário existente
             int idUsuario = Integer.parseInt(id);
 
-            Usuario usuario =
-                    usuarioService.buscarPorId(idUsuario);
+            Usuario usuario = usuarioService.buscarPorId(idUsuario);
 
             Map<String, String> erros = new HashMap<>();
 
-
-            // ==========================
-            // NOME
-            // ==========================
-
+            // Valida os campos permitidos na atualização
             if (nome == null || nome.isBlank()) {
 
-                erros.put(
-                        "nome",
-                        "Nome é obrigatório"
-                );
+                erros.put("nome", "Nome é obrigatório");
 
             } else if (!nome.matches("[\\p{L} ]+")) {
-
-                erros.put(
-                        "nome",
-                        "Nome deve conter apenas letras"
-                );
+                erros.put("nome", "Nome deve conter apenas letras");
             }
-
-
-            // ==========================
-            // SOBRENOME
-            // ==========================
 
             if (sobrenome == null || sobrenome.isBlank()) {
 
-                erros.put(
-                        "sobrenome",
-                        "Sobrenome é obrigatório"
-                );
+                erros.put("sobrenome", "Sobrenome é obrigatório");
 
             } else if (!sobrenome.matches("[\\p{L} ]+")) {
-
-                erros.put(
-                        "sobrenome",
-                        "Sobrenome deve conter apenas letras"
-                );
+                erros.put("sobrenome", "Sobrenome deve conter apenas letras");
             }
-
-
-            // ==========================
-            // CEP
-            // ==========================
 
             if (cep == null || cep.isBlank()) {
 
-                erros.put(
-                        "cep",
-                        "CEP é obrigatório"
-                );
+                erros.put("cep", "CEP é obrigatório");
 
             } else if (!cep.matches(Regex.CEP)) {
-
-                erros.put(
-                        "cep",
-                        "Formato do CEP inválido"
-                );
+                erros.put("cep", "Formato do CEP inválido");
             }
-
-
-            // ==========================
-            // EMAIL
-            // ==========================
 
             if (email == null || email.isBlank()) {
 
-                erros.put(
-                        "email",
-                        "Email é obrigatório"
-                );
+                erros.put("email", "Email é obrigatório");
 
             } else if (!email.matches(Regex.EMAIL)) {
-
-                erros.put(
-                        "email",
-                        "Formato do email inválido"
-                );
-
-            } else if (
-                    usuarioService.existePorEmailExcetoId(
-                            email,
-                            idUsuario
-                    )
-            ) {
-
-                erros.put(
-                        "email",
-                        "Email já cadastrado"
-                );
+                erros.put("email", "Formato do email inválido");
+            } else if (usuarioService.existePorEmailExcetoId(email, idUsuario)) {
+                erros.put("email", "Email já cadastrado");
             }
 
-
-            // ==========================
-            // EXISTEM ERROS
-            // ==========================
-
+            // Retorna ao formulário caso existam erros de validação
             if (!erros.isEmpty()) {
 
-                request.setAttribute(
-                        "errosAtualizacao",
-                        erros
-                );
+                request.setAttribute("errosAtualizacao", erros);
+                request.setAttribute("idUsuarioAtualizacao", idUsuario);
 
-                request.setAttribute(
-                        "idUsuarioAtualizacao",
-                        idUsuario
-                );
-
-
-                List<Usuario> usuarios =
-                        usuarioService.listarTodos();
-
-                Map<Integer, List<Gondola>> gondolasPorUsuario =
-                        new HashMap<>();
-
+                List<Usuario> usuarios = usuarioService.listarTodos();
+                Map<Integer, List<Gondola>> gondolasPorUsuario = new HashMap<>();
 
                 for (Usuario usuarioLista : usuarios) {
 
-                    List<Gondola> gondolas =
-                            usuarioService.listarGondolasPorUsuario(
-                                    usuarioLista
-                            );
+                    List<Gondola> gondolas = usuarioService.listarGondolasPorUsuario(usuarioLista);
 
-                    gondolasPorUsuario.put(
-                            usuarioLista.getId(),
-                            gondolas
-                    );
+                    gondolasPorUsuario.put(usuarioLista.getId(), gondolas);
                 }
 
+                request.setAttribute("usuarios", usuarios);
+                request.setAttribute("gondolasPorUsuario", gondolasPorUsuario);
 
-                request.setAttribute(
-                        "usuarios",
-                        usuarios
-                );
-
-                request.setAttribute(
-                        "gondolasPorUsuario",
-                        gondolasPorUsuario
-                );
-
-
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/admin/usuarios.jsp"
-                ).forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/admin/usuarios.jsp")
+                        .forward(request, response);
 
                 return;
             }
 
-
-            // ==========================
-            // ATUALIZAR
-            // ==========================
-
-            /*
-             * CPF e data de nascimento não são alterados.
-             *
-             * O objeto "usuario" foi buscado pelo ID antes,
-             * então ele já possui o CPF e a data de nascimento
-             * originais cadastrados no banco.
-             */
-
+            // Mantém o CPF e a data de nascimento originais do usuário
             usuario.setNome(nome);
             usuario.setSobrenome(sobrenome);
             usuario.setCep(cep);
@@ -346,293 +186,131 @@ public class UsuarioServlet extends HttpServlet {
 
             usuarioService.atualizar(usuario);
 
-
         } else {
 
-            // ==========================
-            // ADICIONAR USUÁRIO
-            // ==========================
+            // Cadastra um novo usuário
+            String nomeEmpresa = request.getParameter("nomeEmpresa");
 
-            String nomeEmpresa =
-                    request.getParameter("nomeEmpresa");
+            Map<String, String> erros = new HashMap<>();
 
-            Map<String, String> erros =
-                    new HashMap<>();
-
-            /*
-             * Guarda a data convertida somente se
-             * ela for válida.
-             */
             LocalDate dataNascimentoConvertida = null;
 
-
-            // ==========================
-            // NOME
-            // ==========================
-
+            // Valida os campos obrigatórios do cadastro
             if (nome == null || nome.isBlank()) {
 
-                erros.put(
-                        "nome",
-                        "Nome é obrigatório"
-                );
+                erros.put("nome", "Nome é obrigatório");
 
             } else if (!nome.matches("[\\p{L} ]+")) {
-
-                erros.put(
-                        "nome",
-                        "Nome deve conter apenas letras"
-                );
+                erros.put("nome", "Nome deve conter apenas letras");
             }
-
-
-            // ==========================
-            // SOBRENOME
-            // ==========================
 
             if (sobrenome == null || sobrenome.isBlank()) {
-
-                erros.put(
-                        "sobrenome",
-                        "Sobrenome é obrigatório"
-                );
-
+                erros.put("sobrenome", "Sobrenome é obrigatório");
             } else if (!sobrenome.matches("[\\p{L} ]+")) {
-
-                erros.put(
-                        "sobrenome",
-                        "Sobrenome deve conter apenas letras"
-                );
+                erros.put("sobrenome", "Sobrenome deve conter apenas letras");
             }
-
-
-            // ==========================
-            // CPF
-            // ==========================
 
             if (cpf == null || cpf.isBlank()) {
 
-                erros.put(
-                        "cpf",
-                        "CPF é obrigatório"
-                );
+                erros.put("cpf", "CPF é obrigatório");
 
             } else if (!cpf.matches(Regex.CPF)) {
-
-                erros.put(
-                        "cpf",
-                        "Formato do CPF inválido"
-                );
-
+                erros.put("cpf", "Formato do CPF inválido");
             } else if (usuarioService.existePorCpf(cpf)) {
-
-                erros.put(
-                        "cpf",
-                        "CPF já cadastrado"
-                );
+                erros.put("cpf", "CPF já cadastrado");
             }
 
-
-            // ==========================
-            // DATA DE NASCIMENTO
-            // ==========================
-
+            // Converte e valida a data de nascimento
             if (dataNascimento == null || dataNascimento.isBlank()) {
 
-                erros.put(
-                        "nascimento",
-                        "Data de nascimento é obrigatória"
-                );
+                erros.put("nascimento", "Data de nascimento é obrigatória");
 
             } else {
 
                 try {
 
-                    dataNascimentoConvertida =
-                            LocalDate.parse(dataNascimento);
+                    dataNascimentoConvertida = LocalDate.parse(dataNascimento);
 
+                    if (dataNascimentoConvertida.isBefore(LocalDate.of(1900, 1, 1))) {
 
-                    if (dataNascimentoConvertida.isBefore(
-                            LocalDate.of(1900, 1, 1)
-                    )) {
+                        erros.put("nascimento", "Data de nascimento deve ser a partir de 1900");
 
-                        erros.put(
-                                "nascimento",
-                                "Data de nascimento deve ser a partir de 1900"
-                        );
+                    } else if (dataNascimentoConvertida.isAfter(LocalDate.now())) {
 
-                    } else if (
-                            dataNascimentoConvertida.isAfter(
-                                    LocalDate.now()
-                            )
-                    ) {
-
-                        erros.put(
-                                "nascimento",
-                                "Data de nascimento não pode ser futura"
-                        );
+                        erros.put("nascimento", "Data de nascimento não pode ser futura");
                     }
 
                 } catch (DateTimeParseException e) {
-
-                    erros.put(
-                            "nascimento",
-                            "Data de nascimento inválida"
-                    );
+                    erros.put("nascimento", "Data de nascimento inválida");
                 }
             }
 
-
-            // ==========================
-            // CEP
-            // ==========================
-
             if (cep == null || cep.isBlank()) {
 
-                erros.put(
-                        "cep",
-                        "CEP é obrigatório"
-                );
+                erros.put("cep", "CEP é obrigatório");
 
             } else if (!cep.matches(Regex.CEP)) {
-
-                erros.put(
-                        "cep",
-                        "Formato do CEP inválido"
-                );
+                erros.put("cep", "Formato do CEP inválido");
             }
-
-
-            // ==========================
-            // EMAIL
-            // ==========================
 
             if (email == null || email.isBlank()) {
 
-                erros.put(
-                        "email",
-                        "Email é obrigatório"
-                );
+                erros.put("email", "Email é obrigatório");
 
             } else if (!email.matches(Regex.EMAIL)) {
-
-                erros.put(
-                        "email",
-                        "Formato do email inválido"
-                );
-
+                erros.put("email", "Formato do email inválido");
             } else if (usuarioService.existePorEmail(email)) {
-
-                erros.put(
-                        "email",
-                        "Email já cadastrado"
-                );
+                erros.put("email", "Email já cadastrado");
             }
-
-
-            // ==========================
-            // TIPO USUÁRIO
-            // ==========================
 
             if (tipoUsuario == null || tipoUsuario.isBlank()) {
-
-                erros.put(
-                        "tipoUsuario",
-                        "Tipo de usuário é obrigatório"
-                );
+                erros.put("tipoUsuario", "Tipo de usuário é obrigatório");
             }
 
-
-            // ==========================
-            // EMPRESA
-            // ==========================
-
+            // Busca e valida a empresa informada
             Empresa empresa = null;
-
 
             if (nomeEmpresa == null || nomeEmpresa.isBlank()) {
 
-                erros.put(
-                        "empresa",
-                        "Nome da empresa é obrigatório"
-                );
+                erros.put("empresa", "Nome da empresa é obrigatório");
 
             } else {
 
                 try {
 
-                    empresa =
-                            empresaService.buscarPorNome(nomeEmpresa);
+                    empresa = empresaService.buscarPorNome(nomeEmpresa);
 
                 } catch (EmpresaNotFoundException e) {
-
-                    erros.put(
-                            "empresa",
-                            "Empresa não encontrada"
-                    );
+                    erros.put("empresa", "Empresa não encontrada");
                 }
             }
 
-
-            // ==========================
-            // EXISTEM ERROS
-            // ==========================
-
+            // Retorna ao formulário caso existam erros de validação
             if (!erros.isEmpty()) {
 
-                request.setAttribute(
-                        "erros",
-                        erros
-                );
+                request.setAttribute("erros", erros);
 
-
-                List<Usuario> usuarios =
-                        usuarioService.listarTodos();
-
-                Map<Integer, List<Gondola>> gondolasPorUsuario =
-                        new HashMap<>();
-
+                List<Usuario> usuarios = usuarioService.listarTodos();
+                Map<Integer, List<Gondola>> gondolasPorUsuario = new HashMap<>();
 
                 for (Usuario usuario : usuarios) {
 
-                    List<Gondola> gondolas =
-                            usuarioService.listarGondolasPorUsuario(
-                                    usuario
-                            );
+                    List<Gondola> gondolas = usuarioService.listarGondolasPorUsuario(usuario);
 
-                    gondolasPorUsuario.put(
-                            usuario.getId(),
-                            gondolas
-                    );
+                    gondolasPorUsuario.put(usuario.getId(), gondolas);
                 }
 
+                request.setAttribute("usuarios", usuarios);
+                request.setAttribute("gondolasPorUsuario", gondolasPorUsuario);
 
-                request.setAttribute(
-                        "usuarios",
-                        usuarios
-                );
-
-                request.setAttribute(
-                        "gondolasPorUsuario",
-                        gondolasPorUsuario
-                );
-
-
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/admin/usuarios.jsp"
-                ).forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/admin/usuarios.jsp")
+                        .forward(request, response);
 
                 return;
             }
 
-
-            // ==========================
-            // CRIAR USUÁRIO
-            // ==========================
-
-            String senha =
-                    PasswordGenerator.gerar(15);
-
+            // Gera uma senha e cadastra o usuário validado
+            String senha = PasswordGenerator.gerar(15);
 
             Usuario usuario = new Usuario(
                     cpf,
@@ -646,13 +324,9 @@ public class UsuarioServlet extends HttpServlet {
                     empresa
             );
 
-
             usuarioService.cadastrar(usuario);
         }
 
-
-        response.sendRedirect(
-                request.getContextPath() + "/admin/usuarios"
-        );
+        response.sendRedirect(request.getContextPath() + "/admin/usuarios");
     }
 }

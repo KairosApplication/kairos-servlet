@@ -1,4 +1,3 @@
-
 package com.kairos.dao;
 
 import com.kairos.model.Empresa;
@@ -372,11 +371,11 @@ public class UsuarioDAO {
                      FROM usuarios u
                      JOIN empresas e ON e.id = u.empresa_id
                      WHERE CAST(u.id AS TEXT) ILIKE ?
-                        OR u.cpf ILIKE ?
+                        OR u.cpf ILIKE REGEXP_REPLACE(?, '[^0-9]', '', 'g')
                         OR u.nome ILIKE ?
                         OR u.sobrenome ILIKE ?
                         OR TO_CHAR(u.data_nascimento, 'DD/MM/YYYY') ILIKE ?
-                        OR u.cep ILIKE ?
+                        OR u.cep ILIKE REGEXP_REPLACE(?, '[^0-9]', '', 'g')
                         OR u.email ILIKE ?
                         OR u.tipo_usuario ILIKE ?
                         OR e.nome ILIKE ?

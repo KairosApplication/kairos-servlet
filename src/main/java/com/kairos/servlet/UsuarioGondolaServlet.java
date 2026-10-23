@@ -8,6 +8,7 @@ import com.kairos.service.UsuarioService;
 import com.kairos.utils.exceptions.notfound.GondolaNotFoundException;
 import com.kairos.utils.exceptions.notfound.UsuarioNotFoundException;
 import com.kairos.utils.exceptions.system.ServiceException;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,6 +20,7 @@ import java.io.IOException;
 @WebServlet("/admin/usuarios-gondolas")
 public class UsuarioGondolaServlet extends HttpServlet {
 
+    // Atributos
     private final UsuarioGondolaService usuarioGondolaService =
             new UsuarioGondolaService();
 
@@ -28,6 +30,7 @@ public class UsuarioGondolaServlet extends HttpServlet {
     private final GondolaService gondolaService =
             new GondolaService();
 
+    // Processa a vinculação e desvinculação de usuários e gôndolas
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -44,10 +47,12 @@ public class UsuarioGondolaServlet extends HttpServlet {
 
         try {
 
+            // Busca o usuário e a gôndola pelos IDs informados
             Usuario usuario = usuarioService.buscarPorId(idUsuario);
 
             Gondola gondola = gondolaService.buscarPorId(idGondola);
 
+            // Executa a ação solicitada
             if ("vincular".equals(acao)) {
 
                 usuarioGondolaService.vincular(
@@ -71,22 +76,24 @@ public class UsuarioGondolaServlet extends HttpServlet {
                  | GondolaNotFoundException
                  | UsuarioNotFoundException e) {
 
-        request.getSession().setAttribute(
-                "erroVincularGondola",
-                e.getMessage()
-        );
+            // Armazena os erros e IDs na sessão para exibição
+            request.getSession().setAttribute(
+                    "erroVincularGondola",
+                    e.getMessage()
+            );
 
-        request.getSession().setAttribute(
-                "idUsuarioVincular",
-                idUsuario
-        );
+            request.getSession().setAttribute(
+                    "idUsuarioVincular",
+                    idUsuario
+            );
 
-        request.getSession().setAttribute(
-                "idGondolaVincular",
-                idGondola
-        );
-    }
+            request.getSession().setAttribute(
+                    "idGondolaVincular",
+                    idGondola
+            );
+        }
 
+        // Redireciona para a listagem de usuários
         response.sendRedirect(request.getContextPath() + "/admin/usuarios");
     }
 }
