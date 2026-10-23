@@ -26,6 +26,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+
 .sidebar {
     position: fixed;
     top: 0;
@@ -229,6 +230,7 @@ body {
     background: #1e68bc;
 }
 
+
 .mensagem-erro {
     width: 100%;
 
@@ -248,6 +250,7 @@ body {
 
     line-height: 1.4;
 }
+
 
 .content-card {
     width: 100%;
@@ -273,6 +276,7 @@ body {
 
     font-weight: 700;
 }
+
 
 .table-wrapper {
     width: 100%;
@@ -495,6 +499,7 @@ body {
     border-bottom: none;
 }
 
+
 .details-header {
     display: flex;
     align-items: center;
@@ -603,6 +608,7 @@ body {
 .id-gondola {
     text-align: center;
 }
+
 
 .popup-toggle {
     position: fixed;
@@ -864,6 +870,7 @@ body {
 .delete-confirm-button:hover {
     background: #d92525;
 }
+
 
 @media (max-width: 900px) {
 

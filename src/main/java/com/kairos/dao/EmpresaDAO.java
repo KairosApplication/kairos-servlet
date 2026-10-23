@@ -331,13 +331,13 @@ public class EmpresaDAO {
     public List<Empresa> pesquisar(String pesquisa) {
 
         String sql = """
-                     SELECT id, nome, cnpj, tipo_plano
-                     FROM empresas
-                     WHERE CAST(id AS TEXT) ILIKE ?
-                           OR nome ILIKE ?
-                           OR cnpj ILIKE ?
-                           OR tipo_plano ILIKE ?
-                     """;
+            SELECT id, nome, cnpj, tipo_plano
+            FROM empresas
+            WHERE CAST(id AS TEXT) ILIKE ?
+                  OR nome ILIKE ?
+                  OR cnpj ILIKE REGEXP_REPLACE(?, '[^0-9]', '', 'g')
+                  OR tipo_plano ILIKE ?
+            """;
 
         List<Empresa> empresas = new ArrayList<>();
 

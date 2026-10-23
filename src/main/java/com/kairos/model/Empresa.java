@@ -1,18 +1,17 @@
 package com.kairos.model;
 
 import com.kairos.model.enums.TipoPlano;
+import com.kairos.utils.Formatter;
 
 public class Empresa {
 
     // Atributos
-
     private int id;
     private String nome;
     private String cnpj;
     private TipoPlano tipoPlano;
 
     // Construtores
-
     public Empresa(int id, String nome, String cnpj, TipoPlano tipoPlano) {
         this.id = id;
         this.nome = nome;
@@ -27,7 +26,6 @@ public class Empresa {
     }
 
     // Getters
-
     public int getId() {
         return id;
     }
@@ -40,12 +38,15 @@ public class Empresa {
         return cnpj;
     }
 
+    public String getCnpjFormatado() {
+        return Formatter.cnpj(cnpj);
+    }
+
     public TipoPlano getTipoPlano() {
         return tipoPlano;
     }
 
     // Setters
-
     public void setId(int id) {
         this.id = id;
     }
@@ -62,8 +63,7 @@ public class Empresa {
         this.tipoPlano = tipoPlano;
     }
 
-    // toString
-
+    // to String
     @Override
     public String toString() {
         return "\n-= Empresa =-" +

@@ -5,9 +5,7 @@ import com.kairos.utils.Formatter;
 
 import java.time.LocalDate;
 
-public class Usuario {
-
-    // Atributos
+//    Atributos
     private int id;
     private String cpf;
     private String senha;
@@ -19,7 +17,7 @@ public class Usuario {
     private String email;
     private Empresa empresa;
 
-    // Construtores
+//    Construtuores
     public Usuario(int id, String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, TipoUsuario tipoUsuario, String email, Empresa empresa) {
         this.id = id;
         this.cpf = cpf;
@@ -56,6 +54,7 @@ public class Usuario {
         this.email = email;
         this.empresa = empresa;
     }
+
 
     // Getters
     public int getId() {
@@ -154,7 +153,7 @@ public class Usuario {
         return Formatter.data(dataNascimento);
     }
 
-    // to String
+    //    toString
     @Override
     public String toString() {
         return "\n-= USUARIO =-" +

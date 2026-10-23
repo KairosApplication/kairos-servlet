@@ -1,3 +1,4 @@
+
 package com.kairos.servlet;
 
 import com.kairos.model.Empresa;
@@ -18,20 +19,16 @@ import java.util.Map;
 @WebServlet("/admin/empresas")
 public class EmpresaServlet extends HttpServlet {
 
+    // Service
     private final EmpresaService empresaService = new EmpresaService();
 
+    // Listar, pesquisar e deletar empresas
     @Override
-    protected void doGet(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String acao = request.getParameter("acao");
 
-        // ==========================
-        // DELETAR EMPRESA
-        // ==========================
-
+        // Deletar empresa
         if ("deletar".equals(acao)) {
 
             String id = request.getParameter("id");
@@ -43,17 +40,12 @@ public class EmpresaServlet extends HttpServlet {
                 empresaService.deletarPorId(idEmpresa);
             }
 
-            response.sendRedirect(
-                    request.getContextPath() + "/admin/empresas"
-            );
+            response.sendRedirect(request.getContextPath() + "/admin/empresas");
 
             return;
         }
 
-        // ==========================
-        // PESQUISAR / LISTAR EMPRESAS
-        // ==========================
-
+        // Pesquisar ou listar empresas
         String busca = request.getParameter("busca");
 
         List<Empresa> empresas;
@@ -64,215 +56,101 @@ public class EmpresaServlet extends HttpServlet {
             empresas = empresaService.listarTodos();
         }
 
-        request.setAttribute(
-                "empresas",
-                empresas
-        );
+        request.setAttribute("empresas", empresas);
 
-        request.getRequestDispatcher(
-                "/WEB-INF/views/admin/empresas.jsp"
-        ).forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/admin/empresas.jsp").forward(request, response);
     }
 
+    // Cadastrar e atualizar empresas
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String id = request.getParameter("id");
-
         String nome = request.getParameter("nome");
-
         String cnpj = request.getParameter("cnpj");
-
         String tipoPlano = request.getParameter("tipoPlano");
 
-        // ==========================
-        // ATUALIZAR EMPRESA
-        // ==========================
-
+        // Atualizar empresa
         if (id != null) {
 
             int idEmpresa = Integer.parseInt(id);
 
-            Empresa empresa =
-                    empresaService.buscarPorId(idEmpresa);
+            Empresa empresa = empresaService.buscarPorId(idEmpresa);
 
-            Map<String, String> erros =
-                    new HashMap<>();
+            Map<String, String> erros = new HashMap<>();
 
-            // ==========================
-            // TIPO PLANO
-            // ==========================
-
+            // Validar tipo de plano
             if (tipoPlano == null || tipoPlano.isBlank()) {
-
-                erros.put(
-                        "tipoPlano",
-                        "Tipo de plano é obrigatório"
-                );
+                erros.put("tipoPlano", "Tipo de plano é obrigatório");
             }
 
-            // ==========================
-            // EXISTEM ERROS
-            // ==========================
-
+            // Exibir erros
             if (!erros.isEmpty()) {
 
-                request.setAttribute(
-                        "errosAtualizacao",
-                        erros
-                );
+                request.setAttribute("errosAtualizacao", erros);
+                request.setAttribute("idEmpresaAtualizacao", idEmpresa);
 
-                request.setAttribute(
-                        "idEmpresaAtualizacao",
-                        idEmpresa
-                );
+                List<Empresa> empresas = empresaService.listarTodos();
 
-                List<Empresa> empresas =
-                        empresaService.listarTodos();
+                request.setAttribute("empresas", empresas);
 
-                request.setAttribute(
-                        "empresas",
-                        empresas
-                );
-
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/admin/empresas.jsp"
-                ).forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/admin/empresas.jsp").forward(request, response);
 
                 return;
             }
 
-            // ==========================
-            // ATUALIZAR
-            // ==========================
-
-            /*
-             * Nome e CNPJ não são alterados.
-             * Apenas o tipo de plano é atualizado.
-             */
-
-            empresa.setTipoPlano(
-                    TipoPlano.valueOf(tipoPlano)
-            );
+            // Atualizar apenas o tipo de plano
+            empresa.setTipoPlano(TipoPlano.valueOf(tipoPlano));
 
             empresaService.atualizar(empresa);
 
         } else {
 
-            // ==========================
-            // ADICIONAR EMPRESA
-            // ==========================
+            // Adicionar empresa
+            Map<String, String> erros = new HashMap<>();
 
-            Map<String, String> erros =
-                    new HashMap<>();
-
-            // ==========================
-            // NOME
-            // ==========================
-
+            // Validar nome
             if (nome == null || nome.isBlank()) {
-
-                erros.put(
-                        "nome",
-                        "Nome é obrigatório"
-                );
-
-            } else if (
-                    empresaService.existePorNome(nome)
-            ) {
-
-                erros.put(
-                        "nome",
-                        "Nome já cadastrado"
-                );
+                erros.put("nome", "Nome é obrigatório");
+            } else if (empresaService.existePorNome(nome)) {
+                erros.put("nome", "Nome já cadastrado");
             }
 
-            // ==========================
-            // CNPJ
-            // ==========================
-
+            // Validar CNPJ
             if (cnpj == null || cnpj.isBlank()) {
-
-                erros.put(
-                        "cnpj",
-                        "CNPJ é obrigatório"
-                );
-
+                erros.put("cnpj", "CNPJ é obrigatório");
             } else if (!cnpj.matches(Regex.CNPJ)) {
-
-                erros.put(
-                        "cnpj",
-                        "Formato do CNPJ inválido"
-                );
-
-            } else if (
-                    empresaService.existePorCnpj(cnpj)
-            ) {
-
-                erros.put(
-                        "cnpj",
-                        "CNPJ já cadastrado"
-                );
+                erros.put("cnpj", "Formato do CNPJ inválido");
+            } else if (empresaService.existePorCnpj(cnpj)) {
+                erros.put("cnpj", "CNPJ já cadastrado");
             }
 
-            // ==========================
-            // TIPO PLANO
-            // ==========================
-
+            // Validar tipo de plano
             if (tipoPlano == null || tipoPlano.isBlank()) {
-
-                erros.put(
-                        "tipoPlano",
-                        "Tipo de plano é obrigatório"
-                );
+                erros.put("tipoPlano", "Tipo de plano é obrigatório");
             }
 
-            // ==========================
-            // EXISTEM ERROS
-            // ==========================
-
+            // Exibir erros
             if (!erros.isEmpty()) {
 
-                request.setAttribute(
-                        "erros",
-                        erros
-                );
+                request.setAttribute("erros", erros);
 
-                List<Empresa> empresas =
-                        empresaService.listarTodos();
+                List<Empresa> empresas = empresaService.listarTodos();
 
-                request.setAttribute(
-                        "empresas",
-                        empresas
-                );
+                request.setAttribute("empresas", empresas);
 
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/admin/empresas.jsp"
-                ).forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/admin/empresas.jsp").forward(request, response);
 
                 return;
             }
 
-            // ==========================
-            // CRIAR EMPRESA
-            // ==========================
-
-            Empresa empresa = new Empresa(
-                    nome,
-                    cnpj,
-                    TipoPlano.valueOf(tipoPlano)
-            );
+            // Criar empresa
+            Empresa empresa = new Empresa(nome, cnpj, TipoPlano.valueOf(tipoPlano));
 
             empresaService.cadastrar(empresa);
         }
 
-        // ==========================
-        // REDIRECIONAR
-        // ==========================
-
-        response.sendRedirect(
-                request.getContextPath() + "/admin/empresas"
-        );
+        // Redirecionar
+        response.sendRedirect(request.getContextPath() + "/admin/empresas");
     }
 }
