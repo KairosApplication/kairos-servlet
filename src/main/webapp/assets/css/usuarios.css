@@ -27,10 +27,6 @@ body {
 }
 
 
-/* =========================
-   SIDEBAR
-   ========================= */
-
 .sidebar {
     position: fixed;
     top: 0;
@@ -124,11 +120,6 @@ body {
     filter: brightness(0) invert(1);
 }
 
-
-/* =========================
-   CONTEÚDO
-   ========================= */
-
 .main-content {
     width: calc(100% - 225px);
     margin-left: 225px;
@@ -139,11 +130,6 @@ body {
 
     overflow-x: hidden;
 }
-
-
-/* =========================
-   BUSCA + ADICIONAR
-   ========================= */
 
 .search-area {
     width: 100%;
@@ -244,9 +230,6 @@ body {
     background: #1e68bc;
 }
 
-/* =========================
-   MENSAGEM DE ERRO
-   ========================= */
 
 .mensagem-erro {
     width: 100%;
@@ -268,10 +251,6 @@ body {
     line-height: 1.4;
 }
 
-
-/* =========================
-   CARD PRINCIPAL
-   ========================= */
 
 .content-card {
     width: 100%;
@@ -298,10 +277,6 @@ body {
     font-weight: 700;
 }
 
-
-/* =========================
-   TABELA
-   ========================= */
 
 .table-wrapper {
     width: 100%;
@@ -363,11 +338,6 @@ body {
 .user-row:hover td {
     background: #fbfdff;
 }
-
-
-/* =========================
-   AÇÕES
-   ========================= */
 
 .actions {
     display: flex;
@@ -447,11 +417,6 @@ body {
     background: #d92525;
 }
 
-
-/* =========================
-   EXPANSÃO
-   ========================= */
-
 .details-row {
     display: none;
 }
@@ -463,11 +428,6 @@ body {
 .user-row:has(.details-toggle:checked) .arrow {
     transform: rotate(180deg);
 }
-
-
-/* =========================
-   INFORMAÇÕES ADICIONAIS
-   ========================= */
 
 .details-row > td {
     padding: 13px 14px 16px;
@@ -539,10 +499,6 @@ body {
     border-bottom: none;
 }
 
-
-/* =========================
-   AÇÕES DAS GÔNDOLAS
-   ========================= */
 
 .details-header {
     display: flex;
@@ -654,10 +610,6 @@ body {
 }
 
 
-/* =========================
-   POPUPS
-   ========================= */
-
 .popup-toggle {
     position: absolute;
     opacity: 0;
@@ -754,11 +706,6 @@ body {
     background: rgba(255, 255, 255, 0.14);
 }
 
-
-/* =========================
-   FORMULÁRIOS DOS POPUPS
-   ========================= */
-
 .add-user-form {
     padding: 20px;
 }
@@ -840,11 +787,6 @@ body {
     line-height: 1.3;
 }
 
-
-/* =========================
-   TEXTO DOS POPUPS
-   ========================= */
-
 .popup > p {
     margin: 0;
 
@@ -860,11 +802,6 @@ body {
 .popup > p strong {
     color: #294966;
 }
-
-
-/* =========================
-   BOTÕES DOS POPUPS
-   ========================= */
 
 .popup-actions {
     display: flex;
@@ -930,10 +867,6 @@ body {
     background: #d92525;
 }
 
-
-/* =========================
-   RESPONSIVIDADE
-   ========================= */
 
 @media (max-width: 900px) {
 

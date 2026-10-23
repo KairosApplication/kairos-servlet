@@ -8,7 +8,6 @@ import com.kairos.utils.Formatter;
 public class Usuario {
 
 //    Atributos
-
     private int id;
     private String cpf;
     private String senha;
@@ -21,8 +20,6 @@ public class Usuario {
     private Empresa empresa;
 
 //    Construtuores
-
-
     public Usuario(int id, String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, TipoUsuario tipoUsuario, String email, Empresa empresa) {
         this.id = id;
         this.cpf = cpf;
@@ -60,6 +57,8 @@ public class Usuario {
         this.empresa = empresa;
     }
 
+
+    // Getters
     public int getId() {
         return id;
     }
@@ -100,6 +99,7 @@ public class Usuario {
         return empresa;
     }
 
+    // Setters
     public void setId(int id) {
         this.id = id;
     }
@@ -153,7 +153,6 @@ public class Usuario {
     }
 
     //    toString
-
     @Override
     public String toString() {
         return "\n-= USUARIO =-" +

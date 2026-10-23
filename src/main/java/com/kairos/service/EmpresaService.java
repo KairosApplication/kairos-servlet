@@ -13,12 +13,15 @@ import java.util.List;
 
 public class EmpresaService {
 
+    // DAO
     private final EmpresaDAO empresaDAO;
 
+    // Construtor
     public EmpresaService() {
         this.empresaDAO = new EmpresaDAO();
     }
 
+    // Cadastrar empresa
     public Empresa cadastrar(Empresa empresa) {
 
         validarCampos(empresa);
@@ -40,6 +43,7 @@ public class EmpresaService {
         return empresaDAO.inserir(empresa);
     }
 
+    // Buscar empresa por ID
     public Empresa buscarPorId(int id) {
 
         if (id <= 0) {
@@ -51,9 +55,11 @@ public class EmpresaService {
         if (empresa == null) {
             throw new EmpresaNotFoundException("Empresa não encontrada");
         }
+
         return empresa;
     }
 
+    // Buscar empresa por nome
     public Empresa buscarPorNome(String nome) {
 
         if (nome == null || nome.isBlank()) {
@@ -69,11 +75,13 @@ public class EmpresaService {
         return empresa;
     }
 
+    // Listar empresas
     public List<Empresa> listarTodos() {
 
         return empresaDAO.listarTodos();
     }
 
+    // Atualizar empresa
     public void atualizar(Empresa empresa) {
 
         validarCampos(empresa);
@@ -101,6 +109,7 @@ public class EmpresaService {
         }
     }
 
+    // Deletar empresa por ID
     public void deletarPorId(int id) {
 
         if (id <= 0) {
@@ -116,6 +125,7 @@ public class EmpresaService {
         empresaDAO.deletarPorId(id);
     }
 
+    // Verificar CNPJ existente
     public boolean existePorCnpj(String cnpj) {
 
         if (cnpj == null || cnpj.isBlank()) {
@@ -131,6 +141,7 @@ public class EmpresaService {
         return empresaDAO.existePorCnpj(cnpj);
     }
 
+    // Verificar CNPJ existente, exceto ID
     public boolean existePorCnpjExcetoId(String cnpj, int id) {
 
         if (cnpj == null || cnpj.isBlank()) {
@@ -150,6 +161,7 @@ public class EmpresaService {
         return empresaDAO.existePorCnpjExcetoId(cnpj, id);
     }
 
+    // Buscar empresa por CNPJ
     public Empresa buscarPorCnpj(String cnpj) {
 
         if (cnpj == null || cnpj.isBlank()) {
@@ -167,9 +179,11 @@ public class EmpresaService {
         if (empresa == null) {
             throw new EmpresaNotFoundException("Empresa não encontrada");
         }
+
         return empresa;
     }
 
+    // Verificar nome existente
     public boolean existePorNome(String nome) {
 
         if (nome == null || nome.isBlank()) {
@@ -179,6 +193,7 @@ public class EmpresaService {
         return empresaDAO.existePorNome(nome);
     }
 
+    // Verificar nome existente, exceto ID
     public boolean existePorNomeExcetoId(String nome, int id) {
 
         if (nome == null || nome.isBlank()) {
@@ -192,6 +207,7 @@ public class EmpresaService {
         return empresaDAO.existePorNomeExcetoId(nome, id);
     }
 
+    // Validar campos da empresa
     private void validarCampos(Empresa empresa) {
 
         if (empresa == null) {
@@ -211,9 +227,9 @@ public class EmpresaService {
         }
     }
 
+    // Pesquisar empresas
     public List<Empresa> pesquisar(String pesquisa) {
 
         return empresaDAO.pesquisar(pesquisa);
-
     }
 }

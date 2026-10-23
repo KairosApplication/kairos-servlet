@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.kairos.utils.Formatter" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>
@@ -30,7 +31,6 @@
 
     </div>
 
-
     <nav class="menu">
 
         <a href="${pageContext.request.contextPath}/admin/usuarios"
@@ -49,7 +49,6 @@
 
         </a>
 
-
         <a href="#"
            class="menu-item active">
 
@@ -65,7 +64,6 @@
             <span>Empresa</span>
 
         </a>
-
 
         <a href="${pageContext.request.contextPath}/admin/setores"
            class="menu-item">
@@ -83,7 +81,6 @@
 
         </a>
 
-
         <a href="${pageContext.request.contextPath}/admin/gondolas"
            class="menu-item">
 
@@ -99,7 +96,6 @@
             <span>Gôndola</span>
 
         </a>
-
 
         <a href="${pageContext.request.contextPath}/admin/produtos"
            class="menu-item">
@@ -117,7 +113,6 @@
 
         </a>
 
-
         <a href="${pageContext.request.contextPath}/admin/reposicoes"
            class="menu-item">
 
@@ -134,7 +129,6 @@
 
         </a>
 
-
         <a href="${pageContext.request.contextPath}/admin/alertas"
            class="menu-item">
 
@@ -150,7 +144,6 @@
             <span>Alerta</span>
 
         </a>
-
 
         <a href="${pageContext.request.contextPath}/admin/compras"
            class="menu-item">
@@ -170,7 +163,6 @@
 
     </nav>
 
-
     <div class="logout-area">
 
         <label
@@ -186,11 +178,6 @@
 
 
 <main class="main-content">
-
-
-    <!-- ====================================================== -->
-    <!-- BUSCA E ADICIONAR -->
-    <!-- ====================================================== -->
 
     <section class="search-area">
 
@@ -217,7 +204,6 @@
 
         </form>
 
-
         <label
                 for="add-company-toggle"
                 class="add-user-button"
@@ -228,14 +214,9 @@
     </section>
 
 
-    <!-- ====================================================== -->
-    <!-- TABELA -->
-    <!-- ====================================================== -->
-
     <section class="content-card">
 
         <h1>Empresas</h1>
-
 
         <div class="table-wrapper">
 
@@ -273,7 +254,6 @@
 
                 </thead>
 
-
                 <tbody>
 
                 <c:choose>
@@ -293,7 +273,6 @@
 
                     </c:when>
 
-
                     <c:otherwise>
 
                         <c:forEach
@@ -308,11 +287,11 @@
                                 </td>
 
                                 <td>
-                                        ${empresa.nome}
+                                    <c:out value="${empresa.nome}"/>
                                 </td>
 
                                 <td>
-                                        ${empresa.cnpj}
+                                        ${Formatter.cnpj(empresa.cnpj)}
                                 </td>
 
                                 <td>
@@ -321,17 +300,12 @@
 
                                 <td class="actions">
 
-                                    <!-- ATUALIZAR -->
-
                                     <label
                                             for="update-company-${empresa.id}"
                                             class="update-button"
                                     >
                                         Atualizar
                                     </label>
-
-
-                                    <!-- DELETAR -->
 
                                     <label
                                             for="delete-company-${empresa.id}"
@@ -361,10 +335,6 @@
 </main>
 
 
-<!-- ====================================================== -->
-<!-- POPUPS DE ATUALIZAÇÃO -->
-<!-- ====================================================== -->
-
 <c:forEach
         var="empresa"
         items="${empresas}"
@@ -376,7 +346,6 @@
             class="popup-toggle"
         ${idEmpresaAtualizacao == empresa.id ? 'checked' : ''}
     >
-
 
     <div class="popup-overlay">
 
@@ -398,7 +367,6 @@
 
             </div>
 
-
             <form
                     id="update-company-form-${empresa.id}"
                     action="${pageContext.request.contextPath}/admin/empresas"
@@ -411,7 +379,6 @@
                         name="id"
                         value="${empresa.id}"
                 >
-
 
                 <div class="form-grid">
 
@@ -434,7 +401,6 @@
                                 Selecione o tipo de plano
                             </option>
 
-
                             <option
                                     value="GRATUITO"
                                 ${idEmpresaAtualizacao == empresa.id && param.tipoPlano == 'GRATUITO' || idEmpresaAtualizacao != empresa.id && empresa.tipoPlano.name() == 'GRATUITO' ? 'selected' : ''}
@@ -442,14 +408,12 @@
                                 Gratuito
                             </option>
 
-
                             <option
                                     value="STANDART"
                                 ${idEmpresaAtualizacao == empresa.id && param.tipoPlano == 'STANDART' || idEmpresaAtualizacao != empresa.id && empresa.tipoPlano.name() == 'STANDART' ? 'selected' : ''}
                             >
                                 Standart
                             </option>
-
 
                             <option
                                     value="PREMIUM"
@@ -459,7 +423,6 @@
                             </option>
 
                         </select>
-
 
                         <c:if test="${idEmpresaAtualizacao == empresa.id and not empty errosAtualizacao.tipoPlano}">
 
@@ -473,7 +436,6 @@
 
                 </div>
 
-
                 <div class="popup-actions">
 
                     <label
@@ -483,7 +445,6 @@
                     >
                         Cancelar
                     </label>
-
 
                     <button
                             type="submit"
@@ -503,10 +464,6 @@
 </c:forEach>
 
 
-<!-- ====================================================== -->
-<!-- POPUPS DE CONFIRMAÇÃO DE DELETAR -->
-<!-- ====================================================== -->
-
 <c:forEach
         var="empresa"
         items="${empresas}"
@@ -517,7 +474,6 @@
             id="delete-company-${empresa.id}"
             class="popup-toggle"
     >
-
 
     <div class="popup-overlay">
 
@@ -538,17 +494,15 @@
 
             </div>
 
-
             <p>
 
                 Você deseja realmente deletar a empresa
 
                 <strong>
-                        ${empresa.nome}
+                    <c:out value="${empresa.nome}"/>
                 </strong>?
 
             </p>
-
 
             <div class="popup-actions">
 
@@ -558,7 +512,6 @@
                 >
                     Cancelar
                 </label>
-
 
                 <a
                         href="${pageContext.request.contextPath}/admin/empresas?acao=deletar&amp;id=${empresa.id}"
@@ -576,17 +529,12 @@
 </c:forEach>
 
 
-<!-- ====================================================== -->
-<!-- POPUP DE ADICIONAR EMPRESA -->
-<!-- ====================================================== -->
-
 <input
         type="checkbox"
         id="add-company-toggle"
         class="popup-toggle"
 ${not empty erros ? 'checked' : ''}
 >
-
 
 <div class="popup-overlay">
 
@@ -608,7 +556,6 @@ ${not empty erros ? 'checked' : ''}
 
         </div>
 
-
         <form
                 id="add-company-form"
                 action="${pageContext.request.contextPath}/admin/empresas"
@@ -617,7 +564,6 @@ ${not empty erros ? 'checked' : ''}
         >
 
             <div class="form-grid">
-
 
                 <div class="form-field">
 
@@ -632,7 +578,6 @@ ${not empty erros ? 'checked' : ''}
                             value="${param.nome}"
                     >
 
-
                     <c:if test="${not empty erros.nome}">
 
                         <div class="campo-erro">
@@ -642,7 +587,6 @@ ${not empty erros ? 'checked' : ''}
                     </c:if>
 
                 </div>
-
 
                 <div class="form-field">
 
@@ -657,7 +601,6 @@ ${not empty erros ? 'checked' : ''}
                             value="${param.cnpj}"
                     >
 
-
                     <c:if test="${not empty erros.cnpj}">
 
                         <div class="campo-erro">
@@ -668,13 +611,11 @@ ${not empty erros ? 'checked' : ''}
 
                 </div>
 
-
                 <div class="form-field full-width">
 
                     <label for="tipoPlano">
                         Tipo de plano
                     </label>
-
 
                     <select
                             id="tipoPlano"
@@ -688,7 +629,6 @@ ${not empty erros ? 'checked' : ''}
                             Selecione o tipo de plano
                         </option>
 
-
                         <option
                                 value="GRATUITO"
                         ${param.tipoPlano == 'GRATUITO' ? 'selected' : ''}
@@ -696,14 +636,12 @@ ${not empty erros ? 'checked' : ''}
                             Gratuito
                         </option>
 
-
                         <option
                                 value="STANDART"
                         ${param.tipoPlano == 'STANDART' ? 'selected' : ''}
                         >
                             Standart
                         </option>
-
 
                         <option
                                 value="PREMIUM"
@@ -713,7 +651,6 @@ ${not empty erros ? 'checked' : ''}
                         </option>
 
                     </select>
-
 
                     <c:if test="${not empty erros.tipoPlano}">
 
@@ -725,9 +662,7 @@ ${not empty erros ? 'checked' : ''}
 
                 </div>
 
-
             </div>
-
 
             <div class="popup-actions">
 
@@ -738,7 +673,6 @@ ${not empty erros ? 'checked' : ''}
                 >
                     Cancelar
                 </label>
-
 
                 <button
                         type="submit"
@@ -756,16 +690,11 @@ ${not empty erros ? 'checked' : ''}
 </div>
 
 
-<!-- ====================================================== -->
-<!-- POPUP DE LOGOUT -->
-<!-- ====================================================== -->
-
 <input
         type="checkbox"
         id="logout-popup"
         class="popup-toggle"
 >
-
 
 <div class="popup-overlay">
 
@@ -786,11 +715,9 @@ ${not empty erros ? 'checked' : ''}
 
         </div>
 
-
         <p>
             Você deseja realmente sair da página do administrador?
         </p>
-
 
         <div class="popup-actions">
 
@@ -800,7 +727,6 @@ ${not empty erros ? 'checked' : ''}
             >
                 Cancelar
             </label>
-
 
             <a
                     href="${pageContext.request.contextPath}/logout"

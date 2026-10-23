@@ -1,32 +1,30 @@
 /*
- * Impede o envio múltiplo dos formulários.
- * Funciona para adicionar e atualizar empresa.
+ * Configura o bloqueio dos formulários e botões.
  */
 document.addEventListener("DOMContentLoaded", function () {
 
     /*
-     * Impede o envio múltiplo dos formulários.
+     * Impede envios duplicados.
      */
     document.querySelectorAll("form").forEach(function (form) {
 
         form.addEventListener("submit", function (event) {
 
-            /*
-             * Bloqueia Cancelar, X e campos do popup
-             * antes de enviar a ação.
-             */
-            bloquearControlesPopup(form);
-
-
             if (form.dataset.enviado === "true") {
-
                 event.preventDefault();
-
                 return;
             }
 
-            form.dataset.enviado = "true";
+            if (!form.checkValidity() || event.defaultPrevented) {
+                return;
+            }
 
+            /*
+             * Bloqueia os controles do popup.
+             */
+            bloquearControlesPopup(form);
+
+            form.dataset.enviado = "true";
 
             /*
              * Bloqueia o botão de confirmação.
@@ -49,8 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /*
-     * Impede cliques múltiplos em links que executam ações.
-     * Exemplo: Deletar.
+     * Impede exclusões duplicadas.
      */
     document.querySelectorAll(
         "a.delete-confirm-button"
@@ -58,28 +55,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
         link.addEventListener("click", function (event) {
 
-            /*
-             * Bloqueia Cancelar e X antes de executar
-             * a exclusão.
-             */
-            bloquearControlesPopup(link);
-
-
             if (link.dataset.clicado === "true") {
-
                 event.preventDefault();
-
                 return;
             }
 
+            /*
+             * Bloqueia os controles do popup.
+             */
+            bloquearControlesPopup(link);
+
             link.dataset.clicado = "true";
 
-
-            /*
-             * Bloqueia o próprio botão Deletar.
-             */
             link.style.opacity = "0.6";
-            link.style.pointerEvents = "none";
             link.style.cursor = "not-allowed";
 
         });
@@ -90,9 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 /*
- * Impede qualquer interação com os botões
- * de cancelar e fechar do popup depois
- * que uma ação foi confirmada.
+ * Bloqueia os controles do popup.
  */
 function bloquearControlesPopup(elemento) {
 
@@ -108,24 +94,16 @@ function bloquearControlesPopup(elemento) {
         return;
     }
 
-
     /*
-     * Não aplica ao popup de logout.
+     * Não bloqueia o popup de logout.
      */
     const logout = document.getElementById(
         "logout-popup"
     );
 
-    if (logout) {
-
-        const logoutOverlay = logout.nextElementSibling;
-
-        if (logoutOverlay === overlay) {
-            return;
-        }
-
+    if (logout && logout.nextElementSibling === overlay) {
+        return;
     }
-
 
     /*
      * Bloqueia Cancelar e X.
@@ -134,31 +112,27 @@ function bloquearControlesPopup(elemento) {
         ".cancel-button, .popup-close"
     ).forEach(function (controle) {
 
+        if (controle.dataset.bloqueado === "true") {
+            return;
+        }
+
         controle.style.opacity = "0.6";
         controle.style.cursor = "not-allowed";
         controle.dataset.bloqueado = "true";
 
-
-        /*
-         * Impede o clique sem remover
-         * o elemento da área do mouse.
-         */
         controle.addEventListener("click", function (event) {
 
             if (controle.dataset.bloqueado === "true") {
-
                 event.preventDefault();
                 event.stopPropagation();
-
             }
 
         });
 
     });
 
-
     /*
-     * Bloqueia os campos do formulário.
+     * Bloqueia os campos do popup.
      */
     bloquearCamposPopup(popup);
 
@@ -166,12 +140,7 @@ function bloquearControlesPopup(elemento) {
 
 
 /*
- * Bloqueia os campos do popup depois que
- * a ação foi confirmada.
- *
- * Os campos não recebem disabled=true,
- * pois seus valores ainda precisam ser
- * enviados pelo formulário.
+ * Bloqueia os campos após a confirmação.
  */
 function bloquearCamposPopup(popup) {
 
@@ -179,78 +148,35 @@ function bloquearCamposPopup(popup) {
         "input:not([type='hidden']), select, textarea"
     ).forEach(function (campo) {
 
+        if (campo.dataset.bloqueado === "true") {
+            return;
+        }
+
         campo.style.opacity = "0.6";
+        campo.style.cursor = "not-allowed";
         campo.dataset.bloqueado = "true";
 
-
         /*
-         * Impede interação pelo mouse antes
-         * mesmo que o evento de click aconteça.
+         * Impede alterações sem desabilitar os campos.
          */
-        campo.addEventListener("mousedown", function (event) {
+        [
+            "mousedown",
+            "keydown",
+            "beforeinput",
+            "click",
+            "change",
+            "paste",
+            "drop"
+        ].forEach(function (tipo) {
 
-            if (campo.dataset.bloqueado === "true") {
+            campo.addEventListener(tipo, function (event) {
 
-                event.preventDefault();
+                if (campo.dataset.bloqueado === "true") {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
 
-            }
-
-        });
-
-
-        /*
-         * Impede alterações pelo teclado.
-         */
-        campo.addEventListener("keydown", function (event) {
-
-            if (campo.dataset.bloqueado === "true") {
-
-                event.preventDefault();
-
-            }
-
-        });
-
-
-        /*
-         * Impede entrada de texto.
-         */
-        campo.addEventListener("beforeinput", function (event) {
-
-            if (campo.dataset.bloqueado === "true") {
-
-                event.preventDefault();
-
-            }
-
-        });
-
-
-        /*
-         * Impede cliques no campo.
-         */
-        campo.addEventListener("click", function (event) {
-
-            if (campo.dataset.bloqueado === "true") {
-
-                event.preventDefault();
-
-            }
-
-        });
-
-
-        /*
-         * Impede alterações em selects
-         * e outros campos.
-         */
-        campo.addEventListener("change", function (event) {
-
-            if (campo.dataset.bloqueado === "true") {
-
-                event.preventDefault();
-
-            }
+            });
 
         });
 
@@ -272,15 +198,12 @@ function limparFormularioAdicionar() {
         return;
     }
 
-
     /*
-     * Não limpa o formulário depois que
-     * a ação já foi confirmada.
+     * Não limpa após a confirmação.
      */
     if (formulario.dataset.enviado === "true") {
         return;
     }
-
 
     formulario.querySelectorAll("input").forEach(function (input) {
 
@@ -289,14 +212,15 @@ function limparFormularioAdicionar() {
 
     });
 
-
     formulario.querySelectorAll("select").forEach(function (select) {
 
         select.value = "";
 
     });
 
-
+    /*
+     * Remove os erros de validação.
+     */
     formulario.querySelectorAll(
         ".campo-erro"
     ).forEach(function (erro) {
@@ -309,8 +233,7 @@ function limparFormularioAdicionar() {
 
 
 /*
- * Limpa os erros e restaura os dados originais
- * da empresa no formulário de atualização.
+ * Restaura os dados originais da empresa.
  */
 function limparFormularioAtualizacao(id) {
 
@@ -322,16 +245,16 @@ function limparFormularioAtualizacao(id) {
         return;
     }
 
-
     /*
-     * Não limpa nem restaura os campos depois
-     * que a atualização já foi confirmada.
+     * Não restaura após a confirmação.
      */
     if (formulario.dataset.enviado === "true") {
         return;
     }
 
-
+    /*
+     * Restaura os inputs.
+     */
     formulario.querySelectorAll("input").forEach(function (input) {
 
         if (input.dataset.original !== undefined) {
@@ -342,7 +265,9 @@ function limparFormularioAtualizacao(id) {
 
     });
 
-
+    /*
+     * Restaura os selects.
+     */
     formulario.querySelectorAll("select").forEach(function (select) {
 
         if (select.dataset.original !== undefined) {
@@ -353,7 +278,9 @@ function limparFormularioAtualizacao(id) {
 
     });
 
-
+    /*
+     * Remove os erros de validação.
+     */
     formulario.querySelectorAll(
         ".campo-erro"
     ).forEach(function (erro) {
