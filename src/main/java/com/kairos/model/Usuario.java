@@ -1,3 +1,4 @@
+
 package com.kairos.model;
 
 import com.kairos.model.enums.TipoUsuario;
@@ -5,7 +6,9 @@ import com.kairos.utils.Formatter;
 
 import java.time.LocalDate;
 
-//    Atributos
+public class Usuario {
+
+    // Atributos
     private int id;
     private String cpf;
     private String senha;
@@ -17,7 +20,7 @@ import java.time.LocalDate;
     private String email;
     private Empresa empresa;
 
-//    Construtuores
+    // Construtores
     public Usuario(int id, String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, TipoUsuario tipoUsuario, String email, Empresa empresa) {
         this.id = id;
         this.cpf = cpf;
@@ -54,7 +57,6 @@ import java.time.LocalDate;
         this.email = email;
         this.empresa = empresa;
     }
-
 
     // Getters
     public int getId() {
@@ -138,22 +140,22 @@ import java.time.LocalDate;
         this.empresa = empresa;
     }
 
-    // Retorna o CPF formatado
+    // CPF formatado
     public String getCpfFormatado() {
         return Formatter.cpf(cpf);
     }
 
-    // Retorna o CEP formatado
+    // CEP formatado
     public String getCepFormatado() {
         return Formatter.cep(cep);
     }
 
-    // Retorna a data de nascimento formatada
+    // Data de nascimento formatada
     public String getDataNascimentoFormatada() {
         return Formatter.data(dataNascimento);
     }
 
-    //    toString
+    // to String
     @Override
     public String toString() {
         return "\n-= USUARIO =-" +
