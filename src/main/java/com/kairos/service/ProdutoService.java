@@ -11,12 +11,15 @@ import java.util.List;
 
 public class ProdutoService {
 
+    // Atributos
     private final ProdutoDAO produtoDAO;
 
+    // Construtor
     public ProdutoService() {
         this.produtoDAO = new ProdutoDAO();
     }
 
+    // Cadastra um novo produto
     public Produto cadastrar(Produto produto) {
 
         validarCampos(produto);
@@ -28,6 +31,7 @@ public class ProdutoService {
         return produtoDAO.inserir(produto);
     }
 
+    // Busca um produto pelo ID
     public Produto buscarPorId(int id) {
 
         if (id <= 0) {
@@ -43,6 +47,7 @@ public class ProdutoService {
         return produto;
     }
 
+    // Busca um produto pelo nome
     public Produto buscarPorNome(String nome) {
 
         if (nome == null || nome.isBlank()) {
@@ -58,11 +63,13 @@ public class ProdutoService {
         return produto;
     }
 
+    // Lista todos os produtos
     public List<Produto> listarTodos() {
 
         return produtoDAO.listarTodos();
     }
 
+    // Busca um produto pelo nome e marca
     public Produto buscarPorNomeEMarca(String nome, String marca) {
 
         if (nome == null || nome.isBlank()) {
@@ -82,6 +89,7 @@ public class ProdutoService {
         return produto;
     }
 
+    // Atualiza os dados de um produto
     public void atualizar(Produto produto) {
 
         validarCampos(produto);
@@ -95,6 +103,7 @@ public class ProdutoService {
         }
     }
 
+    // Exclui um produto pelo ID
     public void deletarPorId(int id) {
 
         if (id <= 0) {
@@ -108,6 +117,7 @@ public class ProdutoService {
         produtoDAO.deletarPorId(id);
     }
 
+    // Verifica se existe um produto pelo nome
     public boolean existePorNome(String nome) {
 
         if (nome == null || nome.isBlank()) {
@@ -117,6 +127,7 @@ public class ProdutoService {
         return produtoDAO.existePorNome(nome);
     }
 
+    // Verifica se o nome pertence a outro produto
     public boolean existePorNomeExcetoId(String nome, int id) {
 
         if (id <= 0) {
@@ -130,6 +141,7 @@ public class ProdutoService {
         return produtoDAO.existeNomeExcetoId(nome, id);
     }
 
+    // Verifica se existe um produto pelo nome e marca
     public boolean existePorNomeEMarca(String nome, String marca) {
 
         if (nome == null || nome.isBlank()) {
@@ -143,6 +155,7 @@ public class ProdutoService {
         return produtoDAO.existePorNomeEMarca(nome, marca);
     }
 
+    // Verifica se existe uma marca cadastrada
     public boolean existePorMarca(String marca) {
 
         if (marca == null || marca.isBlank()) {
@@ -154,6 +167,7 @@ public class ProdutoService {
         return produtoDAO.existePorMarca(marca);
     }
 
+    // Valida os campos do produto
     private void validarCampos(Produto produto) {
 
         if (produto == null) {
@@ -173,9 +187,9 @@ public class ProdutoService {
         }
     }
 
+    // Pesquisa produtos pelos campos informados
     public List<Produto> pesquisar(String pesquisa) {
 
         return produtoDAO.pesquisar(pesquisa);
-
     }
 }

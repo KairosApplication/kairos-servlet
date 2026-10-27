@@ -26,11 +26,6 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-
-/* =========================
-   SIDEBAR
-   ========================= */
-
 .sidebar {
     position: fixed;
     top: 0;
@@ -124,11 +119,6 @@ body {
     filter: brightness(0) invert(1);
 }
 
-
-/* =========================
-   CONTEÚDO
-   ========================= */
-
 .main-content {
     width: calc(100% - 225px);
     margin-left: 225px;
@@ -139,11 +129,6 @@ body {
 
     overflow-x: hidden;
 }
-
-
-/* =========================
-   BUSCA + ADICIONAR
-   ========================= */
 
 .search-area {
     width: 100%;
@@ -198,6 +183,15 @@ body {
     color: #70869b;
 }
 
+.search-input:-webkit-autofill,
+.search-input:-webkit-autofill:hover,
+.search-input:-webkit-autofill:focus,
+.search-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #edf3f8 inset !important;
+    -webkit-text-fill-color: #294966 !important;
+    caret-color: #294966;
+}
+
 .search-button {
     width: 120px;
     height: 36px;
@@ -244,11 +238,6 @@ body {
     background: #1e68bc;
 }
 
-
-/* =========================
-   MENSAGEM DE ERRO
-   ========================= */
-
 .mensagem-erro {
     width: 100%;
 
@@ -268,11 +257,6 @@ body {
 
     line-height: 1.4;
 }
-
-
-/* =========================
-   CARD PRINCIPAL
-   ========================= */
 
 .content-card {
     width: 100%;
@@ -298,11 +282,6 @@ body {
 
     font-weight: 700;
 }
-
-
-/* =========================
-   TABELA
-   ========================= */
 
 .table-wrapper {
     width: 100%;
@@ -346,6 +325,24 @@ body {
     border-top-right-radius: 7px;
 }
 
+.users-table.table-empty thead th {
+    color: var(--green);
+}
+
+.users-table td.empty-message {
+    height: 60px;
+
+    padding: 12px;
+
+    text-align: center;
+    vertical-align: middle;
+
+    color: #6f8496 !important;
+
+    font-size: 14px;
+    font-weight: 400;
+}
+
 .user-row td {
     height: 60px;
 
@@ -363,11 +360,6 @@ body {
 .user-row:hover td {
     background: #fbfdff;
 }
-
-
-/* =========================
-   AÇÕES
-   ========================= */
 
 .actions {
     display: flex;
@@ -415,11 +407,6 @@ body {
 .delete-button:hover {
     background: #d92525;
 }
-
-
-/* =========================
-   POPUPS
-   ========================= */
 
 .popup-toggle {
     position: absolute;
@@ -518,11 +505,6 @@ body {
     background: rgba(255, 255, 255, 0.14);
 }
 
-
-/* =========================
-   FORMULÁRIOS
-   ========================= */
-
 .add-user-form {
     padding: 20px;
 }
@@ -577,6 +559,20 @@ body {
     background: #ffffff;
 }
 
+.form-field input:-webkit-autofill,
+.form-field input:-webkit-autofill:hover,
+.form-field input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #f7fafc inset !important;
+    -webkit-text-fill-color: #294966 !important;
+    caret-color: #294966;
+}
+
+.form-field input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+    -webkit-text-fill-color: #294966 !important;
+    caret-color: #294966;
+}
+
 .campo-erro {
     color: #b42323;
 
@@ -585,11 +581,6 @@ body {
 
     line-height: 1.3;
 }
-
-
-/* =========================
-   TEXTO DOS POPUPS
-   ========================= */
 
 .popup > p {
     margin: 0;
@@ -606,11 +597,6 @@ body {
 .popup > p strong {
     color: #294966;
 }
-
-
-/* =========================
-   BOTÕES DOS POPUPS
-   ========================= */
 
 .popup-actions {
     display: flex;
@@ -676,11 +662,6 @@ body {
     background: #d92525;
 }
 
-
-/* =========================
-   RESPONSIVIDADE
-   ========================= */
-
 @media (max-width: 900px) {
 
     .sidebar {
@@ -697,7 +678,6 @@ body {
     }
 
 }
-
 
 @media (max-width: 700px) {
 
@@ -763,11 +743,6 @@ body {
 
 }
 
-
-/* =========================
-   LOGOUT
-   ========================= */
-
 .logout-area {
     margin-top: auto;
 
@@ -796,4 +771,40 @@ body {
 
 .logout-button:hover {
     background-color: #a61f1f;
+}
+
+
+.users-table thead th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.users-table tbody td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.users-table .actions {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.users-table .actions .update-button,
+.users-table .actions .delete-button {
+    vertical-align: middle;
+}
+
+.users-table .actions .update-button {
+    margin-right: 7px;
+}
+
+.users-table td.empty-message {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.form-grid .form-field.full-width {
+    grid-column: 1 / -1;
 }
