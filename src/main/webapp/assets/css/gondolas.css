@@ -4,14 +4,12 @@
     box-sizing: border-box;
 }
 
-
 html,
 body {
     width: 100%;
     min-height: 100%;
     overflow-x: hidden;
 }
-
 
 :root {
     --green: #096b58;
@@ -21,18 +19,12 @@ body {
     --text: #294966;
 }
 
-
 body {
     min-height: 100vh;
     background: var(--background);
     color: var(--text);
     font-family: Arial, Helvetica, sans-serif;
 }
-
-
-/* =========================
-   SIDEBAR
-   ========================= */
 
 .sidebar {
     position: fixed;
@@ -51,7 +43,6 @@ body {
     z-index: 10;
 }
 
-
 .logo-area {
     height: 96px;
 
@@ -64,7 +55,6 @@ body {
     border-bottom: 1px solid #dce7e3;
 }
 
-
 .logo {
     width: 140px;
     max-height: 58px;
@@ -74,11 +64,9 @@ body {
     filter: brightness(0) invert(1);
 }
 
-
 .menu {
     padding: 14px 14px;
 }
-
 
 .menu-item {
     height: 45px;
@@ -102,18 +90,15 @@ body {
     transition: 0.15s ease;
 }
 
-
 .menu-item:hover {
     background: #eef7f4;
 }
-
 
 .menu-item.active {
     color: #ffffff;
     background: var(--green);
     font-weight: 600;
 }
-
 
 .menu-icon {
     width: 26px;
@@ -126,7 +111,6 @@ body {
     flex-shrink: 0;
 }
 
-
 .menu-icon img {
     width: 25px;
     height: 25px;
@@ -134,15 +118,9 @@ body {
     object-fit: contain;
 }
 
-
 .menu-item.active .menu-icon img {
     filter: brightness(0) invert(1);
 }
-
-
-/* =========================
-   CONTEÚDO
-   ========================= */
 
 .main-content {
     width: calc(100% - 225px);
@@ -154,11 +132,6 @@ body {
 
     overflow-x: hidden;
 }
-
-
-/* =========================
-   BUSCA + ADICIONAR
-   ========================= */
 
 .search-area {
     width: 100%;
@@ -179,7 +152,6 @@ body {
     margin-bottom: 20px;
 }
 
-
 .search-form {
     display: flex;
     align-items: center;
@@ -188,7 +160,6 @@ body {
 
     min-width: 0;
 }
-
 
 .search-input {
     width: 400px;
@@ -209,16 +180,13 @@ body {
     outline: none;
 }
 
-
 .search-input:focus {
     border-color: #8dbdaf;
 }
 
-
 .search-input::placeholder {
     color: #70869b;
 }
-
 
 .search-button {
     width: 120px;
@@ -236,11 +204,9 @@ body {
     cursor: pointer;
 }
 
-
 .search-button:hover {
     background: var(--green-dark);
 }
-
 
 .add-gondola-button {
     height: 36px;
@@ -264,15 +230,9 @@ body {
     white-space: nowrap;
 }
 
-
 .add-gondola-button:hover {
     background: #1e68bc;
 }
-
-
-/* =========================
-   MENSAGEM DE ERRO
-   ========================= */
 
 .mensagem-erro {
     width: 100%;
@@ -294,11 +254,6 @@ body {
     line-height: 1.4;
 }
 
-
-/* =========================
-   CARD PRINCIPAL
-   ========================= */
-
 .content-card {
     width: 100%;
 
@@ -313,7 +268,6 @@ body {
     overflow: hidden;
 }
 
-
 .content-card h1 {
     margin: 0 0 17px;
 
@@ -325,11 +279,6 @@ body {
     font-weight: 700;
 }
 
-
-/* =========================
-   TABELA PRINCIPAL
-   ========================= */
-
 .table-wrapper {
     width: 100%;
 
@@ -338,7 +287,6 @@ body {
     border: 1px solid #e4edf4;
     border-radius: 8px;
 }
-
 
 .gondolas-table {
     width: 100%;
@@ -350,7 +298,6 @@ body {
     font-size: 13px;
 }
 
-
 .gondolas-table thead th {
     height: 43px;
 
@@ -359,23 +306,20 @@ body {
     background: var(--green);
     color: #ffffff;
 
-    text-align: left;
+    text-align: center;
     white-space: nowrap;
 
     font-size: 13px;
     font-weight: 700;
 }
 
-
 .gondolas-table thead th:first-child {
     border-top-left-radius: 7px;
 }
 
-
 .gondolas-table thead th:last-child {
     border-top-right-radius: 7px;
 }
-
 
 .gondola-row td {
     height: 60px;
@@ -385,31 +329,26 @@ body {
     border-bottom: 1px solid #e5edf3;
 
     color: #355572;
+    text-align: center;
 
     white-space: nowrap;
 
     vertical-align: middle;
 }
 
-
 .gondola-row:hover td {
     background: #fbfdff;
 }
 
-
-/* =========================
-   AÇÕES
-   ========================= */
-
 .actions {
     display: flex;
     align-items: center;
+    justify-content: center;
 
     gap: 7px;
 
     min-width: 220px;
 }
-
 
 .details-toggle {
     position: absolute;
@@ -417,7 +356,6 @@ body {
     opacity: 0;
     pointer-events: none;
 }
-
 
 .details-button,
 .update-button,
@@ -442,7 +380,6 @@ body {
     cursor: pointer;
 }
 
-
 .details-button {
     gap: 5px;
 
@@ -450,11 +387,9 @@ body {
     color: #177a65;
 }
 
-
 .details-button:hover {
     background: #c4f0e3;
 }
-
 
 .arrow {
     display: inline-block;
@@ -467,58 +402,41 @@ body {
     transition: transform 0.2s ease;
 }
 
-
 .update-button {
     background: #ffd34d;
     color: #4d430d;
 }
 
-
 .update-button:hover {
     background: #f7c83a;
 }
-
 
 .delete-button {
     background: #ee3434;
     color: #ffffff;
 }
 
-
 .delete-button:hover {
     background: #d92525;
 }
-
-
-/* =========================
-   EXPANSÃO
-   ========================= */
 
 .details-row {
     display: none;
 }
 
-
 .gondola-row:has(.details-toggle:checked) + .details-row {
     display: table-row;
 }
 
-
 .gondola-row:has(.details-toggle:checked) .arrow {
     transform: rotate(180deg);
 }
-
-
-/* =========================
-   DETALHES
-   ========================= */
 
 .details-row > td {
     padding: 13px 14px 16px;
 
     border-bottom: 1px solid #e5edf3;
 }
-
 
 .details-box {
     padding: 13px 10px 15px;
@@ -528,7 +446,6 @@ body {
     border-radius: 7px;
 }
 
-
 .details-box h2 {
     margin: 0;
 
@@ -537,11 +454,6 @@ body {
     font-size: 14px;
     font-weight: 700;
 }
-
-
-/* =========================
-   CABEÇALHO DOS PRODUTOS
-   ========================= */
 
 .details-header {
     display: flex;
@@ -553,15 +465,9 @@ body {
     margin-bottom: 10px;
 }
 
-
 .details-header h2 {
     margin: 0;
 }
-
-
-/* =========================
-   BOTÃO VINCULAR
-   ========================= */
 
 .link-button {
     height: 29px;
@@ -586,15 +492,9 @@ body {
     white-space: nowrap;
 }
 
-
 .link-button:hover {
     background: #1e68bc;
 }
-
-
-/* =========================
-   TABELA DE PRODUTOS
-   ========================= */
 
 .details-table {
     width: 100%;
@@ -612,7 +512,6 @@ body {
     font-size: 12px;
 }
 
-
 .details-table th {
     height: 34px;
 
@@ -621,12 +520,11 @@ body {
     background: #edf4fa;
     color: #36536d;
 
-    text-align: left;
+    text-align: center;
     font-weight: 500;
 
     border-bottom: 1px solid #dce7f0;
 }
-
 
 .details-table td {
     height: 33px;
@@ -634,24 +532,19 @@ body {
     padding: 0 12px;
 
     color: #46627a;
+    text-align: center;
+    vertical-align: middle;
 
     border-bottom: 1px solid #e0e9f0;
 }
-
 
 .details-table tr:last-child td {
     border-bottom: none;
 }
 
-
-/* =========================
-   AÇÕES DOS PRODUTOS
-   ========================= */
-
 .id-produto {
     text-align: center;
 }
-
 
 .produto-action-cell {
     width: 130px;
@@ -660,18 +553,12 @@ body {
     vertical-align: middle;
 }
 
-
 .details-table th:last-child,
 .details-table td:last-child {
     width: 130px;
 
     text-align: center;
 }
-
-
-/* =========================
-   BOTÃO DESVINCULAR
-   ========================= */
 
 .unlink-button {
     height: 29px;
@@ -696,26 +583,24 @@ body {
     white-space: nowrap;
 }
 
-
 .unlink-button:hover {
     background: #d92525;
 }
 
-
-.empty-products {
-    height: 40px !important;
-
+.gondolas-table td.empty-message,
+.details-table td.empty-message {
     text-align: center;
-
-    color: #70869b !important;
-
-    font-size: 12px;
+    vertical-align: middle;
+    padding: 12px;
+    color: #6f8496 !important;
+    font-size: 14px;
+    font-weight: 400;
 }
 
-
-/* =========================
-   POPUPS
-   ========================= */
+.gondolas-table.table-empty thead th,
+.details-table.table-empty thead th {
+    color: var(--green);
+}
 
 .popup-toggle {
     position: absolute;
@@ -723,7 +608,6 @@ body {
     opacity: 0;
     pointer-events: none;
 }
-
 
 .popup-overlay {
     position: fixed;
@@ -741,11 +625,9 @@ body {
     background: rgba(23, 43, 58, 0.48);
 }
 
-
 .popup-toggle:checked + .popup-overlay {
     display: flex;
 }
-
 
 .popup {
     width: min(600px, 100%);
@@ -763,7 +645,6 @@ body {
     animation: popup-appear 0.15s ease-out;
 }
 
-
 @keyframes popup-appear {
 
     from {
@@ -777,11 +658,6 @@ body {
     }
 
 }
-
-
-/* =========================
-   CABEÇALHO POPUP
-   ========================= */
 
 .popup-header {
     height: 61px;
@@ -797,13 +673,11 @@ body {
     border-radius: 11px 11px 0 0;
 }
 
-
 .popup-header h2 {
     color: #ffffff;
 
     font-size: 21px;
 }
-
 
 .popup-close {
     width: 31px;
@@ -823,20 +697,13 @@ body {
     cursor: pointer;
 }
 
-
 .popup-close:hover {
     background: rgba(255, 255, 255, 0.14);
 }
 
-
-/* =========================
-   FORMULÁRIOS
-   ========================= */
-
 .add-gondola-form {
     padding: 20px;
 }
-
 
 .form-grid {
     display: grid;
@@ -846,7 +713,6 @@ body {
     gap: 15px 16px;
 }
 
-
 .form-field {
     display: flex;
     flex-direction: column;
@@ -854,11 +720,9 @@ body {
     gap: 6px;
 }
 
-
 .form-field.full-width {
     grid-column: 1 / -1;
 }
-
 
 .form-field label {
     color: #304b64;
@@ -866,7 +730,6 @@ body {
     font-size: 13px;
     font-weight: 700;
 }
-
 
 .form-field input,
 .form-field select {
@@ -887,7 +750,6 @@ body {
     outline: none;
 }
 
-
 .form-field input:focus,
 .form-field select:focus {
     border-color: #76a99c;
@@ -895,11 +757,9 @@ body {
     background: #ffffff;
 }
 
-
 .form-field select {
     cursor: pointer;
 }
-
 
 .campo-erro {
     color: #b42323;
@@ -909,11 +769,6 @@ body {
 
     line-height: 1.3;
 }
-
-
-/* =========================
-   TEXTO DOS POPUPS
-   ========================= */
 
 .popup > p {
     margin: 0;
@@ -927,15 +782,9 @@ body {
     line-height: 1.5;
 }
 
-
 .popup > p strong {
     color: #294966;
 }
-
-
-/* =========================
-   BOTÕES DOS POPUPS
-   ========================= */
 
 .popup-actions {
     display: flex;
@@ -951,7 +800,6 @@ body {
 
     border-top: 1px solid #e4ebf1;
 }
-
 
 .cancel-button,
 .save-button,
@@ -974,28 +822,23 @@ body {
     cursor: pointer;
 }
 
-
 .cancel-button {
     background: #edf2f5;
     color: #52697c;
 }
 
-
 .cancel-button:hover {
     background: #e1e8ed;
 }
-
 
 .save-button {
     background: #2878d4;
     color: #ffffff;
 }
 
-
 .save-button:hover {
     background: #1e68bc;
 }
-
 
 .delete-confirm-button {
     background: #ee3434;
@@ -1004,26 +847,18 @@ body {
     text-decoration: none;
 }
 
-
 .delete-confirm-button:hover {
     background: #d92525;
 }
-
 
 .unlink-confirm-button {
     background: #ee3434;
     color: #ffffff;
 }
 
-
 .unlink-confirm-button:hover {
     background: #d92525;
 }
-
-
-/* =========================
-   RESPONSIVIDADE
-   ========================= */
 
 @media (max-width: 900px) {
 
@@ -1031,19 +866,16 @@ body {
         width: 205px;
     }
 
-
     .main-content {
         width: calc(100% - 205px);
         margin-left: 205px;
     }
-
 
     .search-input {
         width: 330px;
     }
 
 }
-
 
 @media (max-width: 700px) {
 
@@ -1054,11 +886,9 @@ body {
         height: auto;
     }
 
-
     .logo-area {
         height: 82px;
     }
-
 
     .menu {
         display: flex;
@@ -1069,56 +899,46 @@ body {
         padding: 9px;
     }
 
-
     .menu-item {
         width: auto;
 
         margin: 0;
     }
 
-
     .main-content {
         width: 100%;
         margin-left: 0;
     }
-
 
     .search-area {
         align-items: stretch;
         flex-direction: column;
     }
 
-
     .search-form {
         width: 100%;
     }
-
 
     .search-input {
         width: 100%;
         max-width: none;
     }
 
-
     .add-gondola-button {
         width: 100%;
     }
-
 
     .form-grid {
         grid-template-columns: 1fr;
     }
 
-
     .form-field.full-width {
         grid-column: auto;
     }
 
-
     .details-header {
         align-items: center;
     }
-
 
     .details-table {
         min-width: 600px;
@@ -1126,17 +946,11 @@ body {
 
 }
 
-
-/* =========================
-   LOGOUT
-   ========================= */
-
 .logout-area {
     margin-top: auto;
 
     padding: 20px;
 }
-
 
 .logout-button {
     display: flex;
@@ -1158,7 +972,44 @@ body {
     transition: background-color 0.2s ease;
 }
 
-
 .logout-button:hover {
     background-color: #a61f1f;
+}
+
+.gondolas-table th,
+.gondolas-table td,
+.details-table th,
+.details-table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.actions-cell {
+    text-align: center;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 220px;
+}
+
+.form-field input:-webkit-autofill,
+.form-field input:-webkit-autofill:hover,
+.form-field input:-webkit-autofill:focus,
+.form-field input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #f7fafc inset !important;
+    -webkit-text-fill-color: #294966 !important;
+    caret-color: #294966;
+}
+
+.search-input:-webkit-autofill,
+.search-input:-webkit-autofill:hover,
+.search-input:-webkit-autofill:focus,
+.search-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #edf3f8 inset !important;
+    -webkit-text-fill-color: #294966 !important;
+    caret-color: #294966;
 }

@@ -16,62 +16,35 @@ public class GondolaProdutoService {
     private final GondolaService gondolaService;
     private final ProdutoService produtoService;
 
+    // Inicializa os serviços e o DAO
     public GondolaProdutoService() {
 
-        this.gondolaProdutoDAO =
-                new GondolaProdutoDAO();
-
-        this.gondolaService =
-                new GondolaService();
-
-        this.produtoService =
-                new ProdutoService();
+        this.gondolaProdutoDAO = new GondolaProdutoDAO();
+        this.gondolaService = new GondolaService();
+        this.produtoService = new ProdutoService();
     }
 
-
-    public void vincular(
-            GondolaProduto gondolaProduto
-    ) {
+    // Vincula um produto a uma gôndola
+    public void vincular(GondolaProduto gondolaProduto) {
 
         validarCampos(gondolaProduto);
 
-        if (gondolaService.buscarPorId(
-                gondolaProduto.getGondola().getId()
-        ) == null) {
-
-            throw new GondolaNotFoundException(
-                    "Gôndola não encontrada"
-            );
+        if (gondolaService.buscarPorId(gondolaProduto.getGondola().getId()) == null) {
+            throw new GondolaNotFoundException("Gôndola não encontrada");
         }
 
-        if (produtoService.buscarPorId(
-                gondolaProduto.getProduto().getId()
-        ) == null) {
-
-            throw new ProdutoNotFoundException(
-                    "Produto não encontrado"
-            );
+        if (produtoService.buscarPorId(gondolaProduto.getProduto().getId()) == null) {
+            throw new ProdutoNotFoundException("Produto não encontrado");
         }
-
-
-        // ==========================
-        // VERIFICAR VÍNCULO EXISTENTE
-        // ==========================
 
         if (gondolaProdutoDAO.existeVinculo(
                 gondolaProduto.getGondola(),
                 gondolaProduto.getProduto()
         )) {
-
             throw new ServiceException(
                     "Este produto já está associado a esta gôndola"
             );
         }
-
-
-        // ==========================
-        // VINCULAR
-        // ==========================
 
         gondolaProdutoDAO.vincular(
                 gondolaProduto.getGondola(),
@@ -79,35 +52,18 @@ public class GondolaProdutoService {
         );
     }
 
-
-    public void desvincular(
-            GondolaProduto gondolaProduto
-    ) {
+    // Desvincula um produto de uma gôndola
+    public void desvincular(GondolaProduto gondolaProduto) {
 
         validarCampos(gondolaProduto);
 
-        if (gondolaService.buscarPorId(
-                gondolaProduto.getGondola().getId()
-        ) == null) {
-
-            throw new GondolaNotFoundException(
-                    "Gôndola não encontrada"
-            );
+        if (gondolaService.buscarPorId(gondolaProduto.getGondola().getId()) == null) {
+            throw new GondolaNotFoundException("Gôndola não encontrada");
         }
 
-        if (produtoService.buscarPorId(
-                gondolaProduto.getProduto().getId()
-        ) == null) {
-
-            throw new ProdutoNotFoundException(
-                    "Produto não encontrado"
-            );
+        if (produtoService.buscarPorId(gondolaProduto.getProduto().getId()) == null) {
+            throw new ProdutoNotFoundException("Produto não encontrado");
         }
-
-
-        // ==========================
-        // DESVINCULAR
-        // ==========================
 
         gondolaProdutoDAO.desvincular(
                 gondolaProduto.getGondola(),
@@ -115,69 +71,48 @@ public class GondolaProdutoService {
         );
     }
 
-
-    public List<Produto> listarProdutosPorGondola(
-            Gondola gondola
-    ) {
+    // Lista todos os produtos vinculados a uma gôndola
+    public List<Produto> listarProdutosPorGondola(Gondola gondola) {
 
         if (gondola == null) {
-
-            throw new ServiceException(
-                    "Gôndola não pode ser nula"
-            );
+            throw new ServiceException("Gôndola não pode ser nula");
         }
 
         if (gondola.getId() <= 0) {
-
             throw new ServiceException(
                     "O id da gôndola deve ser maior que 0"
             );
         }
 
-        gondolaService.buscarPorId(
-                gondola.getId()
-        );
+        gondolaService.buscarPorId(gondola.getId());
 
-        return gondolaProdutoDAO.listarProdutosPorGondola(
-                gondola
-        );
+        return gondolaProdutoDAO.listarProdutosPorGondola(gondola);
     }
 
-
-    private void validarCampos(
-            GondolaProduto gondolaProduto
-    ) {
+    // Valida os campos obrigatórios do relacionamento
+    private void validarCampos(GondolaProduto gondolaProduto) {
 
         if (gondolaProduto == null) {
-
             throw new ServiceException(
                     "Relacionamento entre gôndola e produto não pode ser nulo"
             );
         }
 
         if (gondolaProduto.getGondola() == null) {
-
-            throw new ServiceException(
-                    "Gôndola não pode ser nula"
-            );
+            throw new ServiceException("Gôndola não pode ser nula");
         }
 
         if (gondolaProduto.getGondola().getId() <= 0) {
-
             throw new ServiceException(
                     "O id da gôndola deve ser maior que 0"
             );
         }
 
         if (gondolaProduto.getProduto() == null) {
-
-            throw new ServiceException(
-                    "Produto não pode ser nulo"
-            );
+            throw new ServiceException("Produto não pode ser nulo");
         }
 
         if (gondolaProduto.getProduto().getId() <= 0) {
-
             throw new ServiceException(
                     "O id do produto deve ser maior que 0"
             );

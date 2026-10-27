@@ -23,237 +23,86 @@ import java.util.Map;
 @WebServlet("/admin/gondolas-produtos")
 public class GondolaProdutoServlet extends HttpServlet {
 
-    private final GondolaProdutoService gondolaProdutoService =
-            new GondolaProdutoService();
+    private final GondolaProdutoService gondolaProdutoService = new GondolaProdutoService();
+    private final GondolaService gondolaService = new GondolaService();
+    private final ProdutoService produtoService = new ProdutoService();
 
-    private final GondolaService gondolaService =
-            new GondolaService();
-
-    private final ProdutoService produtoService =
-            new ProdutoService();
-
-
+    // Processa a vinculação e desvinculação de produtos às gôndolas
     @Override
-    protected void doPost(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String acao =
-                request.getParameter("acao");
+        String acao = request.getParameter("acao");
+        int idGondola = Integer.parseInt(request.getParameter("idGondola"));
 
-        int idGondola =
-                Integer.parseInt(
-                        request.getParameter("idGondola")
-                );
-
-        String nomeProduto =
-                request.getParameter("nomeProduto");
-
-        String marcaProduto =
-                request.getParameter("marcaProduto");
-
+        String nomeProduto = request.getParameter("nomeProduto");
+        String marcaProduto = request.getParameter("marcaProduto");
 
         try {
 
-            Gondola gondola =
-                    gondolaService.buscarPorId(
-                            idGondola
-                    );
+            Gondola gondola = gondolaService.buscarPorId(idGondola);
 
+            Map<String, String> erros = new HashMap<>();
 
-            // ==========================
-            // ERROS
-            // ==========================
+            // Valida o nome do produto informado
+            if (nomeProduto == null || nomeProduto.isBlank()) {
 
-            Map<String, String> erros =
-                    new HashMap<>();
+                erros.put("produto", "Nome do produto é obrigatório");
 
-
-            // ==========================
-            // VALIDAR PRODUTO
-            // ==========================
-
-            if (
-                    nomeProduto == null
-                            || nomeProduto.isBlank()
-            ) {
-
-                erros.put(
-                        "produto",
-                        "Nome do produto é obrigatório"
-                );
-
-            } else if (
-                    !produtoService.existePorNome(
-                            nomeProduto
-                    )
-            ) {
-
-                erros.put(
-                        "produto",
-                        "Produto não encontrado"
-                );
+            } else if (!produtoService.existePorNome(nomeProduto)) {
+                erros.put("produto", "Produto não encontrado");
             }
 
+            // Valida a marca do produto informado
+            if (marcaProduto == null || marcaProduto.isBlank()) {
 
-            // ==========================
-            // VALIDAR MARCA
-            // ==========================
+                erros.put("marca", "Marca do produto é obrigatória");
 
-            if (
-                    marcaProduto == null
-                            || marcaProduto.isBlank()
-            ) {
-
-                erros.put(
-                        "marca",
-                        "Marca do produto é obrigatória"
-                );
-
-            } else if (
-                    !produtoService.existePorMarca(
-                            marcaProduto
-                    )
-            ) {
-
-                erros.put(
-                        "marca",
-                        "Marca não encontrada"
-                );
+            } else if (!produtoService.existePorMarca(marcaProduto)) {
+                erros.put("marca", "Marca não encontrada");
             }
 
-
-            // ==========================
-            // EXISTEM ERROS
-            // ==========================
-
+            // Armazena os erros de validação na sessão
             if (!erros.isEmpty()) {
 
-                request.getSession().setAttribute(
-                        "erroProdutoVincular",
-                        erros.get("produto")
-                );
+                request.getSession().setAttribute("erroProdutoVincular", erros.get("produto"));
+                request.getSession().setAttribute("erroMarcaVincular", erros.get("marca"));
+                request.getSession().setAttribute("idGondolaVincularProduto", idGondola);
+                request.getSession().setAttribute("nomeProdutoVincular", nomeProduto);
+                request.getSession().setAttribute("marcaProdutoVincular", marcaProduto);
 
-                request.getSession().setAttribute(
-                        "erroMarcaVincular",
-                        erros.get("marca")
-                );
-
-                request.getSession().setAttribute(
-                        "idGondolaVincularProduto",
-                        idGondola
-                );
-
-                request.getSession().setAttribute(
-                        "nomeProdutoVincular",
-                        nomeProduto
-                );
-
-                request.getSession().setAttribute(
-                        "marcaProdutoVincular",
-                        marcaProduto
-                );
-
-                response.sendRedirect(
-                        request.getContextPath()
-                                + "/admin/gondolas"
-                );
+                response.sendRedirect(request.getContextPath() + "/admin/gondolas");
 
                 return;
             }
 
+            // Busca o produto e cria o relacionamento com a gôndola
+            Produto produto = produtoService.buscarPorNomeEMarca(nomeProduto, marcaProduto);
 
-            // ==========================
-            // BUSCAR PRODUTO
-            // ==========================
+            GondolaProduto gondolaProduto = new GondolaProduto(gondola, produto);
 
-            Produto produto =
-                    produtoService.buscarPorNomeEMarca(
-                            nomeProduto,
-                            marcaProduto
-                    );
-
-            GondolaProduto gondolaProduto =
-                    new GondolaProduto(
-                            gondola,
-                            produto
-                    );
-
-
-            // ==========================
-            // VINCULAR
-            // ==========================
-
+            // Executa a vinculação ou desvinculação solicitada
             if ("vincular".equals(acao)) {
 
-                gondolaProdutoService.vincular(
-                        gondolaProduto
-                );
-
-
-                // ==========================
-                // DESVINCULAR
-                // ==========================
+                gondolaProdutoService.vincular(gondolaProduto);
 
             } else if ("desvincular".equals(acao)) {
 
-                gondolaProdutoService.desvincular(
-                        gondolaProduto
-                );
-
-
-                // ==========================
-                // AÇÃO INVÁLIDA
-                // ==========================
+                gondolaProdutoService.desvincular(gondolaProduto);
 
             } else {
 
-                throw new ServletException(
-                        "Ação inválida"
-                );
+                throw new ServletException("Ação inválida");
             }
 
+        } catch (ServiceException | GondolaNotFoundException | ProdutoNotFoundException e) {
 
-        } catch (
-                ServiceException
-                | GondolaNotFoundException
-                | ProdutoNotFoundException e
-        ) {
-
-            // ==========================
-            // ERRO
-            // ==========================
-
-            request.getSession().setAttribute(
-                    "erroProdutoVincular",
-                    e.getMessage()
-            );
-
-            request.getSession().setAttribute(
-                    "idGondolaVincularProduto",
-                    idGondola
-            );
-
-            request.getSession().setAttribute(
-                    "nomeProdutoVincular",
-                    nomeProduto
-            );
-
-            request.getSession().setAttribute(
-                    "marcaProdutoVincular",
-                    marcaProduto
-            );
+            // Armazena os erros da operação na sessão
+            request.getSession().setAttribute("erroProdutoVincular", e.getMessage());
+            request.getSession().setAttribute("idGondolaVincularProduto", idGondola);
+            request.getSession().setAttribute("nomeProdutoVincular", nomeProduto);
+            request.getSession().setAttribute("marcaProdutoVincular", marcaProduto);
         }
 
-
-        // ==========================
-        // REDIRECT
-        // ==========================
-
-        response.sendRedirect(
-                request.getContextPath()
-                        + "/admin/gondolas"
-        );
+        response.sendRedirect(request.getContextPath() + "/admin/gondolas");
     }
 }

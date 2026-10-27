@@ -20,7 +20,7 @@ public class GondolaDAO {
         String sql = """
                      INSERT INTO gondolas (capacidade_maxima, setor_id)
                      VALUES (?, ?)
-                     RETURNING id as gondola_id, capacidade_maxima
+                     RETURNING id AS gondola_id, capacidade_maxima
                      """;
 
         try (Connection connection = ConnectionFactory.getConnection();
@@ -44,7 +44,7 @@ public class GondolaDAO {
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao inserir gondola", e);
+            throw new DAOException("Erro ao inserir gôndola", e);
         }
     }
 
@@ -52,8 +52,8 @@ public class GondolaDAO {
     public Gondola buscarPorId(int id) {
 
         String sql = """
-                     SELECT g.id as gondola_id, g.capacidade_maxima, g.setor_id,
-                            s.id as setor_id, s.nome, s.categoria_setor
+                     SELECT g.id AS gondola_id, g.capacidade_maxima, g.setor_id,
+                            s.id AS setor_id, s.nome, s.categoria_setor
                      FROM gondolas g
                      JOIN setores s ON s.id = g.setor_id
                      WHERE g.id = ?
@@ -83,7 +83,7 @@ public class GondolaDAO {
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao buscar gondola por id", e);
+            throw new DAOException("Erro ao buscar gôndola pelo ID", e);
         }
     }
 
@@ -91,10 +91,11 @@ public class GondolaDAO {
     public List<Gondola> listarTodos() {
 
         String sql = """
-                     SELECT g.id as gondola_id, g.capacidade_maxima, g.setor_id,
-                            s.id as setor_id, s.nome, s.categoria_setor
+                     SELECT g.id AS gondola_id, g.capacidade_maxima, g.setor_id,
+                            s.id AS setor_id, s.nome, s.categoria_setor
                      FROM gondolas g
                      JOIN setores s ON s.id = g.setor_id
+                     ORDER BY g.id
                      """;
 
         List<Gondola> gondolas = new ArrayList<>();
@@ -123,7 +124,7 @@ public class GondolaDAO {
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao buscar todas as gôndolas", e);
+            throw new DAOException("Erro ao listar gôndolas", e);
         }
     }
 
@@ -175,13 +176,14 @@ public class GondolaDAO {
     public List<Gondola> pesquisar(String pesquisa) {
 
         String sql = """
-                     SELECT g.id as gondola_id, g.capacidade_maxima, g.setor_id,
-                            s.id as setor_id, s.nome, s.categoria_setor
+                     SELECT g.id AS gondola_id, g.capacidade_maxima, g.setor_id,
+                            s.id AS setor_id, s.nome, s.categoria_setor
                      FROM gondolas g
                      JOIN setores s ON s.id = g.setor_id
                      WHERE CAST(g.id AS TEXT) ILIKE ?
-                           OR CAST(g.capacidade_maxima AS TEXT) ILIKE ?
-                           OR s.nome ILIKE ?
+                        OR CAST(g.capacidade_maxima AS TEXT) ILIKE ?
+                        OR s.nome ILIKE ?
+                     ORDER BY g.id
                      """;
 
         List<Gondola> gondolas = new ArrayList<>();
@@ -214,7 +216,7 @@ public class GondolaDAO {
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao listar setores por pesquisa", e);
+            throw new DAOException("Erro ao pesquisar gôndolas", e);
         }
     }
 }
