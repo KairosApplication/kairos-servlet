@@ -18,17 +18,11 @@ public class ProdutoServlet extends HttpServlet {
 
     private final ProdutoService produtoService = new ProdutoService();
 
+    // Processa a exclusão, pesquisa e listagem de produtos
     @Override
-    protected void doGet(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String acao = request.getParameter("acao");
-
-        // ==========================
-        // DELETAR PRODUTO
-        // ==========================
 
         if ("deletar".equals(acao)) {
 
@@ -41,264 +35,147 @@ public class ProdutoServlet extends HttpServlet {
                 produtoService.deletarPorId(idProduto);
             }
 
-            response.sendRedirect(
-                    request.getContextPath() + "/admin/produtos"
-            );
+            response.sendRedirect(request.getContextPath() + "/admin/produtos");
 
             return;
         }
-
-        // ==========================
-        // PESQUISAR / LISTAR PRODUTOS
-        // ==========================
 
         String busca = request.getParameter("busca");
 
         List<Produto> produtos;
 
         if (busca != null && !busca.isBlank()) {
-
             produtos = produtoService.pesquisar(busca.trim());
-
         } else {
-
             produtos = produtoService.listarTodos();
         }
 
-        request.setAttribute(
-                "produtos",
-                produtos
-        );
+        request.setAttribute("produtos", produtos);
 
-        request.getRequestDispatcher(
-                "/WEB-INF/views/admin/produtos.jsp"
-        ).forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/admin/produtos.jsp")
+                .forward(request, response);
     }
 
+    // Processa o cadastro ou a atualização de produtos
     @Override
-    protected void doPost(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String id = request.getParameter("id");
 
         String marca = request.getParameter("marca");
-
         String nome = request.getParameter("nome");
-
-        String quantidadeEstoqueParam =
-                request.getParameter("quantidadeEstoque");
-
-        // ==========================
-        // ATUALIZAR PRODUTO
-        // ==========================
+        String quantidadeEstoqueParam = request.getParameter("quantidadeEstoque");
 
         if (id != null) {
 
+            // Atualiza o estoque de um produto existente
             int idProduto = Integer.parseInt(id);
 
-            Produto produto =
-                    produtoService.buscarPorId(idProduto);
+            Produto produto = produtoService.buscarPorId(idProduto);
 
-            Map<String, String> erros =
-                    new HashMap<>();
+            Map<String, String> erros = new HashMap<>();
 
             int quantidadeEstoque = 0;
 
-            // ==========================
-            // QUANTIDADE
-            // ==========================
+            // Valida a quantidade em estoque
+            if (quantidadeEstoqueParam == null || quantidadeEstoqueParam.isBlank()) {
 
-            if (
-                    quantidadeEstoqueParam == null
-                            || quantidadeEstoqueParam.isBlank()
-            ) {
-
-                erros.put(
-                        "quantidadeEstoque",
-                        "Quantidade no estoque é obrigatória"
-                );
+                erros.put("quantidadeEstoque", "Quantidade no estoque é obrigatória");
 
             } else {
 
                 try {
 
-                    quantidadeEstoque =
-                            Integer.parseInt(quantidadeEstoqueParam);
+                    quantidadeEstoque = Integer.parseInt(quantidadeEstoqueParam);
 
                     if (quantidadeEstoque < 0) {
-
-                        erros.put(
-                                "quantidadeEstoque",
-                                "A quantidade no estoque não pode ser menor que 0"
-                        );
+                        erros.put("quantidadeEstoque", "A quantidade no estoque não pode ser menor que 0");
                     }
 
                 } catch (NumberFormatException e) {
-
-                    erros.put(
-                            "quantidadeEstoque",
-                            "Quantidade no estoque deve ser um número válido"
-                    );
+                    erros.put("quantidadeEstoque", "Quantidade no estoque deve ser um número válido");
                 }
             }
 
-            // ==========================
-            // EXISTEM ERROS
-            // ==========================
-
+            // Retorna ao formulário caso existam erros de validação
             if (!erros.isEmpty()) {
 
-                request.setAttribute(
-                        "errosAtualizacao",
-                        erros
-                );
+                request.setAttribute("errosAtualizacao", erros);
+                request.setAttribute("idProdutoAtualizacao", idProduto);
 
-                request.setAttribute(
-                        "idProdutoAtualizacao",
-                        idProduto
-                );
+                List<Produto> produtos = produtoService.listarTodos();
 
-                List<Produto> produtos =
-                        produtoService.listarTodos();
+                request.setAttribute("produtos", produtos);
 
-                request.setAttribute(
-                        "produtos",
-                        produtos
-                );
-
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/admin/produtos.jsp"
-                ).forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/admin/produtos.jsp")
+                        .forward(request, response);
 
                 return;
             }
 
-            // ==========================
-            // ATUALIZAR SOMENTE ESTOQUE
-            // ==========================
-
-            produto.setQuantidadeEstoque(
-                    quantidadeEstoque
-            );
+            // Mantém a marca e o nome originais do produto
+            produto.setQuantidadeEstoque(quantidadeEstoque);
 
             produtoService.atualizar(produto);
 
         } else {
 
-            // ==========================
-            // ADICIONAR PRODUTO
-            // ==========================
-
-            Map<String, String> erros =
-                    new HashMap<>();
+            // Cadastra um novo produto
+            Map<String, String> erros = new HashMap<>();
 
             int quantidadeEstoque = 0;
 
-            // ==========================
-            // MARCA
-            // ==========================
-
+            // Valida os campos obrigatórios do cadastro
             if (marca == null || marca.isBlank()) {
-
-                erros.put(
-                        "marca",
-                        "Marca é obrigatória"
-                );
+                erros.put("marca", "Marca é obrigatória");
             }
-
-            // ==========================
-            // NOME
-            // ==========================
 
             if (nome == null || nome.isBlank()) {
 
-                erros.put(
-                        "nome",
-                        "Nome é obrigatório"
-                );
+                erros.put("nome", "Nome é obrigatório");
 
-            } else if (
-                    marca != null
-                            && !marca.isBlank()
-                            && produtoService.existePorNomeEMarca(nome, marca)
-            ) {
+            } else if (marca != null && !marca.isBlank()
+                    && produtoService.existePorNomeEMarca(nome, marca)) {
 
-                erros.put(
-                        "nome",
-                        "Produto já cadastrado para esta marca"
-                );
+                erros.put("nome", "Produto já cadastrado para esta marca");
             }
 
-            // ==========================
-            // QUANTIDADE
-            // ==========================
+            // Converte e valida a quantidade em estoque
+            if (quantidadeEstoqueParam == null || quantidadeEstoqueParam.isBlank()) {
 
-            if (
-                    quantidadeEstoqueParam == null
-                            || quantidadeEstoqueParam.isBlank()
-            ) {
-
-                erros.put(
-                        "quantidadeEstoque",
-                        "Quantidade no estoque é obrigatória"
-                );
+                erros.put("quantidadeEstoque", "Quantidade no estoque é obrigatória");
 
             } else {
 
                 try {
 
-                    quantidadeEstoque =
-                            Integer.parseInt(quantidadeEstoqueParam);
+                    quantidadeEstoque = Integer.parseInt(quantidadeEstoqueParam);
 
                     if (quantidadeEstoque < 0) {
-
-                        erros.put(
-                                "quantidadeEstoque",
-                                "A quantidade no estoque não pode ser menor que 0"
-                        );
+                        erros.put("quantidadeEstoque", "A quantidade no estoque não pode ser menor que 0");
                     }
 
                 } catch (NumberFormatException e) {
-
-                    erros.put(
-                            "quantidadeEstoque",
-                            "Quantidade no estoque deve ser um número válido"
-                    );
+                    erros.put("quantidadeEstoque", "Quantidade no estoque deve ser um número válido");
                 }
             }
 
-            // ==========================
-            // EXISTEM ERROS
-            // ==========================
-
+            // Retorna ao formulário caso existam erros de validação
             if (!erros.isEmpty()) {
 
-                request.setAttribute(
-                        "erros",
-                        erros
-                );
+                request.setAttribute("erros", erros);
 
-                List<Produto> produtos =
-                        produtoService.listarTodos();
+                List<Produto> produtos = produtoService.listarTodos();
 
-                request.setAttribute(
-                        "produtos",
-                        produtos
-                );
+                request.setAttribute("produtos", produtos);
 
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/admin/produtos.jsp"
-                ).forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/admin/produtos.jsp")
+                        .forward(request, response);
 
                 return;
             }
 
-            // ==========================
-            // CRIAR PRODUTO
-            // ==========================
-
+            // Cadastra o produto validado
             Produto produto = new Produto(
                     marca,
                     nome,
@@ -308,12 +185,6 @@ public class ProdutoServlet extends HttpServlet {
             produtoService.cadastrar(produto);
         }
 
-        // ==========================
-        // REDIRECIONAR
-        // ==========================
-
-        response.sendRedirect(
-                request.getContextPath() + "/admin/produtos"
-        );
+        response.sendRedirect(request.getContextPath() + "/admin/produtos");
     }
 }

@@ -1,4 +1,3 @@
-
 package com.kairos.service;
 
 import com.kairos.dao.SetorDAO;

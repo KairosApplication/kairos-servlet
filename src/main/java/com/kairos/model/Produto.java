@@ -2,15 +2,13 @@ package com.kairos.model;
 
 public class Produto {
 
-//    Atributos
-
+    // Atributos
     private int id;
     private String marca;
     private String nome;
     private int quantidadeEstoque;
 
-    //    Construtores
-
+    // Construtores
     public Produto(int id, String marca, String nome, int quantidadeEstoque) {
         this.id = id;
         this.marca = marca;
@@ -24,6 +22,7 @@ public class Produto {
         this.quantidadeEstoque = quantidadeEstoque;
     }
 
+    // Getters
     public int getId() {
         return id;
     }
@@ -40,6 +39,7 @@ public class Produto {
         return quantidadeEstoque;
     }
 
+    // Setters
     public void setId(int id) {
         this.id = id;
     }
@@ -56,13 +56,13 @@ public class Produto {
         this.quantidadeEstoque = quantidadeEstoque;
     }
 
-    //    toString
+    // to String
     @Override
     public String toString() {
         return "\n-= Produto =- " +
-               "\nID: " + getId() +
-               "\nMarca: " + getMarca() +
-               "\nNome: " + getNome() +
-               "\nQuantidade no estoque: " + getQuantidadeEstoque();
+                "\nID: " + getId() +
+                "\nMarca: " + getMarca() +
+                "\nNome: " + getNome() +
+                "\nQuantidade no estoque: " + getQuantidadeEstoque();
     }
 }

@@ -1,4 +1,3 @@
-
 package com.kairos.model;
 
 import com.kairos.model.enums.StatusAlerta;

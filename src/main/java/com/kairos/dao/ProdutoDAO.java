@@ -158,6 +158,7 @@ public class ProdutoDAO {
         String sql = """
                      SELECT id, marca, nome, quantidade_estoque
                      FROM produtos
+                     ORDER BY id
                      """;
 
         List<Produto> produtos = new ArrayList<>();
@@ -337,6 +338,7 @@ public class ProdutoDAO {
                            OR marca ILIKE ?
                            OR nome ILIKE ?
                            OR CAST(quantidade_estoque AS TEXT) ILIKE ?
+                     ORDER BY id
                      """;
 
         List<Produto> produtos = new ArrayList<>();

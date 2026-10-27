@@ -29,7 +29,6 @@
 
     </div>
 
-
     <nav class="menu">
 
         <a
@@ -46,7 +45,6 @@
             <span>Usuários</span>
         </a>
 
-
         <a
                 href="${pageContext.request.contextPath}/admin/empresas"
                 class="menu-item"
@@ -60,7 +58,6 @@
 
             <span>Empresa</span>
         </a>
-
 
         <a
                 href="${pageContext.request.contextPath}/admin/setores"
@@ -76,7 +73,6 @@
             <span>Setor</span>
         </a>
 
-
         <a
                 href="${pageContext.request.contextPath}/admin/gondolas"
                 class="menu-item"
@@ -90,7 +86,6 @@
 
             <span>Gôndola</span>
         </a>
-
 
         <a
                 href="#"
@@ -106,7 +101,6 @@
             <span>Produto</span>
         </a>
 
-
         <a
                 href="${pageContext.request.contextPath}/admin/reposicoes"
                 class="menu-item"
@@ -121,7 +115,6 @@
             <span>Reposição</span>
         </a>
 
-
         <a
                 href="${pageContext.request.contextPath}/admin/alertas"
                 class="menu-item"
@@ -135,7 +128,6 @@
 
             <span>Alerta</span>
         </a>
-
 
         <a
                 href="${pageContext.request.contextPath}/admin/compras"
@@ -153,7 +145,6 @@
 
     </nav>
 
-
     <div class="logout-area">
 
         <label
@@ -167,13 +158,7 @@
 
 </aside>
 
-
 <main class="main-content">
-
-
-    <!-- ====================================================== -->
-    <!-- BUSCA E ADICIONAR -->
-    <!-- ====================================================== -->
 
     <section class="search-area">
 
@@ -200,7 +185,6 @@
 
         </form>
 
-
         <label
                 for="add-product-toggle"
                 class="add-user-button"
@@ -210,11 +194,6 @@
 
     </section>
 
-
-    <!-- ====================================================== -->
-    <!-- MENSAGEM DE ERRO GERAL -->
-    <!-- ====================================================== -->
-
     <c:if test="${not empty mensagemErro}">
 
         <div class="mensagem-erro">
@@ -223,86 +202,90 @@
 
     </c:if>
 
-
-    <!-- ====================================================== -->
-    <!-- TABELA -->
-    <!-- ====================================================== -->
-
     <section class="content-card">
 
         <h1>Produtos</h1>
 
-
         <div class="table-wrapper">
 
-            <table class="users-table">
+            <table class="users-table ${empty produtos ? 'table-empty' : ''}">
 
                 <thead>
 
                 <tr>
-
                     <th>ID</th>
                     <th>Marca</th>
                     <th>Nome</th>
                     <th>Quantidade no estoque</th>
                     <th>Ações</th>
-
                 </tr>
 
                 </thead>
 
-
                 <tbody>
 
-                <c:forEach
-                        var="produto"
-                        items="${produtos}"
-                >
+                <c:choose>
 
-                    <tr class="user-row">
+                    <c:when test="${empty produtos}">
 
-                        <td>
-                                ${produto.id}
-                        </td>
+                        <tr>
+                            <td colspan="5" class="empty-message">
+                                Nenhum produto cadastrado.
+                            </td>
+                        </tr>
 
-                        <td>
-                                ${produto.marca}
-                        </td>
+                    </c:when>
 
-                        <td>
-                                ${produto.nome}
-                        </td>
+                    <c:otherwise>
 
-                        <td>
-                                ${produto.quantidadeEstoque}
-                        </td>
+                        <c:forEach
+                                var="produto"
+                                items="${produtos}"
+                        >
 
-                        <td class="actions">
+                            <tr class="user-row">
 
-                            <!-- ATUALIZAR -->
+                                <td>
+                                        ${produto.id}
+                                </td>
 
-                            <label
-                                    for="update-product-${produto.id}"
-                                    class="update-button"
-                            >
-                                Atualizar
-                            </label>
+                                <td>
+                                        ${produto.marca}
+                                </td>
 
+                                <td>
+                                        ${produto.nome}
+                                </td>
 
-                            <!-- DELETAR -->
+                                <td>
+                                        ${produto.quantidadeEstoque}
+                                </td>
 
-                            <label
-                                    for="delete-product-${produto.id}"
-                                    class="delete-button"
-                            >
-                                Deletar
-                            </label>
+                                <td class="actions">
 
-                        </td>
+                                    <label
+                                            for="update-product-${produto.id}"
+                                            class="update-button"
+                                    >
+                                        Atualizar
+                                    </label>
 
-                    </tr>
+                                    <label
+                                            for="delete-product-${produto.id}"
+                                            class="delete-button"
+                                    >
+                                        Deletar
+                                    </label>
 
-                </c:forEach>
+                                </td>
+
+                            </tr>
+
+                        </c:forEach>
+
+                    </c:otherwise>
+
+                </c:choose>
 
                 </tbody>
 
@@ -313,11 +296,6 @@
     </section>
 
 </main>
-
-
-<!-- ====================================================== -->
-<!-- POPUPS DE ATUALIZAÇÃO -->
-<!-- ====================================================== -->
 
 <c:forEach
         var="produto"
@@ -330,7 +308,6 @@
             class="popup-toggle"
         ${idProdutoAtualizacao == produto.id ? 'checked' : ''}
     >
-
 
     <div class="popup-overlay">
 
@@ -352,7 +329,6 @@
 
             </div>
 
-
             <form
                     id="update-product-form-${produto.id}"
                     action="${pageContext.request.contextPath}/admin/produtos"
@@ -366,10 +342,7 @@
                         value="${produto.id}"
                 >
 
-
                 <div class="form-grid">
-
-                    <!-- QUANTIDADE -->
 
                     <div class="form-field full-width">
 
@@ -398,7 +371,6 @@
 
                 </div>
 
-
                 <div class="popup-actions">
 
                     <label
@@ -408,7 +380,6 @@
                     >
                         Cancelar
                     </label>
-
 
                     <button
                             type="submit"
@@ -427,11 +398,6 @@
 
 </c:forEach>
 
-
-<!-- ====================================================== -->
-<!-- POPUPS DE CONFIRMAÇÃO DE DELETAR -->
-<!-- ====================================================== -->
-
 <c:forEach
         var="produto"
         items="${produtos}"
@@ -442,7 +408,6 @@
             id="delete-product-${produto.id}"
             class="popup-toggle"
     >
-
 
     <div class="popup-overlay">
 
@@ -463,7 +428,6 @@
 
             </div>
 
-
             <p>
 
                 Você deseja realmente deletar o produto
@@ -474,7 +438,6 @@
 
             </p>
 
-
             <div class="popup-actions">
 
                 <label
@@ -483,7 +446,6 @@
                 >
                     Cancelar
                 </label>
-
 
                 <a
                         href="${pageContext.request.contextPath}/admin/produtos?acao=deletar&amp;id=${produto.id}"
@@ -500,18 +462,12 @@
 
 </c:forEach>
 
-
-<!-- ====================================================== -->
-<!-- POPUP DE ADICIONAR PRODUTO -->
-<!-- ====================================================== -->
-
 <input
         type="checkbox"
         id="add-product-toggle"
         class="popup-toggle"
 ${not empty erros ? 'checked' : ''}
 >
-
 
 <div class="popup-overlay">
 
@@ -533,7 +489,6 @@ ${not empty erros ? 'checked' : ''}
 
         </div>
 
-
         <form
                 id="add-product-form"
                 action="${pageContext.request.contextPath}/admin/produtos"
@@ -542,9 +497,6 @@ ${not empty erros ? 'checked' : ''}
         >
 
             <div class="form-grid">
-
-
-                <!-- MARCA -->
 
                 <div class="form-field">
 
@@ -569,9 +521,6 @@ ${not empty erros ? 'checked' : ''}
 
                 </div>
 
-
-                <!-- NOME -->
-
                 <div class="form-field">
 
                     <label for="nome">
@@ -595,10 +544,7 @@ ${not empty erros ? 'checked' : ''}
 
                 </div>
 
-
-                <!-- QUANTIDADE -->
-
-                <div class="form-field">
+                <div class="form-field full-width">
 
                     <label for="quantidadeEstoque">
                         Quantidade no estoque
@@ -622,9 +568,7 @@ ${not empty erros ? 'checked' : ''}
 
                 </div>
 
-
             </div>
-
 
             <div class="popup-actions">
 
@@ -635,7 +579,6 @@ ${not empty erros ? 'checked' : ''}
                 >
                     Cancelar
                 </label>
-
 
                 <button
                         type="submit"
@@ -652,17 +595,11 @@ ${not empty erros ? 'checked' : ''}
 
 </div>
 
-
-<!-- ====================================================== -->
-<!-- POPUP DE LOGOUT -->
-<!-- ====================================================== -->
-
 <input
         type="checkbox"
         id="logout-popup"
         class="popup-toggle"
 >
-
 
 <div class="popup-overlay">
 
@@ -683,11 +620,9 @@ ${not empty erros ? 'checked' : ''}
 
         </div>
 
-
         <p>
             Você deseja realmente sair da página do administrador?
         </p>
-
 
         <div class="popup-actions">
 
@@ -697,7 +632,6 @@ ${not empty erros ? 'checked' : ''}
             >
                 Cancelar
             </label>
-
 
             <a
                     href="${pageContext.request.contextPath}/logout"
@@ -711,7 +645,6 @@ ${not empty erros ? 'checked' : ''}
     </div>
 
 </div>
-
 
 <script
         src="${pageContext.request.contextPath}/assets/js/produtos.js">
