@@ -1,4 +1,3 @@
-
 package com.kairos.utils;
 
 import org.mindrot.jbcrypt.BCrypt;

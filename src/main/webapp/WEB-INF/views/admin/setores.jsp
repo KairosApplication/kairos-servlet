@@ -203,9 +203,9 @@
 <main class="main-content">
 
 
-    <!-- ====================================================== -->
-    <!-- BUSCA E ADICIONAR -->
-    <!-- ====================================================== -->
+
+
+
 
     <section class="search-area">
 
@@ -243,9 +243,9 @@
     </section>
 
 
-    <!-- ====================================================== -->
-    <!-- TABELA -->
-    <!-- ====================================================== -->
+
+
+
 
     <section class="content-card">
 
@@ -330,7 +330,7 @@
 
                                 <td class="actions">
 
-                                    <!-- ATUALIZAR -->
+
 
                                     <label
                                             for="update-sector-${setor.id}"
@@ -340,7 +340,7 @@
                                     </label>
 
 
-                                    <!-- DELETAR -->
+
 
                                     <label
                                             for="delete-sector-${setor.id}"
@@ -370,9 +370,9 @@
 </main>
 
 
-<!-- ====================================================== -->
-<!-- POPUPS DE ATUALIZAÇÃO -->
-<!-- ====================================================== -->
+
+
+
 
 <c:forEach
         var="setor"
@@ -425,7 +425,7 @@
                 <div class="form-grid">
 
 
-                    <!-- NOME -->
+
 
                     <div class="form-field">
 
@@ -452,7 +452,7 @@
                     </div>
 
 
-                    <!-- CATEGORIA -->
+
 
                     <div class="form-field">
 
@@ -511,9 +511,9 @@
 </c:forEach>
 
 
-<!-- ====================================================== -->
-<!-- POPUPS DE CONFIRMAÇÃO DE DELETAR -->
-<!-- ====================================================== -->
+
+
+
 
 <c:forEach
         var="setor"
@@ -584,9 +584,9 @@
 </c:forEach>
 
 
-<!-- ====================================================== -->
-<!-- POPUP DE ADICIONAR SETOR -->
-<!-- ====================================================== -->
+
+
+
 
 <input
         type="checkbox"
@@ -627,7 +627,7 @@ ${not empty erros ? 'checked' : ''}
             <div class="form-grid">
 
 
-                <!-- NOME -->
+
 
                 <div class="form-field">
 
@@ -653,7 +653,7 @@ ${not empty erros ? 'checked' : ''}
                 </div>
 
 
-                <!-- CATEGORIA -->
+
 
                 <div class="form-field">
 
@@ -709,9 +709,9 @@ ${not empty erros ? 'checked' : ''}
 </div>
 
 
-<!-- ====================================================== -->
-<!-- POPUP DE LOGOUT -->
-<!-- ====================================================== -->
+
+
+
 
 <input
         type="checkbox"
