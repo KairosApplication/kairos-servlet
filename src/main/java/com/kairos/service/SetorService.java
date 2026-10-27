@@ -1,3 +1,4 @@
+
 package com.kairos.service;
 
 import com.kairos.dao.SetorDAO;
@@ -12,10 +13,12 @@ public class SetorService {
 
     private final SetorDAO setorDAO;
 
+    // Construtor
     public SetorService() {
         this.setorDAO = new SetorDAO();
     }
 
+    // Cadastrar setor
     public Setor cadastrar(Setor setor) {
 
         validarCampos(setor);
@@ -27,6 +30,7 @@ public class SetorService {
         return setorDAO.inserir(setor);
     }
 
+    // Buscar setor por ID
     public Setor buscarPorId(int id) {
 
         if (id <= 0) {
@@ -42,6 +46,7 @@ public class SetorService {
         return setor;
     }
 
+    // Buscar setor por nome
     public Setor buscarPorNome(String nome) {
 
         if (nome == null || nome.isBlank()) {
@@ -57,11 +62,12 @@ public class SetorService {
         return setor;
     }
 
+    // Listar todos os setores
     public List<Setor> listarTodos() {
-
         return setorDAO.listarTodos();
     }
 
+    // Atualizar setor
     public void atualizar(Setor setor) {
 
         validarCampos(setor);
@@ -79,6 +85,7 @@ public class SetorService {
         }
     }
 
+    // Deletar setor por ID
     public void deletarPorId(int id) {
 
         if (id <= 0) {
@@ -92,15 +99,17 @@ public class SetorService {
         setorDAO.deletarPorId(id);
     }
 
+    // Verificar existência por nome
     public boolean existePorNome(String nome) {
 
         if (nome == null || nome.isBlank()) {
-            throw new ServiceException("Nome é obrgatório");
+            throw new ServiceException("Nome é obrigatório");
         }
 
         return setorDAO.existePorNome(nome);
     }
 
+    // Verificar existência por nome, exceto ID
     public boolean existePorNomeExcetoId(String nome, int id) {
 
         if (nome == null || nome.isBlank()) {
@@ -114,12 +123,12 @@ public class SetorService {
         return setorDAO.existePorNomeExcetoId(nome, id);
     }
 
+    // Pesquisar setores
     public List<Setor> pesquisar(String pesquisa) {
-
         return setorDAO.pesquisar(pesquisa);
-
     }
 
+    // Validar campos do setor
     private void validarCampos(Setor setor) {
 
         if (setor == null) {

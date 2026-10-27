@@ -1,4 +1,3 @@
-
 package com.kairos.utils;
 
 import java.time.LocalDate;
