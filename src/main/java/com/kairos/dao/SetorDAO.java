@@ -76,7 +76,7 @@ public class SetorDAO {
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao buscar setor por id", e);
+            throw new DAOException("Erro ao buscar setor por ID", e);
         }
     }
 
@@ -119,6 +119,7 @@ public class SetorDAO {
         String sql = """
                      SELECT id, nome, categoria_setor
                      FROM setores
+                     ORDER BY id
                      """;
 
         List<Setor> setores = new ArrayList<>();
@@ -167,7 +168,7 @@ public class SetorDAO {
             return statement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao atualizar", e);
+            throw new DAOException("Erro ao atualizar setor", e);
         }
     }
 
@@ -245,8 +246,9 @@ public class SetorDAO {
                      SELECT id, nome, categoria_setor
                      FROM setores
                      WHERE CAST(id AS TEXT) ILIKE ?
-                           OR nome ILIKE ?
-                           OR categoria_setor ILIKE ?
+                        OR nome ILIKE ?
+                        OR categoria_setor ILIKE ?
+                     ORDER BY id
                      """;
 
         List<Setor> setores = new ArrayList<>();

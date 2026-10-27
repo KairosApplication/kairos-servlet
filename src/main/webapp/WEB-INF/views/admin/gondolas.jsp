@@ -7,15 +7,27 @@
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Kairos - Gôndolas</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/gondolas.css">
 
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/assets/css/gondolas.css">
+    <style>
+        .gondolas-table td.empty-message,
+        .details-table td.empty-message {
+            text-align: center;
+            vertical-align: middle;
+            padding: 12px;
+            color: #6f8496 !important;
+            font-size: 14px;
+            font-weight: 400;
+        }
 
+        .gondolas-table.table-empty thead th,
+        .details-table.table-empty thead th {
+            color: var(--green);
+        }
+    </style>
 </head>
 
 <body>
@@ -23,160 +35,82 @@
 <aside class="sidebar">
 
     <div class="logo-area">
-
         <img
                 src="${pageContext.request.contextPath}/assets/images/logo-kairos.svg"
                 alt="Kairos"
                 class="logo"
         >
-
     </div>
-
 
     <nav class="menu">
 
-        <a href="${pageContext.request.contextPath}/admin/usuarios"
-           class="menu-item">
-
+        <a href="${pageContext.request.contextPath}/admin/usuarios" class="menu-item">
             <span class="menu-icon">
-                <img
-                        src="${pageContext.request.contextPath}/assets/images/usuario.svg"
-                        alt=""
-                >
+                <img src="${pageContext.request.contextPath}/assets/images/usuario.svg" alt="">
             </span>
-
             <span>Usuários</span>
-
         </a>
 
-
-        <a href="${pageContext.request.contextPath}/admin/empresas"
-           class="menu-item">
-
+        <a href="${pageContext.request.contextPath}/admin/empresas" class="menu-item">
             <span class="menu-icon">
-                <img
-                        src="${pageContext.request.contextPath}/assets/images/empresa.svg"
-                        alt=""
-                >
+                <img src="${pageContext.request.contextPath}/assets/images/empresa.svg" alt="">
             </span>
-
             <span>Empresa</span>
-
         </a>
 
-
-        <a href="${pageContext.request.contextPath}/admin/setores"
-           class="menu-item">
-
+        <a href="${pageContext.request.contextPath}/admin/setores" class="menu-item">
             <span class="menu-icon">
-                <img
-                        src="${pageContext.request.contextPath}/assets/images/setor.svg"
-                        alt=""
-                >
+                <img src="${pageContext.request.contextPath}/assets/images/setor.svg" alt="">
             </span>
-
             <span>Setor</span>
-
         </a>
 
-
-        <a href="${pageContext.request.contextPath}/admin/gondolas"
-           class="menu-item active">
-
+        <a href="${pageContext.request.contextPath}/admin/gondolas" class="menu-item active">
             <span class="menu-icon">
-                <img
-                        src="${pageContext.request.contextPath}/assets/images/gondola.svg"
-                        alt=""
-                >
+                <img src="${pageContext.request.contextPath}/assets/images/gondola.svg" alt="">
             </span>
-
             <span>Gôndola</span>
-
         </a>
 
-
-        <a href="${pageContext.request.contextPath}/admin/produtos"
-           class="menu-item">
-
+        <a href="${pageContext.request.contextPath}/admin/produtos" class="menu-item">
             <span class="menu-icon">
-                <img
-                        src="${pageContext.request.contextPath}/assets/images/produto.svg"
-                        alt=""
-                >
+                <img src="${pageContext.request.contextPath}/assets/images/produto.svg" alt="">
             </span>
-
             <span>Produto</span>
-
         </a>
 
-
-        <a href="${pageContext.request.contextPath}/admin/reposicoes"
-           class="menu-item">
-
+        <a href="${pageContext.request.contextPath}/admin/reposicoes" class="menu-item">
             <span class="menu-icon">
-                <img
-                        src="${pageContext.request.contextPath}/assets/images/reposicao.svg"
-                        alt=""
-                >
+                <img src="${pageContext.request.contextPath}/assets/images/reposicao.svg" alt="">
             </span>
-
             <span>Reposição</span>
-
         </a>
 
-
-        <a href="${pageContext.request.contextPath}/admin/alertas"
-           class="menu-item">
-
+        <a href="${pageContext.request.contextPath}/admin/alertas" class="menu-item">
             <span class="menu-icon">
-                <img
-                        src="${pageContext.request.contextPath}/assets/images/alerta.svg"
-                        alt=""
-                >
+                <img src="${pageContext.request.contextPath}/assets/images/alerta.svg" alt="">
             </span>
-
             <span>Alerta</span>
-
         </a>
 
-
-        <a href="${pageContext.request.contextPath}/admin/compras"
-           class="menu-item">
-
+        <a href="${pageContext.request.contextPath}/admin/compras" class="menu-item">
             <span class="menu-icon">
-                <img
-                        src="${pageContext.request.contextPath}/assets/images/compra.svg"
-                        alt=""
-                >
+                <img src="${pageContext.request.contextPath}/assets/images/compra.svg" alt="">
             </span>
-
             <span>Compra</span>
-
         </a>
 
     </nav>
 
-
     <div class="logout-area">
-
-        <label
-                for="logout-popup"
-                class="logout-button"
-        >
+        <label for="logout-popup" class="logout-button">
             Sair
         </label>
-
     </div>
 
 </aside>
 
-
 <main class="main-content">
-
-
-    <!-- ====================================================== -->
-    <!-- BUSCA + ADICIONAR -->
-    <!-- ====================================================== -->
 
     <section class="search-area">
 
@@ -185,7 +119,6 @@
                 method="get"
                 class="search-form"
         >
-
             <input
                     type="text"
                     name="busca"
@@ -194,301 +127,252 @@
                     value="${param.busca}"
             >
 
-            <button
-                    type="submit"
-                    class="search-button"
-            >
+            <button type="submit" class="search-button">
                 Buscar
             </button>
-
         </form>
 
-
-        <label
-                for="add-gondola-toggle"
-                class="add-gondola-button"
-        >
+        <label for="add-gondola-toggle" class="add-gondola-button">
             + Adicionar Gôndola
         </label>
 
     </section>
 
-
-    <!-- ====================================================== -->
-    <!-- MENSAGEM DE ERRO -->
-    <!-- ====================================================== -->
-
     <c:if test="${not empty mensagemErro}">
-
         <div class="mensagem-erro">
                 ${mensagemErro}
         </div>
-
     </c:if>
-
-
-    <!-- ====================================================== -->
-    <!-- TABELA PRINCIPAL -->
-    <!-- ====================================================== -->
 
     <section class="content-card">
 
         <h1>Gôndolas</h1>
 
-
         <div class="table-wrapper">
 
-            <table class="gondolas-table">
+            <table class="gondolas-table ${empty gondolas ? 'table-empty' : ''}">
 
                 <thead>
-
                 <tr>
-
                     <th>ID</th>
                     <th>Capacidade máxima</th>
                     <th>Setor</th>
                     <th>Ações</th>
-
                 </tr>
-
                 </thead>
-
 
                 <tbody>
 
-                <c:forEach
-                        var="gondola"
-                        items="${gondolas}"
-                >
+                <c:choose>
 
-                    <tr class="gondola-row">
+                    <c:when test="${empty gondolas}">
 
-                        <td>
-                                ${gondola.id}
-                        </td>
+                        <tr>
+                            <td colspan="4" class="empty-message">
+                                Nenhuma gôndola cadastrada.
+                            </td>
+                        </tr>
 
-                        <td>
-                                ${gondola.capacidadeMaxima}
-                        </td>
+                    </c:when>
 
-                        <td>
-                                ${gondola.setor.nome}
-                        </td>
+                    <c:otherwise>
 
+                        <c:forEach var="gondola" items="${gondolas}">
 
-                        <td class="actions">
+                            <tr class="gondola-row">
 
-                            <!-- VER MAIS -->
+                                <td>
+                                        ${gondola.id}
+                                </td>
 
-                            <input
-                                    type="checkbox"
-                                    id="details-${gondola.id}"
-                                    class="details-toggle"
+                                <td>
+                                        ${gondola.capacidadeMaxima}
+                                </td>
+
+                                <td>
+                                        ${gondola.setor.nome}
+                                </td>
+
+                                <td class="actions-cell">
+
+                                    <div class="actions">
+
+                                        <input
+                                                type="checkbox"
+                                                id="details-${gondola.id}"
+                                                class="details-toggle"
+                                        >
+
+                                        <label
+                                                for="details-${gondola.id}"
+                                                class="details-button"
+                                        >
+                                            <span class="button-text">
+                                                Ver mais
+                                            </span>
+
+                                            <span class="arrow">
+                                                ▼
+                                            </span>
+                                        </label>
+
+                                        <label
+                                                for="update-gondola-${gondola.id}"
+                                                class="update-button"
+                                                onclick="limparFormularioAtualizacao(${gondola.id})"
+                                        >
+                                            Atualizar
+                                        </label>
+
+                                        <label
+                                                for="delete-gondola-${gondola.id}"
+                                                class="delete-button"
+                                        >
+                                            Deletar
+                                        </label>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            <tr
+                                    class="details-row"
+                                    id="details-row-${gondola.id}"
                             >
 
+                                <td colspan="4">
 
-                            <label
-                                    for="details-${gondola.id}"
-                                    class="details-button"
-                            >
+                                    <div class="details-box">
 
-                                <span class="button-text">
-                                    Ver mais
-                                </span>
+                                        <div class="details-header">
 
-                                <span class="arrow">
-                                    ▼
-                                </span>
+                                            <h2>Produtos Associados</h2>
 
-                            </label>
-
-
-                            <!-- ATUALIZAR -->
-
-                            <label
-                                    for="update-gondola-${gondola.id}"
-                                    class="update-button"
-                                    onclick="limparFormularioAtualizacao(${gondola.id})"
-                            >
-                                Atualizar
-                            </label>
-
-
-                            <!-- DELETAR -->
-
-                            <label
-                                    for="delete-gondola-${gondola.id}"
-                                    class="delete-button"
-                            >
-                                Deletar
-                            </label>
-
-                        </td>
-
-                    </tr>
-
-
-                    <!-- ====================================================== -->
-                    <!-- DETALHES -->
-                    <!-- ====================================================== -->
-
-                    <tr
-                            class="details-row"
-                            id="details-row-${gondola.id}"
-                    >
-
-                        <td colspan="4">
-
-                            <div class="details-box">
-
-                                <div class="details-header">
-
-                                    <h2>
-                                        Produtos Associados
-                                    </h2>
-
-                                    <label
-                                            for="link-produto-${gondola.id}"
-                                            class="link-button"
-                                    >
-                                        Vincular
-                                    </label>
-
-                                </div>
-
-
-                                <table class="details-table">
-
-                                    <thead>
-
-                                    <tr>
-
-                                        <th>Campo</th>
-                                        <th>Informação</th>
-                                        <th>Ação</th>
-
-                                    </tr>
-
-                                    </thead>
-
-
-                                    <tbody>
-
-                                    <c:choose>
-
-                                        <c:when test="${not empty produtosPorGondola[gondola.id]}">
-
-                                            <c:forEach
-                                                    var="produto"
-                                                    items="${produtosPorGondola[gondola.id]}"
+                                            <label
+                                                    for="link-produto-${gondola.id}"
+                                                    class="link-button"
                                             >
+                                                Vincular
+                                            </label>
 
-                                                <!-- ID -->
+                                        </div>
 
-                                                <tr>
+                                        <table class="details-table ${empty produtosPorGondola[gondola.id] ? 'table-empty' : ''}">
 
-                                                    <td>
-                                                        ID do produto
-                                                    </td>
+                                            <thead>
+                                            <tr>
+                                                <th>Campo</th>
+                                                <th>Informação</th>
+                                                <th>Ação</th>
+                                            </tr>
+                                            </thead>
 
-                                                    <td class="id-produto">
-                                                            ${produto.id}
-                                                    </td>
+                                            <tbody>
 
-                                                    <td
-                                                            rowspan="4"
-                                                            class="produto-action-cell"
+                                            <c:choose>
+
+                                                <c:when test="${empty produtosPorGondola[gondola.id]}">
+
+                                                    <tr>
+                                                        <td colspan="3" class="empty-message">
+                                                            Nenhum produto associado a esta gôndola.
+                                                        </td>
+                                                    </tr>
+
+                                                </c:when>
+
+                                                <c:otherwise>
+
+                                                    <c:forEach
+                                                            var="produto"
+                                                            items="${produtosPorGondola[gondola.id]}"
                                                     >
 
-                                                        <label
-                                                                for="unlink-produto-${gondola.id}-${produto.id}"
-                                                                class="unlink-button"
-                                                        >
-                                                            Desvincular
-                                                        </label>
+                                                        <tr>
 
-                                                    </td>
+                                                            <td>
+                                                                ID do produto
+                                                            </td>
 
-                                                </tr>
+                                                            <td class="id-produto">
+                                                                    ${produto.id}
+                                                            </td>
 
+                                                            <td
+                                                                    rowspan="4"
+                                                                    class="produto-action-cell"
+                                                            >
 
-                                                <!-- MARCA -->
+                                                                <label
+                                                                        for="unlink-produto-${gondola.id}-${produto.id}"
+                                                                        class="unlink-button"
+                                                                >
+                                                                    Desvincular
+                                                                </label>
 
-                                                <tr>
+                                                            </td>
 
-                                                    <td>
-                                                        Marca do produto
-                                                    </td>
+                                                        </tr>
 
-                                                    <td>
-                                                            ${produto.marca}
-                                                    </td>
+                                                        <tr>
 
-                                                </tr>
+                                                            <td>
+                                                                Marca do produto
+                                                            </td>
 
+                                                            <td>
+                                                                    ${produto.marca}
+                                                            </td>
 
-                                                <!-- NOME -->
+                                                        </tr>
 
-                                                <tr>
+                                                        <tr>
 
-                                                    <td>
-                                                        Nome do produto
-                                                    </td>
+                                                            <td>
+                                                                Nome do produto
+                                                            </td>
 
-                                                    <td>
-                                                            ${produto.nome}
-                                                    </td>
+                                                            <td>
+                                                                    ${produto.nome}
+                                                            </td>
 
-                                                </tr>
+                                                        </tr>
 
+                                                        <tr>
 
-                                                <!-- ESTOQUE -->
+                                                            <td>
+                                                                Quantidade em estoque
+                                                            </td>
 
-                                                <tr>
+                                                            <td>
+                                                                    ${produto.quantidadeEstoque}
+                                                            </td>
 
-                                                    <td>
-                                                        Quantidade em estoque
-                                                    </td>
+                                                        </tr>
 
-                                                    <td>
-                                                            ${produto.quantidadeEstoque}
-                                                    </td>
+                                                    </c:forEach>
 
-                                                </tr>
+                                                </c:otherwise>
 
-                                            </c:forEach>
+                                            </c:choose>
 
-                                        </c:when>
+                                            </tbody>
 
+                                        </table>
 
-                                        <c:otherwise>
+                                    </div>
 
-                                            <tr>
+                                </td>
 
-                                                <td
-                                                        colspan="3"
-                                                        class="empty-products"
-                                                >
-                                                    Nenhum produto associado a esta gôndola.
-                                                </td>
+                            </tr>
 
-                                            </tr>
+                        </c:forEach>
 
-                                        </c:otherwise>
+                    </c:otherwise>
 
-                                    </c:choose>
-
-                                    </tbody>
-
-                                </table>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                </c:forEach>
+                </c:choose>
 
                 </tbody>
 
@@ -500,15 +384,7 @@
 
 </main>
 
-
-<!-- ====================================================== -->
-<!-- POPUPS DE ATUALIZAÇÃO -->
-<!-- ====================================================== -->
-
-<c:forEach
-        var="gondola"
-        items="${gondolas}"
->
+<c:forEach var="gondola" items="${gondolas}">
 
     <input
             type="checkbox"
@@ -517,16 +393,13 @@
         ${idGondolaAtualizacao == gondola.id ? 'checked' : ''}
     >
 
-
     <div class="popup-overlay">
 
         <div class="popup">
 
             <div class="popup-header">
 
-                <h2>
-                    Atualizar Gôndola
-                </h2>
+                <h2>Atualizar Gôndola</h2>
 
                 <label
                         for="update-gondola-${gondola.id}"
@@ -537,7 +410,6 @@
                 </label>
 
             </div>
-
 
             <form
                     id="update-gondola-form-${gondola.id}"
@@ -551,7 +423,6 @@
                         name="id"
                         value="${gondola.id}"
                 >
-
 
                 <div class="form-grid">
 
@@ -571,17 +442,14 @@
                         >
 
                         <c:if test="${idGondolaAtualizacao == gondola.id and not empty errosAtualizacao.capacidadeMaxima}">
-
                             <div class="campo-erro">
                                     ${errosAtualizacao.capacidadeMaxima}
                             </div>
-
                         </c:if>
 
                     </div>
 
                 </div>
-
 
                 <div class="popup-actions">
 
@@ -593,10 +461,7 @@
                         Cancelar
                     </label>
 
-                    <button
-                            type="submit"
-                            class="save-button"
-                    >
+                    <button type="submit" class="save-button">
                         Atualizar Gôndola
                     </button>
 
@@ -610,16 +475,7 @@
 
 </c:forEach>
 
-
-<!-- ====================================================== -->
-<!-- POPUPS DE VINCULAR PRODUTO -->
-<!-- ASSOCIAÇÃO PELO NOME + MARCA -->
-<!-- ====================================================== -->
-
-<c:forEach
-        var="gondola"
-        items="${gondolas}"
->
+<c:forEach var="gondola" items="${gondolas}">
 
     <input
             type="checkbox"
@@ -628,16 +484,13 @@
         ${idGondolaVincularProduto == gondola.id ? 'checked' : ''}
     >
 
-
     <div class="popup-overlay">
 
         <div class="popup">
 
             <div class="popup-header">
 
-                <h2>
-                    Vincular Produto
-                </h2>
+                <h2>Vincular Produto</h2>
 
                 <label
                         for="link-produto-${gondola.id}"
@@ -648,7 +501,6 @@
                 </label>
 
             </div>
-
 
             <form
                     id="link-produto-form-${gondola.id}"
@@ -669,10 +521,7 @@
                         value="${gondola.id}"
                 >
 
-
                 <div class="form-grid">
-
-                    <!-- MARCA -->
 
                     <div class="form-field">
 
@@ -688,17 +537,12 @@
                         >
 
                         <c:if test="${idGondolaVincularProduto == gondola.id and not empty erroMarcaVincular}">
-
                             <div class="campo-erro">
                                     ${erroMarcaVincular}
                             </div>
-
                         </c:if>
 
                     </div>
-
-
-                    <!-- NOME -->
 
                     <div class="form-field">
 
@@ -714,17 +558,14 @@
                         >
 
                         <c:if test="${idGondolaVincularProduto == gondola.id and not empty erroProdutoVincular}">
-
                             <div class="campo-erro">
                                     ${erroProdutoVincular}
                             </div>
-
                         </c:if>
 
                     </div>
 
                 </div>
-
 
                 <div class="popup-actions">
 
@@ -736,10 +577,7 @@
                         Cancelar
                     </label>
 
-                    <button
-                            type="submit"
-                            class="save-button"
-                    >
+                    <button type="submit" class="save-button">
                         Vincular Produto
                     </button>
 
@@ -753,20 +591,9 @@
 
 </c:forEach>
 
+<c:forEach var="gondola" items="${gondolas}">
 
-<!-- ====================================================== -->
-<!-- POPUPS DE DESVINCULAR PRODUTO -->
-<!-- ====================================================== -->
-
-<c:forEach
-        var="gondola"
-        items="${gondolas}"
->
-
-    <c:forEach
-            var="produto"
-            items="${produtosPorGondola[gondola.id]}"
-    >
+    <c:forEach var="produto" items="${produtosPorGondola[gondola.id]}">
 
         <input
                 type="checkbox"
@@ -774,16 +601,13 @@
                 class="popup-toggle"
         >
 
-
         <div class="popup-overlay">
 
             <div class="popup">
 
                 <div class="popup-header">
 
-                    <h2>
-                        Desvincular Produto
-                    </h2>
+                    <h2>Desvincular Produto</h2>
 
                     <label
                             for="unlink-produto-${gondola.id}-${produto.id}"
@@ -794,19 +618,11 @@
 
                 </div>
 
-
                 <p>
-
                     Você deseja realmente desvincular o produto
-
-                    <strong>
-                            ${produto.nome}
-                    </strong>
-
+                    <strong>${produto.nome}</strong>
                     desta gôndola?
-
                 </p>
-
 
                 <form
                         action="${pageContext.request.contextPath}/admin/gondolas-produtos"
@@ -838,7 +654,6 @@
                             value="${produto.marca}"
                     >
 
-
                     <div class="popup-actions">
 
                         <label
@@ -848,10 +663,7 @@
                             Cancelar
                         </label>
 
-                        <button
-                                type="submit"
-                                class="unlink-confirm-button"
-                        >
+                        <button type="submit" class="unlink-confirm-button">
                             Desvincular
                         </button>
 
@@ -867,15 +679,7 @@
 
 </c:forEach>
 
-
-<!-- ====================================================== -->
-<!-- POPUPS DELETAR GÔNDOLA -->
-<!-- ====================================================== -->
-
-<c:forEach
-        var="gondola"
-        items="${gondolas}"
->
+<c:forEach var="gondola" items="${gondolas}">
 
     <input
             type="checkbox"
@@ -883,16 +687,13 @@
             class="popup-toggle"
     >
 
-
     <div class="popup-overlay">
 
         <div class="popup">
 
             <div class="popup-header">
 
-                <h2>
-                    Deletar Gôndola
-                </h2>
+                <h2>Deletar Gôndola</h2>
 
                 <label
                         for="delete-gondola-${gondola.id}"
@@ -903,17 +704,10 @@
 
             </div>
 
-
             <p>
-
                 Você deseja realmente deletar a gôndola
-
-                <strong>
-                        ${gondola.id}
-                </strong>?
-
+                <strong>${gondola.id}</strong>?
             </p>
-
 
             <div class="popup-actions">
 
@@ -939,11 +733,6 @@
 
 </c:forEach>
 
-
-<!-- ====================================================== -->
-<!-- POPUP DE ADICIONAR GÔNDOLA -->
-<!-- ====================================================== -->
-
 <input
         type="checkbox"
         id="add-gondola-toggle"
@@ -951,16 +740,13 @@
 ${not empty erros ? 'checked' : ''}
 >
 
-
 <div class="popup-overlay">
 
     <div class="popup">
 
         <div class="popup-header">
 
-            <h2>
-                Adicionar Gôndola
-            </h2>
+            <h2>Adicionar Gôndola</h2>
 
             <label
                     for="add-gondola-toggle"
@@ -971,7 +757,6 @@ ${not empty erros ? 'checked' : ''}
             </label>
 
         </div>
-
 
         <form
                 id="add-gondola-form"
@@ -997,15 +782,12 @@ ${not empty erros ? 'checked' : ''}
                     >
 
                     <c:if test="${not empty erros.capacidadeMaxima}">
-
                         <div class="campo-erro">
                                 ${erros.capacidadeMaxima}
                         </div>
-
                     </c:if>
 
                 </div>
-
 
                 <div class="form-field">
 
@@ -1021,17 +803,14 @@ ${not empty erros ? 'checked' : ''}
                     >
 
                     <c:if test="${not empty erros.setor}">
-
                         <div class="campo-erro">
                                 ${erros.setor}
                         </div>
-
                     </c:if>
 
                 </div>
 
             </div>
-
 
             <div class="popup-actions">
 
@@ -1043,10 +822,7 @@ ${not empty erros ? 'checked' : ''}
                     Cancelar
                 </label>
 
-                <button
-                        type="submit"
-                        class="save-button"
-                >
+                <button type="submit" class="save-button">
                     Adicionar Gôndola
                 </button>
 
@@ -1058,17 +834,11 @@ ${not empty erros ? 'checked' : ''}
 
 </div>
 
-
-<!-- ====================================================== -->
-<!-- POPUP LOGOUT -->
-<!-- ====================================================== -->
-
 <input
         type="checkbox"
         id="logout-popup"
         class="popup-toggle"
 >
-
 
 <div class="popup-overlay">
 
@@ -1076,9 +846,7 @@ ${not empty erros ? 'checked' : ''}
 
         <div class="popup-header">
 
-            <h2>
-                Confirmar saída
-            </h2>
+            <h2>Confirmar saída</h2>
 
             <label
                     for="logout-popup"
@@ -1089,11 +857,9 @@ ${not empty erros ? 'checked' : ''}
 
         </div>
 
-
         <p>
             Você deseja realmente sair da página do administrador?
         </p>
-
 
         <div class="popup-actions">
 
@@ -1117,16 +883,7 @@ ${not empty erros ? 'checked' : ''}
 
 </div>
 
-
-<!-- ====================================================== -->
-<!-- JAVASCRIPT -->
-<!-- ====================================================== -->
-
-<script
-        src="${pageContext.request.contextPath}/assets/js/gondolas.js">
-</script>
-
+<script src="${pageContext.request.contextPath}/assets/js/gondolas.js"></script>
 
 </body>
-
 </html>

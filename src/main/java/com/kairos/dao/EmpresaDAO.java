@@ -124,6 +124,7 @@ public class EmpresaDAO {
         String sql = """
                      SELECT id, nome, cnpj, tipo_plano
                      FROM empresas
+                     ORDER BY id
                      """;
 
         List<Empresa> empresas = new ArrayList<>();
@@ -331,13 +332,14 @@ public class EmpresaDAO {
     public List<Empresa> pesquisar(String pesquisa) {
 
         String sql = """
-            SELECT id, nome, cnpj, tipo_plano
-            FROM empresas
-            WHERE CAST(id AS TEXT) ILIKE ?
-                  OR nome ILIKE ?
-                  OR cnpj ILIKE REGEXP_REPLACE(?, '[^0-9]', '', 'g')
-                  OR tipo_plano ILIKE ?
-            """;
+                     SELECT id, nome, cnpj, tipo_plano
+                     FROM empresas
+                     WHERE CAST(id AS TEXT) ILIKE ?
+                        OR nome ILIKE ?
+                        OR cnpj ILIKE REGEXP_REPLACE(?, '[^0-9]', '', 'g')
+                        OR tipo_plano ILIKE ?
+                     ORDER BY id
+                     """;
 
         List<Empresa> empresas = new ArrayList<>();
 

@@ -23,507 +23,225 @@ import java.util.Map;
 @WebServlet("/admin/gondolas")
 public class GondolaServlet extends HttpServlet {
 
-    private final GondolaService gondolaService =
-            new GondolaService();
+    private final GondolaService gondolaService = new GondolaService();
+    private final GondolaProdutoService gondolaProdutoService = new GondolaProdutoService();
+    private final SetorService setorService = new SetorService();
 
-    private final GondolaProdutoService gondolaProdutoService =
-            new GondolaProdutoService();
-
-    private final SetorService setorService =
-            new SetorService();
-
-
+    // Processa a exclusão, pesquisa e listagem de gôndolas
     @Override
-    protected void doGet(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String acao =
-                request.getParameter("acao");
-
-
-        // ==========================
-        // DELETAR GÔNDOLA
-        // ==========================
+        String acao = request.getParameter("acao");
 
         if ("deletar".equals(acao)) {
 
-            String id =
-                    request.getParameter("id");
+            String id = request.getParameter("id");
 
             if (id != null && !id.isBlank()) {
 
-                int idGondola =
-                        Integer.parseInt(id);
+                int idGondola = Integer.parseInt(id);
 
-                gondolaService.deletarPorId(
-                        idGondola
-                );
+                gondolaService.deletarPorId(idGondola);
             }
 
-            response.sendRedirect(
-                    request.getContextPath() + "/admin/gondolas"
-            );
+            response.sendRedirect(request.getContextPath() + "/admin/gondolas");
 
             return;
         }
 
-
-        // ==========================
-        // PESQUISAR / LISTAR GÔNDOLAS
-        // ==========================
-
-        String busca =
-                request.getParameter("busca");
+        String busca = request.getParameter("busca");
 
         List<Gondola> gondolas;
 
         if (busca != null && !busca.isBlank()) {
-
-            gondolas =
-                    gondolaService.pesquisar(
-                            busca.trim()
-                    );
-
+            gondolas = gondolaService.pesquisar(busca.trim());
         } else {
-
-            gondolas =
-                    gondolaService.listarTodos();
+            gondolas = gondolaService.listarTodos();
         }
 
-
-        // ==========================
-        // PRODUTOS POR GÔNDOLA
-        // ==========================
-
-        Map<Integer, List<Produto>> produtosPorGondola =
-                new HashMap<>();
+        // Recupera os produtos vinculados a cada gôndola
+        Map<Integer, List<Produto>> produtosPorGondola = new HashMap<>();
 
         for (Gondola gondola : gondolas) {
 
-            List<Produto> produtos =
-                    gondolaProdutoService
-                            .listarProdutosPorGondola(
-                                    gondola
-                            );
+            List<Produto> produtos = gondolaProdutoService.listarProdutosPorGondola(gondola);
 
-            produtosPorGondola.put(
-                    gondola.getId(),
-                    produtos
-            );
+            produtosPorGondola.put(gondola.getId(), produtos);
         }
 
+        // Recupera possíveis erros de vinculação armazenados na sessão
+        HttpSession session = request.getSession();
 
-        // ==========================
-        // RECUPERAR ERROS DE VINCULAR PRODUTO
-        // ==========================
+        String erroProdutoVincular = (String) session.getAttribute("erroProdutoVincular");
+        String erroMarcaVincular = (String) session.getAttribute("erroMarcaVincular");
+        Object idGondolaVincularProduto = session.getAttribute("idGondolaVincularProduto");
+        Object nomeProdutoVincular = session.getAttribute("nomeProdutoVincular");
+        Object marcaProdutoVincular = session.getAttribute("marcaProdutoVincular");
 
-        HttpSession session =
-                request.getSession();
+        request.setAttribute("erroProdutoVincular", erroProdutoVincular);
+        request.setAttribute("erroMarcaVincular", erroMarcaVincular);
+        request.setAttribute("idGondolaVincularProduto", idGondolaVincularProduto);
+        request.setAttribute("nomeProdutoVincular", nomeProdutoVincular);
+        request.setAttribute("marcaProdutoVincular", marcaProdutoVincular);
 
-        String erroProdutoVincular =
-                (String) session.getAttribute(
-                        "erroProdutoVincular"
-                );
+        session.removeAttribute("erroProdutoVincular");
+        session.removeAttribute("erroMarcaVincular");
+        session.removeAttribute("idGondolaVincularProduto");
+        session.removeAttribute("nomeProdutoVincular");
+        session.removeAttribute("marcaProdutoVincular");
 
-        String erroMarcaVincular =
-                (String) session.getAttribute(
-                        "erroMarcaVincular"
-                );
+        request.setAttribute("gondolas", gondolas);
+        request.setAttribute("produtosPorGondola", produtosPorGondola);
 
-        Object idGondolaVincularProduto =
-                session.getAttribute(
-                        "idGondolaVincularProduto"
-                );
-
-        Object nomeProdutoVincular =
-                session.getAttribute(
-                        "nomeProdutoVincular"
-                );
-
-        Object marcaProdutoVincular =
-                session.getAttribute(
-                        "marcaProdutoVincular"
-                );
-
-
-        request.setAttribute(
-                "erroProdutoVincular",
-                erroProdutoVincular
-        );
-
-        request.setAttribute(
-                "erroMarcaVincular",
-                erroMarcaVincular
-        );
-
-        request.setAttribute(
-                "idGondolaVincularProduto",
-                idGondolaVincularProduto
-        );
-
-        request.setAttribute(
-                "nomeProdutoVincular",
-                nomeProdutoVincular
-        );
-
-        request.setAttribute(
-                "marcaProdutoVincular",
-                marcaProdutoVincular
-        );
-
-
-        session.removeAttribute(
-                "erroProdutoVincular"
-        );
-
-        session.removeAttribute(
-                "erroMarcaVincular"
-        );
-
-        session.removeAttribute(
-                "idGondolaVincularProduto"
-        );
-
-        session.removeAttribute(
-                "nomeProdutoVincular"
-        );
-
-        session.removeAttribute(
-                "marcaProdutoVincular"
-        );
-
-
-        // ==========================
-        // ATRIBUTOS
-        // ==========================
-
-        request.setAttribute(
-                "gondolas",
-                gondolas
-        );
-
-        request.setAttribute(
-                "produtosPorGondola",
-                produtosPorGondola
-        );
-
-
-        // ==========================
-        // FORWARD
-        // ==========================
-
-        request.getRequestDispatcher(
-                "/WEB-INF/views/admin/gondolas.jsp"
-        ).forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/admin/gondolas.jsp")
+                .forward(request, response);
     }
 
-
+    // Processa o cadastro ou a atualização de gôndolas
     @Override
-    protected void doPost(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String id =
-                request.getParameter("id");
-
-        String capacidadeMaxima =
-                request.getParameter("capacidadeMaxima");
-
-
-        // ==========================
-        // ATUALIZAR GÔNDOLA
-        // ==========================
+        String id = request.getParameter("id");
+        String capacidadeMaxima = request.getParameter("capacidadeMaxima");
 
         if (id != null) {
 
-            int idGondola =
-                    Integer.parseInt(id);
+            // Atualiza a capacidade máxima de uma gôndola existente
+            int idGondola = Integer.parseInt(id);
 
-            Gondola gondola =
-                    gondolaService.buscarPorId(
-                            idGondola
-                    );
+            Gondola gondola = gondolaService.buscarPorId(idGondola);
 
-            Map<String, String> erros =
-                    new HashMap<>();
+            Map<String, String> erros = new HashMap<>();
 
             int capacidade = 0;
 
+            // Valida a capacidade máxima informada
+            if (capacidadeMaxima == null || capacidadeMaxima.isBlank()) {
 
-            // ==========================
-            // CAPACIDADE MÁXIMA
-            // ==========================
-
-            if (
-                    capacidadeMaxima == null
-                            || capacidadeMaxima.isBlank()
-            ) {
-
-                erros.put(
-                        "capacidadeMaxima",
-                        "Capacidade máxima é obrigatória"
-                );
+                erros.put("capacidadeMaxima", "Capacidade máxima é obrigatória");
 
             } else {
 
                 try {
 
-                    capacidade =
-                            Integer.parseInt(
-                                    capacidadeMaxima
-                            );
+                    capacidade = Integer.parseInt(capacidadeMaxima);
 
                     if (capacidade < 1) {
-
-                        erros.put(
-                                "capacidadeMaxima",
-                                "Capacidade máxima deve ser maior que 0"
-                        );
+                        erros.put("capacidadeMaxima", "Capacidade máxima deve ser maior que 0");
                     }
 
                 } catch (NumberFormatException e) {
-
-                    erros.put(
-                            "capacidadeMaxima",
-                            "Capacidade máxima deve ser um número válido"
-                    );
+                    erros.put("capacidadeMaxima", "Capacidade máxima deve ser um número válido");
                 }
             }
 
-
-            // ==========================
-            // EXISTEM ERROS
-            // ==========================
-
+            // Retorna ao formulário caso existam erros de atualização
             if (!erros.isEmpty()) {
 
-                request.setAttribute(
-                        "errosAtualizacao",
-                        erros
-                );
+                request.setAttribute("errosAtualizacao", erros);
+                request.setAttribute("idGondolaAtualizacao", idGondola);
 
-                request.setAttribute(
-                        "idGondolaAtualizacao",
-                        idGondola
-                );
-
-                List<Gondola> gondolas =
-                        gondolaService.listarTodos();
-
-                Map<Integer, List<Produto>> produtosPorGondola =
-                        new HashMap<>();
+                List<Gondola> gondolas = gondolaService.listarTodos();
+                Map<Integer, List<Produto>> produtosPorGondola = new HashMap<>();
 
                 for (Gondola gondolaLista : gondolas) {
 
-                    List<Produto> produtos =
-                            gondolaProdutoService
-                                    .listarProdutosPorGondola(
-                                            gondolaLista
-                                    );
+                    List<Produto> produtos = gondolaProdutoService.listarProdutosPorGondola(gondolaLista);
 
-                    produtosPorGondola.put(
-                            gondolaLista.getId(),
-                            produtos
-                    );
+                    produtosPorGondola.put(gondolaLista.getId(), produtos);
                 }
 
-                request.setAttribute(
-                        "gondolas",
-                        gondolas
-                );
+                request.setAttribute("gondolas", gondolas);
+                request.setAttribute("produtosPorGondola", produtosPorGondola);
 
-                request.setAttribute(
-                        "produtosPorGondola",
-                        produtosPorGondola
-                );
-
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/admin/gondolas.jsp"
-                ).forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/admin/gondolas.jsp")
+                        .forward(request, response);
 
                 return;
             }
 
+            // Mantém o setor original e atualiza somente a capacidade máxima
+            gondola.setCapacidadeMaxima(capacidade);
 
-            // ==========================
-            // ATUALIZAR SOMENTE CAPACIDADE
-            // ==========================
-
-            gondola.setCapacidadeMaxima(
-                    capacidade
-            );
-
-            gondolaService.atualizar(
-                    gondola
-            );
-
+            gondolaService.atualizar(gondola);
 
         } else {
 
-            String nomeSetor =
-                    request.getParameter("nomeSetor");
+            // Cadastra uma nova gôndola
+            String nomeSetor = request.getParameter("nomeSetor");
 
-
-            // ==========================
-            // ADICIONAR GÔNDOLA
-            // ==========================
-
-            Map<String, String> erros =
-                    new HashMap<>();
+            Map<String, String> erros = new HashMap<>();
 
             int capacidade = 0;
 
+            // Valida a capacidade máxima informada
+            if (capacidadeMaxima == null || capacidadeMaxima.isBlank()) {
 
-            // ==========================
-            // CAPACIDADE MÁXIMA
-            // ==========================
-
-            if (
-                    capacidadeMaxima == null
-                            || capacidadeMaxima.isBlank()
-            ) {
-
-                erros.put(
-                        "capacidadeMaxima",
-                        "Capacidade máxima é obrigatória"
-                );
+                erros.put("capacidadeMaxima", "Capacidade máxima é obrigatória");
 
             } else {
 
                 try {
 
-                    capacidade =
-                            Integer.parseInt(
-                                    capacidadeMaxima
-                            );
+                    capacidade = Integer.parseInt(capacidadeMaxima);
 
                     if (capacidade < 1) {
-
-                        erros.put(
-                                "capacidadeMaxima",
-                                "Capacidade máxima deve ser maior que 0"
-                        );
+                        erros.put("capacidadeMaxima", "Capacidade máxima deve ser maior que 0");
                     }
 
                 } catch (NumberFormatException e) {
-
-                    erros.put(
-                            "capacidadeMaxima",
-                            "Capacidade máxima deve ser um número válido"
-                    );
+                    erros.put("capacidadeMaxima", "Capacidade máxima deve ser um número válido");
                 }
             }
 
-
-            // ==========================
-            // SETOR
-            // ==========================
-
+            // Busca e valida o setor informado
             Setor setor = null;
 
-            if (
-                    nomeSetor == null
-                            || nomeSetor.isBlank()
-            ) {
+            if (nomeSetor == null || nomeSetor.isBlank()) {
 
-                erros.put(
-                        "setor",
-                        "Nome do setor é obrigatório"
-                );
+                erros.put("setor", "Nome do setor é obrigatório");
 
             } else {
 
                 try {
 
-                    setor =
-                            setorService.buscarPorNome(
-                                    nomeSetor.trim()
-                            );
+                    setor = setorService.buscarPorNome(nomeSetor.trim());
 
                 } catch (SetorNotFoundException e) {
-
-                    erros.put(
-                            "setor",
-                            "Setor não encontrado"
-                    );
+                    erros.put("setor", "Setor não encontrado");
                 }
             }
 
-
-            // ==========================
-            // EXISTEM ERROS
-            // ==========================
-
+            // Retorna ao formulário caso existam erros de cadastro
             if (!erros.isEmpty()) {
 
-                request.setAttribute(
-                        "erros",
-                        erros
-                );
+                request.setAttribute("erros", erros);
 
-                List<Gondola> gondolas =
-                        gondolaService.listarTodos();
-
-                Map<Integer, List<Produto>> produtosPorGondola =
-                        new HashMap<>();
+                List<Gondola> gondolas = gondolaService.listarTodos();
+                Map<Integer, List<Produto>> produtosPorGondola = new HashMap<>();
 
                 for (Gondola gondola : gondolas) {
 
-                    List<Produto> produtos =
-                            gondolaProdutoService
-                                    .listarProdutosPorGondola(
-                                            gondola
-                                    );
+                    List<Produto> produtos = gondolaProdutoService.listarProdutosPorGondola(gondola);
 
-                    produtosPorGondola.put(
-                            gondola.getId(),
-                            produtos
-                    );
+                    produtosPorGondola.put(gondola.getId(), produtos);
                 }
 
-                request.setAttribute(
-                        "gondolas",
-                        gondolas
-                );
+                request.setAttribute("gondolas", gondolas);
+                request.setAttribute("produtosPorGondola", produtosPorGondola);
 
-                request.setAttribute(
-                        "produtosPorGondola",
-                        produtosPorGondola
-                );
-
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/admin/gondolas.jsp"
-                ).forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/admin/gondolas.jsp")
+                        .forward(request, response);
 
                 return;
             }
 
+            // Cria e cadastra a gôndola validada
+            Gondola gondola = new Gondola(capacidade, setor);
 
-            // ==========================
-            // CRIAR GÔNDOLA
-            // ==========================
-
-            Gondola gondola =
-                    new Gondola(
-                            capacidade,
-                            setor
-                    );
-
-            gondolaService.cadastrar(
-                    gondola
-            );
+            gondolaService.cadastrar(gondola);
         }
 
-
-        // ==========================
-        // REDIRECIONAR
-        // ==========================
-
-        response.sendRedirect(
-                request.getContextPath() + "/admin/gondolas"
-        );
+        response.sendRedirect(request.getContextPath() + "/admin/gondolas");
     }
 }

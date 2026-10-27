@@ -87,6 +87,7 @@ public class GondolaProdutoDAO {
                      FROM produtos p
                      INNER JOIN gondolas_produtos gp ON gp.produto_id = p.id
                      WHERE gp.gondola_id = ?
+                     ORDER BY p.id
                      """;
 
         List<Produto> produtos = new ArrayList<>();
