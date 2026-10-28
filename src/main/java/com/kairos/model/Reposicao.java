@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Reposicao {
 
+    // Atributos
     private int id;
     private Produto produto;
     private Timestamp dataReposicao;
@@ -14,6 +15,7 @@ public class Reposicao {
     private HistoricoReposicao historicoReposicao;
     private List<HistoricoUsuarioReposicao> historicoUsuariosReposicoes;
 
+    // Construtores
     public Reposicao(int id, Produto produto, Timestamp dataReposicao,
                      int quantidadeReposto, String motivoReposicao, Gondola gondola) {
         this.id = id;
@@ -42,6 +44,7 @@ public class Reposicao {
         this.gondola = gondola;
     }
 
+    // Getters
     public int getId() {
         return id;
     }
@@ -74,6 +77,7 @@ public class Reposicao {
         return historicoUsuariosReposicoes;
     }
 
+    // Setters
     public void setId(int id) {
         this.id = id;
     }
@@ -107,6 +111,7 @@ public class Reposicao {
         this.historicoUsuariosReposicoes = historicoUsuariosReposicoes;
     }
 
+    // to String
     @Override
     public String toString() {
 
