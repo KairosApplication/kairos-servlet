@@ -268,23 +268,17 @@ public class ReposicaoDAO {
 
         String sql = """
                      UPDATE reposicoes
-                     SET produto_id = ?,
-                         data_reposicao = ?,
-                         quantidade_reposto = ?,
-                         motivo_reposicao = ?,
-                         gondola_id = ?
+                     SET quantidade_reposto = ?,
+                         motivo_reposicao = ?
                      WHERE id = ?
                      """;
 
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, reposicao.getProduto().getId());
-            statement.setTimestamp(2, reposicao.getDataReposicao());
-            statement.setInt(3, reposicao.getQuantidadeReposto());
-            statement.setString(4, reposicao.getMotivoReposicao());
-            statement.setInt(5, reposicao.getGondola().getId());
-            statement.setInt(6, reposicao.getId());
+            statement.setInt(1, reposicao.getQuantidadeReposto());
+            statement.setString(2, reposicao.getMotivoReposicao());
+            statement.setInt(3, reposicao.getId());
 
             return statement.executeUpdate();
 
@@ -337,7 +331,7 @@ public class ReposicaoDAO {
                         OR COALESCE(p.nome, '') ILIKE ?
                         OR COALESCE(h.produto_marca, '') ILIKE ?
                         OR COALESCE(h.produto_nome, '') ILIKE ?
-                        OR TO_CHAR(r.data_reposicao, 'DD/MM/YYYY') ILIKE ?
+                        OR TO_CHAR(r.data_reposicao, 'DD/MM/YYYY "às" HH24:MI') ILIKE ?
                         OR CAST(r.quantidade_reposto AS TEXT) ILIKE ?
                         OR r.motivo_reposicao ILIKE ?
                         OR CAST(r.gondola_id AS TEXT) ILIKE ?

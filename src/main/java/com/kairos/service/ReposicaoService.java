@@ -15,11 +15,13 @@ import java.util.List;
 
 public class ReposicaoService {
 
+    // Atributos
     private final ReposicaoDAO reposicaoDAO;
     private final HistoricoReposicaoDAO historicoReposicaoDAO;
     private final ProdutoService produtoService;
     private final GondolaService gondolaService;
 
+    // Construtor
     public ReposicaoService() {
         this.reposicaoDAO = new ReposicaoDAO();
         this.historicoReposicaoDAO = new HistoricoReposicaoDAO();
@@ -27,6 +29,7 @@ public class ReposicaoService {
         this.gondolaService = new GondolaService();
     }
 
+    // Cadastra uma reposição e salva seu histórico
     public Reposicao cadastrar(Reposicao reposicao) {
 
         validarCampos(reposicao);
@@ -57,6 +60,7 @@ public class ReposicaoService {
         return reposicaoSalva;
     }
 
+    // Busca uma reposição pelo ID
     public Reposicao buscarPorId(int id) {
 
         if (id <= 0) {
@@ -72,25 +76,19 @@ public class ReposicaoService {
         return reposicao;
     }
 
+    // Lista todas as reposições
     public List<Reposicao> listarTodos() {
 
         return reposicaoDAO.listarTodos();
     }
 
+    // Atualiza os dados de uma reposição
     public void atualizar(Reposicao reposicao) {
 
-        validarCampos(reposicao);
+        validarCamposAtualizacao(reposicao);
 
         if (reposicao.getId() <= 0) {
             throw new ServiceException("O id deve ser maior que 0");
-        }
-
-        if (produtoService.buscarPorId(reposicao.getProduto().getId()) == null) {
-            throw new ProdutoNotFoundException("Produto não encontrado");
-        }
-
-        if (gondolaService.buscarPorId(reposicao.getGondola().getId()) == null) {
-            throw new GondolaNotFoundException("Gôndola não encontrada");
         }
 
         if (reposicaoDAO.atualizar(reposicao) == 0) {
@@ -98,6 +96,7 @@ public class ReposicaoService {
         }
     }
 
+    // Deleta uma reposição pelo ID
     public void deletarPorId(int id) {
 
         if (id <= 0) {
@@ -111,6 +110,7 @@ public class ReposicaoService {
         reposicaoDAO.deletarPorId(id);
     }
 
+    // Valida os campos obrigatórios da reposição
     private void validarCampos(Reposicao reposicao) {
 
         if (reposicao == null) {
@@ -144,8 +144,28 @@ public class ReposicaoService {
         }
     }
 
+    // Pesquisa reposições pelo termo informado
     public List<Reposicao> pesquisar(String pesquisa) {
 
         return reposicaoDAO.pesquisar(pesquisa);
     }
+
+    // Valida os campos permitidos na atualização
+    private void validarCamposAtualizacao(Reposicao reposicao) {
+
+        if (reposicao == null) {
+            throw new ServiceException("Reposição não pode ser nula");
+        }
+
+        if (reposicao.getQuantidadeReposto() < 1) {
+            throw new ReplenishmentQuantityException(
+                    "A quantidade reposta deve ser maior que 0"
+            );
+        }
+
+        if (reposicao.getMotivoReposicao() == null || reposicao.getMotivoReposicao().isBlank()) {
+            throw new ServiceException("Motivo da reposição é obrigatório");
+        }
+    }
+
 }

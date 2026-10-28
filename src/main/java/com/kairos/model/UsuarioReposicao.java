@@ -3,13 +3,11 @@ package com.kairos.model;
 public class UsuarioReposicao {
 
     // Atributos
-
     private int id;
     private Reposicao reposicao;
     private Usuario usuario;
 
     // Construtores
-
     public UsuarioReposicao(int id, Reposicao reposicao, Usuario usuario) {
         this.id = id;
         this.reposicao = reposicao;
@@ -21,6 +19,7 @@ public class UsuarioReposicao {
         this.usuario = usuario;
     }
 
+    // Getters
     public int getId() {
         return id;
     }
@@ -33,6 +32,7 @@ public class UsuarioReposicao {
         return usuario;
     }
 
+    // Setters
     public void setId(int id) {
         this.id = id;
     }
@@ -45,13 +45,11 @@ public class UsuarioReposicao {
         this.usuario = usuario;
     }
 
-    // toString
-
+    // to String
     @Override
     public String toString() {
         return "\n-= Usuário Reposição =-" +
                 "\nID: " + getId() +
-
                 "\nReposição: " +
                 "\n   - ID: " + getReposicao().getId() +
                 "\n   - Produto: " +
@@ -69,7 +67,6 @@ public class UsuarioReposicao {
                 "\n         - ID: " + getReposicao().getGondola().getSetor().getId() +
                 "\n         - Nome: " + getReposicao().getGondola().getSetor().getNome() +
                 "\n         - Categoria do setor: " + getReposicao().getGondola().getSetor().getCategoria() +
-
                 "\nUsuário: " +
                 "\n   - ID: " + getUsuario().getId() +
                 "\n   - CPF: " + getUsuario().getCpf() +
