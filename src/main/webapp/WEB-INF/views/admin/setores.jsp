@@ -639,7 +639,7 @@ ${not empty erros ? 'checked' : ''}
                             type="text"
                             id="nome"
                             name="nome"
-                            value="${param.nome}"
+                            value="${not empty erros ? param.nome : ''}"
                     >
 
                     <c:if test="${not empty erros.nome}">
@@ -665,7 +665,7 @@ ${not empty erros ? 'checked' : ''}
                             type="text"
                             id="categoria"
                             name="categoria"
-                            value="${param.categoria}"
+                            value="${not empty erros ? param.categoria : ''}"
                     >
 
                     <c:if test="${not empty erros.categoria}">

@@ -1,7 +1,3 @@
-/* =========================
-   RESET E CONFIGURAÇÕES
-   ========================= */
-
 * {
     margin: 0;
     padding: 0;
@@ -29,11 +25,6 @@ body {
     color: var(--text);
     font-family: Arial, Helvetica, sans-serif;
 }
-
-
-/* =========================
-   SIDEBAR
-   ========================= */
 
 .sidebar {
     position: fixed;
@@ -154,11 +145,6 @@ body {
     background-color: #a61f1f;
 }
 
-
-/* =========================
-   CONTEÚDO PRINCIPAL
-   ========================= */
-
 .main-content {
     width: calc(100% - 225px);
     margin-left: 225px;
@@ -168,11 +154,6 @@ body {
 
     overflow-x: hidden;
 }
-
-
-/* =========================
-   BUSCA E ADICIONAR ALERTA
-   ========================= */
 
 .search-area {
     width: 100%;
@@ -273,11 +254,6 @@ body {
     background: #1e68bc;
 }
 
-
-/* =========================
-   MENSAGEM DE ERRO
-   ========================= */
-
 .mensagem-erro {
     width: 100%;
 
@@ -296,11 +272,6 @@ body {
     font-weight: 600;
     line-height: 1.4;
 }
-
-
-/* =========================
-   CARD PRINCIPAL
-   ========================= */
 
 .content-card {
     width: 100%;
@@ -324,11 +295,6 @@ body {
     line-height: 1;
     font-weight: 700;
 }
-
-
-/* =========================
-   TABELA DE ALERTAS
-   ========================= */
 
 .table-wrapper {
     width: 100%;
@@ -398,7 +364,6 @@ body {
     border-bottom: none;
 }
 
-/* Descrição do alerta pode ocupar mais espaço */
 .alerta-descricao {
     min-width: 220px;
     max-width: 320px;
@@ -410,7 +375,6 @@ body {
     line-height: 1.4;
 }
 
-/* Status do alerta */
 .status-alerta {
     display: inline-flex;
     align-items: center;
@@ -435,11 +399,6 @@ body {
     color: #8a5a00;
 }
 
-
-/* =========================
-   ESTADO VAZIO DA TABELA
-   ========================= */
-
 .users-table td.empty-message,
 .alerts-table td.empty-message {
     text-align: center;
@@ -453,36 +412,25 @@ body {
     font-weight: 400;
 }
 
-/*
- * Mantém o cabeçalho verde,
- * escondendo somente os nomes das colunas
- * quando não houver registros.
- */
 .users-table.table-empty thead th,
 .alerts-table.table-empty thead th {
     color: var(--green);
 }
 
-/*
- * Permite que a tabela vazia ocupe
- * somente a largura disponível.
- */
 .users-table.table-empty,
 .alerts-table.table-empty {
     min-width: 0;
 }
 
-/* =========================
-   AÇÕES DA TABELA
-   ========================= */
-
 .actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 7px;
     min-width: 145px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.actions .update-button {
+    margin-right: 7px;
 }
 
 .update-button,
@@ -524,13 +472,12 @@ body {
     background: #d92525;
 }
 
-
-/* =========================
-   POPUPS
-   ========================= */
-
 .popup-toggle {
-    position: absolute;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
     opacity: 0;
     pointer-events: none;
 }
@@ -620,11 +567,6 @@ body {
     background: rgba(255, 255, 255, 0.14);
 }
 
-
-/* =========================
-   FORMULÁRIOS DOS POPUPS
-   ========================= */
-
 .add-alerta-form,
 .update-alerta-form,
 .add-user-form {
@@ -705,11 +647,6 @@ body {
     line-height: 1.3;
 }
 
-
-/* =========================
-   TEXTO DOS POPUPS
-   ========================= */
-
 .popup > p {
     margin: 0;
     padding: 20px;
@@ -723,11 +660,6 @@ body {
 .popup > p strong {
     color: #294966;
 }
-
-
-/* =========================
-   BOTÕES DOS POPUPS
-   ========================= */
 
 .popup-actions {
     display: flex;
@@ -790,21 +722,11 @@ body {
     background: #d92525;
 }
 
-
-/* =========================
-   LOGOUT POPUP
-   ========================= */
-
 .logout-popup-toggle {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
-
-
-/* =========================
-   AUTOCOMPLETE
-   ========================= */
 
 .form-field input:-webkit-autofill,
 .form-field input:-webkit-autofill:hover,
@@ -819,11 +741,6 @@ body {
     -webkit-box-shadow: 0 0 0 1000px #edf3f8 inset !important;
     -webkit-text-fill-color: #294966 !important;
 }
-
-
-/* =========================
-   RESPONSIVIDADE
-   ========================= */
 
 @media (max-width: 1200px) {
     .alerts-table,

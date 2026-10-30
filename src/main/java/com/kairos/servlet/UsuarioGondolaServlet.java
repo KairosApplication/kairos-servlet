@@ -29,34 +29,108 @@ public class UsuarioGondolaServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String acao = request.getParameter("acao");
+        String usuarioId = request.getParameter("idUsuario");
+        String gondolaId = request.getParameter("idGondola");
 
-        int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
-        int idGondola = Integer.parseInt(request.getParameter("idGondola"));
+        int idUsuario = 0;
+        int idGondola = 0;
 
-        try {
+        String erroVincularGondola = null;
 
-            // Busca o usuário e a gôndola pelos IDs informados
-            Usuario usuario = usuarioService.buscarPorId(idUsuario);
-            Gondola gondola = gondolaService.buscarPorId(idGondola);
+        // Valida o ID do usuário informado
+        if (usuarioId == null || usuarioId.isBlank()) {
 
-            // Executa a ação solicitada
-            if ("vincular".equals(acao)) {
+            erroVincularGondola = "ID do usuário é obrigatório";
 
-                usuarioGondolaService.vincular(usuario, gondola);
+        } else {
 
-            } else if ("desvincular".equals(acao)) {
+            try {
 
-                usuarioGondolaService.desvincular(usuario, gondola);
+                long idConvertido = Long.parseLong(usuarioId);
+
+                if (idConvertido > Integer.MAX_VALUE) {
+
+                    erroVincularGondola = "ID do usuário não pode ultrapassar 2.147.483.647";
+
+                } else if (idConvertido < 1) {
+
+                    erroVincularGondola = "ID do usuário deve ser maior que zero";
+
+                } else {
+
+                    idUsuario = (int) idConvertido;
+                }
+
+            } catch (NumberFormatException e) {
+                erroVincularGondola = "ID do usuário deve ser um número inteiro válido";
+            }
+        }
+
+        // Valida o ID da gôndola informada
+        if (erroVincularGondola == null) {
+
+            if (gondolaId == null || gondolaId.isBlank()) {
+
+                erroVincularGondola = "ID da gôndola é obrigatório";
 
             } else {
 
-                throw new ServletException("Ação inválida");
+                try {
+
+                    long idConvertido = Long.parseLong(gondolaId);
+
+                    if (idConvertido > Integer.MAX_VALUE) {
+
+                        erroVincularGondola = "ID da gôndola não pode ultrapassar 2.147.483.647";
+
+                    } else if (idConvertido < 1) {
+
+                        erroVincularGondola = "ID da gôndola deve ser maior que zero";
+
+                    } else {
+
+                        idGondola = (int) idConvertido;
+                    }
+
+                } catch (NumberFormatException e) {
+                    erroVincularGondola = "ID da gôndola deve ser um número inteiro válido";
+                }
             }
+        }
 
-        } catch (ServiceException | GondolaNotFoundException | UsuarioNotFoundException e) {
+        // Executa a vinculação ou desvinculação quando os IDs são válidos
+        if (erroVincularGondola == null) {
 
-            // Armazena os erros e IDs na sessão para exibição
-            request.getSession().setAttribute("erroVincularGondola", e.getMessage());
+            try {
+
+                // Busca o usuário e a gôndola pelos IDs informados
+                Usuario usuario = usuarioService.buscarPorId(idUsuario);
+                Gondola gondola = gondolaService.buscarPorId(idGondola);
+
+                // Executa a ação solicitada
+                if ("vincular".equals(acao)) {
+
+                    usuarioGondolaService.vincular(usuario, gondola);
+
+                } else if ("desvincular".equals(acao)) {
+
+                    usuarioGondolaService.desvincular(usuario, gondola);
+
+                } else {
+
+                    throw new ServletException("Ação inválida");
+                }
+
+            } catch (ServiceException | GondolaNotFoundException | UsuarioNotFoundException e) {
+
+                erroVincularGondola = e.getMessage();
+            }
+        }
+
+        // Armazena os erros e IDs na sessão para exibição
+        if (erroVincularGondola != null) {
+
+            request.getSession().setAttribute("erroVincularGondola", erroVincularGondola);
             request.getSession().setAttribute("idUsuarioVincular", idUsuario);
             request.getSession().setAttribute("idGondolaVincular", idGondola);
         }

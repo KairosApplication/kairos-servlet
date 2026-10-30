@@ -2,6 +2,7 @@ package com.kairos.servlet;
 
 import com.kairos.model.Setor;
 import com.kairos.service.SetorService;
+import com.kairos.utils.exceptions.exists.NameExistsException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -98,7 +99,24 @@ public class SetorServlet extends HttpServlet {
             setor.setNome(nome);
             setor.setCategoria(categoria);
 
-            setorService.atualizar(setor);
+            try {
+
+                setorService.atualizar(setor);
+
+            } catch (NameExistsException e) {
+
+                erros.put("nome", e.getMessage());
+
+                request.setAttribute("errosAtualizacao", erros);
+                request.setAttribute("idSetorAtualizacao", idSetor);
+
+                List<Setor> setores = setorService.listarTodos();
+
+                request.setAttribute("setores", setores);
+
+                request.getRequestDispatcher("/WEB-INF/views/admin/setores.jsp").forward(request, response);
+                return;
+            }
 
         } else {
 

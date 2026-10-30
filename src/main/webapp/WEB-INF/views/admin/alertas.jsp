@@ -17,8 +17,6 @@
 
 <body>
 
-<!-- SIDEBAR -->
-
 <aside class="sidebar">
 
     <div class="logo-area">
@@ -105,9 +103,6 @@
 
 </aside>
 
-
-<!-- CONTEÚDO PRINCIPAL -->
-
 <main class="main-content">
 
     <section class="search-area">
@@ -137,9 +132,6 @@
         </label>
 
     </section>
-
-
-    <!-- TABELA -->
 
     <section class="content-card">
 
@@ -185,7 +177,6 @@
 
                                 <td>${alerta.id}</td>
 
-                                <!-- ID HISTÓRICO DO USUÁRIO -->
                                 <td>
                                     <c:choose>
                                         <c:when test="${not empty alerta.historicoAlerta}">
@@ -198,7 +189,6 @@
                                     </c:choose>
                                 </td>
 
-                                <!-- ID HISTÓRICO DA GÔNDOLA -->
                                 <td>
                                     <c:choose>
                                         <c:when test="${not empty alerta.historicoAlerta}">
@@ -211,7 +201,6 @@
                                     </c:choose>
                                 </td>
 
-                                <!-- ID HISTÓRICO DO PRODUTO -->
                                 <td>
                                     <c:choose>
                                         <c:when test="${not empty alerta.historicoAlerta}">
@@ -224,13 +213,17 @@
                                     </c:choose>
                                 </td>
 
-                                <td>${alerta.dataRuptura}</td>
+                                <td>
+                                    <fmt:formatDate
+                                            value="${alerta.dataRuptura}"
+                                            pattern="dd/MM/yyyy"
+                                    />
+                                </td>
 
                                 <td>
                                     <c:out value="${alerta.descricaoAlerta}" />
                                 </td>
 
-                                <!-- STATUS FORMATADO -->
                                 <td>
                                     <c:choose>
                                         <c:when test="${alerta.statusAlerta == 'CONCLUIDO'}">
@@ -250,7 +243,7 @@
                                         <c:when test="${alerta.statusAlerta == 'CONCLUIDO' and not empty alerta.dataResolucao}">
                                             <fmt:formatDate
                                                     value="${alerta.dataResolucao}"
-                                                    pattern="dd/MM/yyyy HH:mm"
+                                                    pattern="dd/MM/yyyy 'às' HH:mm"
                                             />
                                         </c:when>
                                         <c:otherwise>-</c:otherwise>
@@ -293,9 +286,6 @@
     </section>
 
 </main>
-
-
-<!-- POPUPS DE ATUALIZAÇÃO -->
 
 <c:forEach var="alerta" items="${alertas}">
 
@@ -345,8 +335,6 @@
 
                 <div class="form-grid">
 
-                    <!-- DESCRIÇÃO -->
-
                     <div class="form-field full-width">
 
                         <label for="descricao-${alerta.id}">
@@ -366,9 +354,6 @@
                         </c:if>
 
                     </div>
-
-
-                    <!-- STATUS -->
 
                     <div class="form-field full-width">
 
@@ -409,9 +394,6 @@
                         </c:if>
 
                     </div>
-
-
-                    <!-- DATA DA RESOLUÇÃO -->
 
                     <div
                             class="form-field full-width campo-resolucao"
@@ -470,9 +452,6 @@
 
 </c:forEach>
 
-
-<!-- POPUPS DE EXCLUSÃO -->
-
 <c:forEach var="alerta" items="${alertas}">
 
     <input
@@ -527,9 +506,6 @@
 
 </c:forEach>
 
-
-<!-- POPUP DE ADIÇÃO -->
-
 <input
         type="checkbox"
         id="add-alerta-toggle"
@@ -564,8 +540,6 @@ ${not empty erros ? 'checked' : ''}
 
             <div class="form-grid">
 
-                <!-- USUÁRIO -->
-
                 <div class="form-field">
 
                     <label for="idUsuario">
@@ -577,7 +551,7 @@ ${not empty erros ? 'checked' : ''}
                             id="idUsuario"
                             name="idUsuario"
                             min="1"
-                            value="${param.idUsuario}"
+                            value="${not empty erros ? param.idUsuario : ''}"
                     >
 
                     <c:if test="${not empty erros.idUsuario}">
@@ -587,9 +561,6 @@ ${not empty erros ? 'checked' : ''}
                     </c:if>
 
                 </div>
-
-
-                <!-- GÔNDOLA -->
 
                 <div class="form-field">
 
@@ -602,7 +573,7 @@ ${not empty erros ? 'checked' : ''}
                             id="idGondola"
                             name="idGondola"
                             min="1"
-                            value="${param.idGondola}"
+                            value="${not empty erros ? param.idGondola : ''}"
                     >
 
                     <c:if test="${not empty erros.idGondola}">
@@ -612,9 +583,6 @@ ${not empty erros ? 'checked' : ''}
                     </c:if>
 
                 </div>
-
-
-                <!-- PRODUTO -->
 
                 <div class="form-field">
 
@@ -627,7 +595,7 @@ ${not empty erros ? 'checked' : ''}
                             id="idProduto"
                             name="idProduto"
                             min="1"
-                            value="${param.idProduto}"
+                            value="${not empty erros ? param.idProduto : ''}"
                     >
 
                     <c:if test="${not empty erros.idProduto}">
@@ -637,9 +605,6 @@ ${not empty erros ? 'checked' : ''}
                     </c:if>
 
                 </div>
-
-
-                <!-- DATA DA RUPTURA -->
 
                 <div class="form-field">
 
@@ -651,7 +616,7 @@ ${not empty erros ? 'checked' : ''}
                             type="date"
                             id="dataRuptura"
                             name="dataRuptura"
-                            value="${param.dataRuptura}"
+                            value="${not empty erros ? param.dataRuptura : ''}"
                     >
 
                     <c:if test="${not empty erros.dataRuptura}">
@@ -662,9 +627,6 @@ ${not empty erros ? 'checked' : ''}
 
                 </div>
 
-
-                <!-- DESCRIÇÃO -->
-
                 <div class="form-field full-width">
 
                     <label for="descricaoAlerta">
@@ -674,7 +636,7 @@ ${not empty erros ? 'checked' : ''}
                     <textarea
                             id="descricaoAlerta"
                             name="descricaoAlerta"
-                    ><c:out value="${param.descricaoAlerta}" /></textarea>
+                    ><c:out value="${not empty erros ? param.descricaoAlerta : ''}" /></textarea>
 
                     <c:if test="${not empty erros.descricaoAlerta}">
                         <div class="campo-erro">
@@ -683,9 +645,6 @@ ${not empty erros ? 'checked' : ''}
                     </c:if>
 
                 </div>
-
-
-                <!-- STATUS -->
 
                 <div class="form-field full-width">
 
@@ -700,21 +659,21 @@ ${not empty erros ? 'checked' : ''}
 
                         <option
                                 value=""
-                        ${empty param.statusAlerta ? 'selected' : ''}
+                        ${empty erros or empty param.statusAlerta ? 'selected' : ''}
                         >
                             Selecione o status do alerta
                         </option>
 
                         <option
                                 value="CONCLUIDO"
-                        ${param.statusAlerta == 'CONCLUIDO' ? 'selected' : ''}
+                        ${not empty erros and param.statusAlerta == 'CONCLUIDO' ? 'selected' : ''}
                         >
                             Concluído
                         </option>
 
                         <option
                                 value="NAO_CONCLUIDO"
-                        ${param.statusAlerta == 'NAO_CONCLUIDO' ? 'selected' : ''}
+                        ${not empty erros and param.statusAlerta == 'NAO_CONCLUIDO' ? 'selected' : ''}
                         >
                             Não Concluído
                         </option>
@@ -729,13 +688,10 @@ ${not empty erros ? 'checked' : ''}
 
                 </div>
 
-
-                <!-- DATA DA RESOLUÇÃO -->
-
                 <div
                         class="form-field full-width campo-resolucao"
                         id="campoDataResolucao"
-                        style="${param.statusAlerta == 'CONCLUIDO' ? '' : 'display: none;'}"
+                        style="${not empty erros and param.statusAlerta == 'CONCLUIDO' ? '' : 'display: none;'}"
                 >
 
                     <label for="dataResolucao">
@@ -746,8 +702,8 @@ ${not empty erros ? 'checked' : ''}
                             type="datetime-local"
                             id="dataResolucao"
                             name="dataResolucao"
-                            value="${param.dataResolucao}"
-                    ${param.statusAlerta == 'CONCLUIDO' ? 'required' : ''}
+                            value="${not empty erros ? param.dataResolucao : ''}"
+                    ${not empty erros and param.statusAlerta == 'CONCLUIDO' ? 'required' : ''}
                     >
 
                     <c:if test="${not empty erros.dataResolucao}">
@@ -781,9 +737,6 @@ ${not empty erros ? 'checked' : ''}
     </div>
 
 </div>
-
-
-<!-- POPUP DE SAÍDA -->
 
 <input
         type="checkbox"
@@ -833,7 +786,6 @@ ${not empty erros ? 'checked' : ''}
     </div>
 
 </div>
-
 
 <script
         src="${pageContext.request.contextPath}/assets/js/alertas.js">

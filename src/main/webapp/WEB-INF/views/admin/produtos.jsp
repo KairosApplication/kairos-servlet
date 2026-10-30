@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
@@ -508,7 +509,7 @@ ${not empty erros ? 'checked' : ''}
                             type="text"
                             id="marca"
                             name="marca"
-                            value="${param.marca}"
+                            value="${not empty erros ? param.marca : ''}"
                     >
 
                     <c:if test="${not empty erros.marca}">
@@ -531,7 +532,7 @@ ${not empty erros ? 'checked' : ''}
                             type="text"
                             id="nome"
                             name="nome"
-                            value="${param.nome}"
+                            value="${not empty erros ? param.nome : ''}"
                     >
 
                     <c:if test="${not empty erros.nome}">
@@ -555,7 +556,7 @@ ${not empty erros ? 'checked' : ''}
                             id="quantidadeEstoque"
                             name="quantidadeEstoque"
                             min="0"
-                            value="${param.quantidadeEstoque}"
+                            value="${not empty erros ? param.quantidadeEstoque : ''}"
                     >
 
                     <c:if test="${not empty erros.quantidadeEstoque}">

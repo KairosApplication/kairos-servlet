@@ -100,7 +100,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             link.style.opacity = "0.6";
             link.style.cursor = "not-allowed";
-            link.style.pointerEvents = "none";
 
         });
 

@@ -384,10 +384,10 @@ public class AlertaDAO {
                         OR CAST(ha.id_usuario AS TEXT) ILIKE ?
                         OR CAST(ha.id_gondola AS TEXT) ILIKE ?
                         OR CAST(ha.id_produto AS TEXT) ILIKE ?
-                        OR CAST(a.data_ruptura AS TEXT) ILIKE ?
+                        OR TO_CHAR(a.data_ruptura, 'DD/MM/YYYY') ILIKE ?
                         OR a.descricao_alerta ILIKE ?
                         OR a.status_alerta ILIKE ?
-                        OR CAST(a.data_resolucao AS TEXT) ILIKE ?
+                        OR TO_CHAR(a.data_resolucao, 'DD/MM/YYYY "às" HH24:MI') ILIKE ?
                         OR u.nome ILIKE ?
                         OR u.sobrenome ILIKE ?
                         OR p.nome ILIKE ?
