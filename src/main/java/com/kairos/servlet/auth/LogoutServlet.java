@@ -11,14 +11,14 @@ import java.io.IOException;
 @WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {
 
+    // Processa a saída do administrador
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        // Invalida a sessão atual
         request.getSession().invalidate();
 
-        response.sendRedirect(
-                request.getContextPath() + "/"
-        );
+        // Redireciona para a página inicial
+        response.sendRedirect(request.getContextPath() + "/");
     }
 }

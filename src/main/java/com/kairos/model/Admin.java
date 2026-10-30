@@ -1,10 +1,13 @@
 package com.kairos.model;
 
 public class Admin {
+
+    // Atributos
     private int id;
     private String email;
     private String senha;
 
+    // Construtores
     public Admin(int id, String email, String senha) {
         this.id = id;
         this.email = email;
@@ -16,6 +19,7 @@ public class Admin {
         this.senha = senha;
     }
 
+    // Getters
     public int getId() {
         return id;
     }
@@ -28,6 +32,7 @@ public class Admin {
         return senha;
     }
 
+    // Setters
     public void setId(int id) {
         this.id = id;
     }

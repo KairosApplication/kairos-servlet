@@ -26,11 +26,6 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-
-/* =========================
-   SIDEBAR
-   ========================= */
-
 .sidebar {
     position: fixed;
     top: 0;
@@ -124,11 +119,6 @@ body {
     filter: brightness(0) invert(1);
 }
 
-
-/* =========================
-   CONTEÚDO
-   ========================= */
-
 .main-content {
     width: calc(100% - 225px);
     margin-left: 225px;
@@ -139,11 +129,6 @@ body {
 
     overflow-x: hidden;
 }
-
-
-/* =========================
-   BUSCA + ADICIONAR
-   ========================= */
 
 .search-area {
     width: 100%;
@@ -244,11 +229,6 @@ body {
     background: #1e68bc;
 }
 
-
-/* =========================
-   MENSAGEM DE ERRO
-   ========================= */
-
 .mensagem-erro {
     width: 100%;
 
@@ -268,11 +248,6 @@ body {
 
     line-height: 1.4;
 }
-
-
-/* =========================
-   CARD PRINCIPAL
-   ========================= */
 
 .content-card {
     width: 100%;
@@ -298,11 +273,6 @@ body {
 
     font-weight: 700;
 }
-
-
-/* =========================
-   TABELA DE COMPRAS
-   ========================= */
 
 .table-wrapper {
     width: 100%;
@@ -364,11 +334,6 @@ body {
 .compra-row:hover td {
     background: #fbfdff;
 }
-
-
-/* =========================
-   AÇÕES PRINCIPAIS
-   ========================= */
 
 .actions {
     display: flex;
@@ -447,11 +412,6 @@ body {
     background: #d92525;
 }
 
-
-/* =========================
-   EXPANSÃO
-   ========================= */
-
 .details-row {
     display: none;
 }
@@ -463,11 +423,6 @@ body {
 .compra-row:has(.details-toggle:checked) .arrow {
     transform: rotate(180deg);
 }
-
-
-/* =========================
-   INFORMAÇÕES ADICIONAIS
-   ========================= */
 
 .details-row > td {
     padding: 13px 14px 16px;
@@ -503,11 +458,6 @@ body {
 .details-header h2 {
     margin: 0;
 }
-
-
-/* =========================
-   TABELA DE PRODUTOS
-   ========================= */
 
 .details-table {
     width: 100%;
@@ -565,11 +515,6 @@ body {
     width: auto;
 }
 
-
-/* =========================
-   VINCULAR PRODUTO
-   ========================= */
-
 .link-button {
     height: 29px;
 
@@ -596,11 +541,6 @@ body {
 .link-button:hover {
     background: #1e68bc;
 }
-
-
-/* =========================
-   DESVINCULAR PRODUTO
-   ========================= */
 
 .unlink-button {
     height: 29px;
@@ -667,11 +607,6 @@ body {
 
     text-align: center;
 }
-
-
-/* =========================
-   POPUPS
-   ========================= */
 
 .popup-toggle {
     position: fixed;
@@ -774,11 +709,6 @@ body {
     background: rgba(255, 255, 255, 0.14);
 }
 
-
-/* =========================
-   FORMULÁRIOS DOS POPUPS
-   ========================= */
-
 .compra-form {
     padding: 20px;
 }
@@ -863,11 +793,6 @@ body {
     line-height: 1.3;
 }
 
-
-/* =========================
-   TEXTO DOS POPUPS
-   ========================= */
-
 .popup > p {
     margin: 0;
 
@@ -883,11 +808,6 @@ body {
 .popup > p strong {
     color: #294966;
 }
-
-
-/* =========================
-   BOTÕES DOS POPUPS
-   ========================= */
 
 .popup-actions {
     display: flex;
@@ -952,11 +872,6 @@ body {
 .delete-confirm-button:hover {
     background: #d92525;
 }
-
-
-/* =========================
-   RESPONSIVIDADE
-   ========================= */
 
 @media (max-width: 900px) {
 
@@ -1115,11 +1030,6 @@ body {
 
 }
 
-
-/* =========================
-   ESPAÇAMENTO DAS AÇÕES
-   ========================= */
-
 .details-button-placeholder {
     display: inline-block;
 
@@ -1133,11 +1043,6 @@ body {
 
     margin-left: 2px;
 }
-
-
-/* =========================
-   LOGOUT
-   ========================= */
 
 .logout-area {
     margin-top: auto;
@@ -1167,13 +1072,6 @@ body {
     background-color: #a61f1f;
 }
 
-
-/* =========================
-   AUTOCOMPLETE
-   ========================= */
-
-/* Inputs dos popups */
-
 .form-field input:-webkit-autofill,
 .form-field input:-webkit-autofill:hover,
 .form-field input:-webkit-autofill:active {
@@ -1181,19 +1079,12 @@ body {
     -webkit-text-fill-color: #294966 !important;
 }
 
-/* Campo Buscar */
-
 .search-input:-webkit-autofill,
 .search-input:-webkit-autofill:hover,
 .search-input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 1000px #edf3f8 inset !important;
     -webkit-text-fill-color: #294966 !important;
 }
-
-
-/* =========================
-   REGISTROS VAZIOS
-   ========================= */
 
 .compras-table td.empty-message,
 .details-table td.empty-message {
@@ -1205,7 +1096,6 @@ body {
     font-weight: 400;
 }
 
-/* Mantém a linha de compras vazias com a mesma altura do cabeçalho. */
 .compras-table > tbody > tr > td.empty-message {
     height: 43px;
     padding: 0 12px;
