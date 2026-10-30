@@ -16,12 +16,14 @@ import java.util.List;
 
 public class AlertaService {
 
+    // Atributos
     private final AlertaDAO alertaDAO;
     private final HistoricoAlertaDAO historicoAlertaDAO;
     private final UsuarioService usuarioService;
     private final GondolaService gondolaService;
     private final ProdutoService produtoService;
 
+    // Construtor
     public AlertaService() {
         this.alertaDAO = new AlertaDAO();
         this.historicoAlertaDAO = new HistoricoAlertaDAO();
@@ -30,33 +32,27 @@ public class AlertaService {
         this.produtoService = new ProdutoService();
     }
 
+    // Cadastrar alerta
     public Alerta cadastrar(Alerta alerta) {
 
         validarCampos(alerta);
 
-        if (usuarioService.buscarPorId(
-                alerta.getUsuario().getId()) == null) {
-            throw new UsuarioNotFoundException(
-                    "Usuário não encontrado");
+        if (usuarioService.buscarPorId(alerta.getUsuario().getId()) == null) {
+            throw new UsuarioNotFoundException("Usuário não encontrado");
         }
 
-        if (gondolaService.buscarPorId(
-                alerta.getGondola().getId()) == null) {
-            throw new GondolaNotFoundException(
-                    "Gôndola não encontrada");
+        if (gondolaService.buscarPorId(alerta.getGondola().getId()) == null) {
+            throw new GondolaNotFoundException("Gôndola não encontrada");
         }
 
-        if (produtoService.buscarPorId(
-                alerta.getProduto().getId()) == null) {
-            throw new ProdutoNotFoundException(
-                    "Produto não encontrado");
+        if (produtoService.buscarPorId(alerta.getProduto().getId()) == null) {
+            throw new ProdutoNotFoundException("Produto não encontrado");
         }
 
         Alerta alertaSalvo = alertaDAO.inserir(alerta);
 
         if (alertaSalvo == null) {
-            throw new ServiceException(
-                    "Não foi possível salvar o alerta");
+            throw new ServiceException("Não foi possível salvar o alerta");
         }
 
         HistoricoAlerta historico = new HistoricoAlerta(
@@ -66,142 +62,131 @@ public class AlertaService {
                 alertaSalvo.getProduto().getId()
         );
 
-        HistoricoAlerta historicoSalvo =
-                historicoAlertaDAO.salvar(historico);
+        HistoricoAlerta historicoSalvo = historicoAlertaDAO.salvar(historico);
 
         alertaSalvo.setHistoricoAlerta(historicoSalvo);
 
         return alertaSalvo;
     }
 
+    // Buscar alerta por ID
     public Alerta buscarPorId(int id) {
 
         if (id <= 0) {
-            throw new ServiceException(
-                    "O id deve ser maior que 0");
+            throw new ServiceException("O id deve ser maior que 0");
         }
 
         Alerta alerta = alertaDAO.buscarPorId(id);
 
         if (alerta == null) {
-            throw new AlertaNotFoundException(
-                    "Alerta não encontrado");
+            throw new AlertaNotFoundException("Alerta não encontrado");
         }
 
         return alerta;
     }
 
+    // Listar alertas
     public List<Alerta> listarTodos() {
+
         return alertaDAO.listarTodos();
     }
 
+    // Pesquisar alertas
     public List<Alerta> pesquisar(String busca) {
+
         return alertaDAO.pesquisar(busca.trim());
     }
 
+    // Atualizar alerta
     public void atualizar(Alerta alerta) {
 
         if (alerta == null) {
-            throw new ServiceException(
-                    "Alerta não pode ser nulo");
+            throw new ServiceException("Alerta não pode ser nulo");
         }
 
         if (alerta.getId() <= 0) {
-            throw new ServiceException(
-                    "O id deve ser maior que 0");
+            throw new ServiceException("O id deve ser maior que 0");
         }
 
         validarDescricaoStatusResolucao(alerta);
 
         if (alertaDAO.atualizar(alerta) == 0) {
-            throw new AlertaNotFoundException(
-                    "Alerta não encontrado");
+            throw new AlertaNotFoundException("Alerta não encontrado");
         }
     }
 
+    // Deletar alerta por ID
     public void deletarPorId(int id) {
 
         if (id <= 0) {
-            throw new ServiceException(
-                    "O id deve ser maior que 0");
+            throw new ServiceException("O id deve ser maior que 0");
         }
 
         if (alertaDAO.buscarPorId(id) == null) {
-            throw new AlertaNotFoundException(
-                    "Alerta não encontrado");
+            throw new AlertaNotFoundException("Alerta não encontrado");
         }
 
         alertaDAO.deletarPorId(id);
     }
 
+    // Validar campos do alerta
     private void validarCampos(Alerta alerta) {
 
         if (alerta == null) {
-            throw new ServiceException(
-                    "Alerta não pode ser nulo");
+            throw new ServiceException("Alerta não pode ser nulo");
         }
 
         if (alerta.getUsuario() == null) {
-            throw new ServiceException(
-                    "Usuário não pode ser nulo");
+            throw new ServiceException("Usuário não pode ser nulo");
         }
 
         if (alerta.getGondola() == null) {
-            throw new ServiceException(
-                    "Gôndola não pode ser nula");
+            throw new ServiceException("Gôndola não pode ser nula");
         }
 
         if (alerta.getProduto() == null) {
-            throw new ServiceException(
-                    "Produto não pode ser nulo");
+            throw new ServiceException("Produto não pode ser nulo");
         }
 
         if (alerta.getDataRuptura() == null) {
-            throw new ServiceException(
-                    "A data da ruptura não pode ser nula");
+            throw new ServiceException("A data da ruptura não pode ser nula");
         }
 
-        if (alerta.getDataRuptura().after(
-                new java.sql.Date(System.currentTimeMillis()))) {
-            throw new ServiceException(
-                    "A data da ruptura não pode ser futura");
+        if (alerta.getDataRuptura().after(new java.sql.Date(System.currentTimeMillis()))) {
+            throw new ServiceException("A data da ruptura não pode ser futura");
         }
 
         validarDescricaoStatusResolucao(alerta);
     }
 
+    // Validar descrição, status e data de resolução do alerta
     private void validarDescricaoStatusResolucao(Alerta alerta) {
 
         if (alerta.getDescricaoAlerta() == null
                 || alerta.getDescricaoAlerta().isBlank()) {
-            throw new ServiceException(
-                    "Descrição do alerta é obrigatória");
+            throw new ServiceException("Descrição do alerta é obrigatória");
         }
 
         if (alerta.getStatusAlerta() == null) {
-            throw new ServiceException(
-                    "Status do alerta não pode ser nulo");
+            throw new ServiceException("Status do alerta não pode ser nulo");
         }
 
         if (alerta.getStatusAlerta() == StatusAlerta.CONCLUIDO) {
 
             if (alerta.getDataResolucao() == null) {
                 throw new ServiceException(
-                        "A data da resolução é obrigatória para alertas concluídos");
+                        "A data da resolução é obrigatória para alertas concluídos"
+                );
             }
 
-            if (alerta.getDataResolucao().after(
-                    new Timestamp(System.currentTimeMillis()))) {
-                throw new ServiceException(
-                        "A data da resolução não pode ser futura");
+            if (alerta.getDataResolucao().after(new Timestamp(System.currentTimeMillis()))) {
+                throw new ServiceException("A data da resolução não pode ser futura");
             }
 
             if (alerta.getDataRuptura() != null
-                    && alerta.getDataResolucao().toLocalDateTime()
-                    .toLocalDate().isBefore(
-                            alerta.getDataRuptura().toLocalDate())) {
-                throw new ServiceException(
-                        "A data da resolução não pode ser anterior à ruptura");
+                && alerta.getDataResolucao().toLocalDateTime()
+                .toLocalDate().isBefore(alerta.getDataRuptura().toLocalDate())) {
+                throw new ServiceException("A data da resolução não pode ser anterior à ruptura");
             }
         }
     }

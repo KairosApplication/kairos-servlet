@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 
 public class Alerta {
 
+    // Atributos
     private int id;
     private Usuario usuario;
     private Gondola gondola;
@@ -17,9 +18,11 @@ public class Alerta {
     private Timestamp dataResolucao;
     private HistoricoAlerta historicoAlerta;
 
+    // Construtor com ID
     public Alerta(int id, Usuario usuario, Gondola gondola, Produto produto,
                   Date dataRuptura, String descricaoAlerta,
                   StatusAlerta statusAlerta, Timestamp dataResolucao) {
+
         this.id = id;
         this.usuario = usuario;
         this.gondola = gondola;
@@ -30,9 +33,11 @@ public class Alerta {
         this.dataResolucao = dataResolucao;
     }
 
+    // Construtor sem ID
     public Alerta(Usuario usuario, Gondola gondola, Produto produto,
                   Date dataRuptura, String descricaoAlerta,
                   StatusAlerta statusAlerta, Timestamp dataResolucao) {
+
         this.usuario = usuario;
         this.gondola = gondola;
         this.produto = produto;
@@ -42,6 +47,7 @@ public class Alerta {
         this.dataResolucao = dataResolucao;
     }
 
+    // Getters
     public int getId() {
         return id;
     }
@@ -78,6 +84,7 @@ public class Alerta {
         return historicoAlerta;
     }
 
+    // Setters
     public void setId(int id) {
         this.id = id;
     }
@@ -114,6 +121,7 @@ public class Alerta {
         this.historicoAlerta = historicoAlerta;
     }
 
+    // to String
     @Override
     public String toString() {
 
@@ -151,7 +159,6 @@ public class Alerta {
             usuarioInfo = "\n   - Usuário indisponível";
         }
 
-
         String gondolaInfo;
 
         if (getGondola() != null) {
@@ -180,7 +187,6 @@ public class Alerta {
             gondolaInfo = "\n   - Gôndola indisponível";
         }
 
-
         String produtoInfo;
 
         if (getProduto() != null) {
@@ -201,7 +207,6 @@ public class Alerta {
 
             produtoInfo = "\n   - Produto indisponível";
         }
-
 
         return "\n-= Alerta =-" +
                 "\nID: " + getId() +

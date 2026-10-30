@@ -1,4 +1,5 @@
 function toggleDetails(id) {
+
     const checkbox = document.getElementById("details-" + id);
     const row = document.getElementById("details-row-" + id);
 
@@ -55,7 +56,6 @@ document.addEventListener("DOMContentLoaded", function () {
             bloquearControlesPopup(link);
 
             link.style.opacity = "0.6";
-            link.style.pointerEvents = "none";
             link.style.cursor = "not-allowed";
 
         });
@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Bloquear controles do popup
 function bloquearControlesPopup(elemento) {
+
     const popup = elemento.closest(".popup");
 
     if (!popup) {
@@ -132,6 +133,7 @@ function bloquearCamposPopup(popup) {
 
 // Limpar formulário de adicionar
 function limparFormularioAdicionar() {
+
     const formulario = document.getElementById("add-gondola-form");
 
     if (!formulario || formulario.dataset.enviado === "true") {
@@ -150,10 +152,12 @@ function limparFormularioAdicionar() {
     formulario.querySelectorAll(".campo-erro").forEach(function (erro) {
         erro.remove();
     });
+
 }
 
 // Limpar formulário de atualização
 function limparFormularioAtualizacao(id) {
+
     const formulario = document.getElementById("update-gondola-form-" + id);
 
     if (!formulario || formulario.dataset.enviado === "true") {
@@ -179,10 +183,12 @@ function limparFormularioAtualizacao(id) {
     formulario.querySelectorAll(".campo-erro").forEach(function (erro) {
         erro.remove();
     });
+
 }
 
 // Limpar formulário de vincular produto
 function limparFormularioVincular(id) {
+
     const formulario = document.getElementById("link-produto-form-" + id);
 
     if (!formulario || formulario.dataset.enviado === "true") {
@@ -201,4 +207,5 @@ function limparFormularioVincular(id) {
     formulario.querySelectorAll(".campo-erro").forEach(function (erro) {
         erro.remove();
     });
+
 }

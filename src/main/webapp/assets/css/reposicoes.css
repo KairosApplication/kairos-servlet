@@ -285,6 +285,23 @@ body {
     min-width: 220px;
 }
 
+.reposicoes-table .reposicao-row > td.actions {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.reposicoes-table .reposicao-row > td:last-child {
+    white-space: nowrap;
+}
+
+.reposicoes-table .reposicao-row > td.actions > .details-button,
+.reposicoes-table .reposicao-row > td.actions > .update-button,
+.reposicoes-table .reposicao-row > td.actions > .delete-button {
+    margin: 0 3px;
+}
+
 .details-toggle {
     position: absolute;
     opacity: 0;

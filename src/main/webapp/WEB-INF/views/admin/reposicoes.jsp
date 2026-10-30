@@ -156,25 +156,11 @@
                                 <td>${reposicao.id}</td>
 
                                 <td>
-                                    <c:choose>
-                                        <c:when test="${not empty reposicao.produto}">
-                                            <c:out value="${reposicao.produto.nome}"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:out value="${reposicao.historicoReposicao.produtoNome}" default="—"/>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <c:out value="${reposicao.historicoReposicao.produtoNome}" default="—"/>
                                 </td>
 
                                 <td>
-                                    <c:choose>
-                                        <c:when test="${not empty reposicao.produto}">
-                                            <c:out value="${reposicao.produto.marca}"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:out value="${reposicao.historicoReposicao.produtoMarca}" default="—"/>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <c:out value="${reposicao.historicoReposicao.produtoMarca}" default="—"/>
                                 </td>
 
                                 <td>

@@ -117,7 +117,36 @@ public class ReposicaoServlet extends HttpServlet {
 
             Map<String, String> erros = new HashMap<>();
 
-            int quantidade = Integer.parseInt(quantidadeReposto);
+            int quantidade = 0;
+
+            // Valida a quantidade reposta
+            if (quantidadeReposto == null || quantidadeReposto.isBlank()) {
+
+                erros.put("quantidadeReposto", "Quantidade reposta é obrigatória");
+
+            } else {
+
+                try {
+
+                    long quantidadeConvertida = Long.parseLong(quantidadeReposto);
+
+                    if (quantidadeConvertida > Integer.MAX_VALUE) {
+
+                        erros.put("quantidadeReposto", "Quantidade reposta não pode ultrapassar 2.147.483.647");
+
+                    } else if (quantidadeConvertida < 1) {
+
+                        erros.put("quantidadeReposto", "Quantidade reposta deve ser de pelo menos 1");
+
+                    } else {
+
+                        quantidade = (int) quantidadeConvertida;
+                    }
+
+                } catch (NumberFormatException e) {
+                    erros.put("quantidadeReposto", "Quantidade reposta deve ser um número inteiro válido");
+                }
+            }
 
             // Valida os campos permitidos na atualização
             if (motivoReposicao == null || motivoReposicao.isBlank()) {
@@ -218,10 +247,23 @@ public class ReposicaoServlet extends HttpServlet {
 
                 try {
 
-                    quantidade = Integer.parseInt(quantidadeReposto);
+                    long quantidadeConvertida = Long.parseLong(quantidadeReposto);
+
+                    if (quantidadeConvertida > Integer.MAX_VALUE) {
+
+                        erros.put("quantidadeReposto", "Quantidade reposta não pode ultrapassar 2.147.483.647");
+
+                    } else if (quantidadeConvertida < 1) {
+
+                        erros.put("quantidadeReposto", "Quantidade reposta deve ser de pelo menos 1");
+
+                    } else {
+
+                        quantidade = (int) quantidadeConvertida;
+                    }
 
                 } catch (NumberFormatException e) {
-                    erros.put("quantidadeReposto", "Quantidade reposta deve ser um número válido");
+                    erros.put("quantidadeReposto", "Quantidade reposta deve ser um número inteiro válido");
                 }
             }
 
@@ -256,11 +298,11 @@ public class ReposicaoServlet extends HttpServlet {
                 List<Reposicao> reposicoes = reposicaoService.listarTodos();
                 Map<Integer, List<Usuario>> usuariosPorReposicao = new HashMap<>();
 
-                for (Reposicao reposicao : reposicoes) {
+                for (Reposicao reposicaoLista : reposicoes) {
 
-                    List<Usuario> usuarios = usuarioReposicaoService.listarUsuariosPorReposicao(reposicao);
+                    List<Usuario> usuarios = usuarioReposicaoService.listarUsuariosPorReposicao(reposicaoLista);
 
-                    usuariosPorReposicao.put(reposicao.getId(), usuarios);
+                    usuariosPorReposicao.put(reposicaoLista.getId(), usuarios);
                 }
 
                 List<Produto> produtos = produtoService.listarTodos();

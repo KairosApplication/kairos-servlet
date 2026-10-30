@@ -603,8 +603,11 @@ body {
 }
 
 .popup-toggle {
-    position: absolute;
-
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
     opacity: 0;
     pointer-events: none;
 }
@@ -1012,4 +1015,14 @@ body {
     -webkit-box-shadow: 0 0 0 1000px #edf3f8 inset !important;
     -webkit-text-fill-color: #294966 !important;
     caret-color: #294966;
+}
+
+.details-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.details-table th,
+.details-table td {
+    width: 33.3333%;
 }

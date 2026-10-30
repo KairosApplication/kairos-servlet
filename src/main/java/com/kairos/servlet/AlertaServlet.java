@@ -5,12 +5,10 @@ import com.kairos.model.Gondola;
 import com.kairos.model.Produto;
 import com.kairos.model.Usuario;
 import com.kairos.model.enums.StatusAlerta;
-
 import com.kairos.service.AlertaService;
 import com.kairos.service.GondolaService;
 import com.kairos.service.ProdutoService;
 import com.kairos.service.UsuarioService;
-
 import com.kairos.utils.exceptions.notfound.GondolaNotFoundException;
 import com.kairos.utils.exceptions.notfound.ProdutoNotFoundException;
 import com.kairos.utils.exceptions.notfound.UsuarioNotFoundException;
@@ -34,36 +32,18 @@ import java.util.Map;
 @WebServlet("/admin/alertas")
 public class AlertaServlet extends HttpServlet {
 
-    private final AlertaService alertaService =
-            new AlertaService();
+    private final AlertaService alertaService = new AlertaService();
+    private final UsuarioService usuarioService = new UsuarioService();
+    private final GondolaService gondolaService = new GondolaService();
+    private final ProdutoService produtoService = new ProdutoService();
 
-    private final UsuarioService usuarioService =
-            new UsuarioService();
-
-    private final GondolaService gondolaService =
-            new GondolaService();
-
-    private final ProdutoService produtoService =
-            new ProdutoService();
-
-
-    // ==========================
-    // CARREGAR DADOS DA PÁGINA
-    // ==========================
-
+    // Carrega os dados necessários para a página de alertas
     private void carregarDados(HttpServletRequest request) {
 
-        List<Alerta> alertas =
-                alertaService.listarTodos();
-
-        List<Usuario> usuarios =
-                usuarioService.listarTodos();
-
-        List<Gondola> gondolas =
-                gondolaService.listarTodos();
-
-        List<Produto> produtos =
-                produtoService.listarTodos();
+        List<Alerta> alertas = alertaService.listarTodos();
+        List<Usuario> usuarios = usuarioService.listarTodos();
+        List<Gondola> gondolas = gondolaService.listarTodos();
+        List<Produto> produtos = produtoService.listarTodos();
 
         request.setAttribute("alertas", alertas);
         request.setAttribute("usuarios", usuarios);
@@ -71,17 +51,9 @@ public class AlertaServlet extends HttpServlet {
         request.setAttribute("produtos", produtos);
     }
 
-
-    // ==========================
-    // EXIBIR ERROS NO FORMULÁRIO
-    // ==========================
-
-    private void exibirErros(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Map<String, String> erros,
-            Integer idAlerta
-    ) throws ServletException, IOException {
+    // Exibe os erros de validação no formulário correspondente
+    private void exibirErros(HttpServletRequest request, HttpServletResponse response,
+                             Map<String, String> erros, Integer idAlerta) throws ServletException, IOException {
 
         if (idAlerta == null) {
 
@@ -89,42 +61,22 @@ public class AlertaServlet extends HttpServlet {
 
         } else {
 
-            request.setAttribute(
-                    "errosAtualizacao",
-                    erros
-            );
-
-            request.setAttribute(
-                    "idAlertaAtualizacao",
-                    idAlerta
-            );
+            request.setAttribute("errosAtualizacao", erros);
+            request.setAttribute("idAlertaAtualizacao", idAlerta);
         }
 
         carregarDados(request);
 
-        request.getRequestDispatcher(
-                "/WEB-INF/views/admin/alertas.jsp"
-        ).forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/admin/alertas.jsp")
+                .forward(request, response);
     }
 
-
-    // ==========================
-    // VALIDAR ID
-    // ==========================
-
-    private Integer validarId(
-            String valor,
-            String campo,
-            String nome,
-            Map<String, String> erros
-    ) {
+    // Valida os IDs informados no cadastro
+    private Integer validarId(String valor, String campo, String nome, Map<String, String> erros) {
 
         if (valor == null || valor.isBlank()) {
 
-            erros.put(
-                    campo,
-                    nome + " é obrigatório"
-            );
+            erros.put(campo, nome + " é obrigatório");
 
             return null;
         }
@@ -135,11 +87,7 @@ public class AlertaServlet extends HttpServlet {
 
             if (id <= 0) {
 
-                erros.put(
-                        campo,
-                        "ID de " + nome.toLowerCase()
-                                + " deve ser maior que zero"
-                );
+                erros.put(campo, "ID de " + nome.toLowerCase() + " deve ser maior que zero");
 
                 return null;
             }
@@ -148,51 +96,26 @@ public class AlertaServlet extends HttpServlet {
 
         } catch (NumberFormatException e) {
 
-            erros.put(
-                    campo,
-                    "ID de " + nome.toLowerCase()
-                            + " inválido"
-            );
+            erros.put(campo, "ID de " + nome.toLowerCase() + " inválido");
 
             return null;
         }
     }
 
-
-    // ==========================
-    // VALIDAR DESCRIÇÃO
-    // ==========================
-
-    private void validarDescricao(
-            String descricao,
-            Map<String, String> erros
-    ) {
+    // Valida a descrição do alerta
+    private void validarDescricao(String descricao, Map<String, String> erros) {
 
         if (descricao == null || descricao.isBlank()) {
-
-            erros.put(
-                    "descricaoAlerta",
-                    "Descrição do alerta é obrigatória"
-            );
+            erros.put("descricaoAlerta", "Descrição do alerta é obrigatória");
         }
     }
 
-
-    // ==========================
-    // VALIDAR STATUS
-    // ==========================
-
-    private StatusAlerta validarStatus(
-            String valor,
-            Map<String, String> erros
-    ) {
+    // Valida o status informado para o alerta
+    private StatusAlerta validarStatus(String valor, Map<String, String> erros) {
 
         if (valor == null || valor.isBlank()) {
 
-            erros.put(
-                    "statusAlerta",
-                    "Status do alerta é obrigatório"
-            );
+            erros.put("statusAlerta", "Status do alerta é obrigatório");
 
             return null;
         }
@@ -203,69 +126,41 @@ public class AlertaServlet extends HttpServlet {
 
         } catch (IllegalArgumentException e) {
 
-            erros.put(
-                    "statusAlerta",
-                    "Status do alerta inválido"
-            );
+            erros.put("statusAlerta", "Status do alerta inválido");
 
             return null;
         }
     }
 
+    // Valida a data de resolução dos alertas concluídos
+    private Timestamp validarDataResolucao(String valor, StatusAlerta status,
+                                           Date dataRuptura, Map<String, String> erros) {
 
-    // ==========================
-    // VALIDAR DATA DA RESOLUÇÃO
-    // ==========================
-
-    private Timestamp validarDataResolucao(
-            String valor,
-            StatusAlerta status,
-            Date dataRuptura,
-            Map<String, String> erros
-    ) {
-
-        /*
-         * Alertas não concluídos não possuem
-         * data de resolução.
-         */
         if (status != StatusAlerta.CONCLUIDO) {
             return null;
         }
 
         if (valor == null || valor.isBlank()) {
 
-            erros.put(
-                    "dataResolucao",
-                    "Data da resolução é obrigatória para alertas concluídos"
-            );
+            erros.put("dataResolucao", "Data da resolução é obrigatória para alertas concluídos");
 
             return null;
         }
 
         try {
 
-            LocalDateTime data =
-                    LocalDateTime.parse(valor);
+            LocalDateTime data = LocalDateTime.parse(valor);
 
             if (data.isAfter(LocalDateTime.now())) {
 
-                erros.put(
-                        "dataResolucao",
-                        "Data da resolução não pode ser futura"
-                );
+                erros.put("dataResolucao", "Data da resolução não pode ser futura");
 
                 return null;
             }
 
-            if (dataRuptura != null
-                    && data.toLocalDate().isBefore(
-                    dataRuptura.toLocalDate()
-            )) {
+            if (dataRuptura != null && data.toLocalDate().isBefore(dataRuptura.toLocalDate())) {
 
-                erros.put(
-                        "dataResolucao",
-                        "Data da resolução não pode ser anterior à ruptura"
-                );
+                erros.put("dataResolucao", "Data da resolução não pode ser anterior à ruptura");
 
                 return null;
             }
@@ -274,25 +169,15 @@ public class AlertaServlet extends HttpServlet {
 
         } catch (DateTimeParseException e) {
 
-            erros.put(
-                    "dataResolucao",
-                    "Data da resolução inválida"
-            );
+            erros.put("dataResolucao", "Data da resolução inválida");
 
             return null;
         }
     }
 
-
-    // ==========================
-    // GET
-    // ==========================
-
+    // Processa a exclusão, pesquisa e listagem de alertas
     @Override
-    protected void doGet(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String acao = request.getParameter("acao");
 
@@ -307,22 +192,15 @@ public class AlertaServlet extends HttpServlet {
                     int idAlerta = Integer.parseInt(id);
 
                     if (idAlerta > 0) {
-
-                        alertaService.deletarPorId(
-                                idAlerta
-                        );
+                        alertaService.deletarPorId(idAlerta);
                     }
 
                 } catch (NumberFormatException e) {
 
-                    // ID inválido: não executa a exclusão.
                 }
             }
 
-            response.sendRedirect(
-                    request.getContextPath()
-                            + "/admin/alertas"
-            );
+            response.sendRedirect(request.getContextPath() + "/admin/alertas");
 
             return;
         }
@@ -332,84 +210,40 @@ public class AlertaServlet extends HttpServlet {
         List<Alerta> alertas;
 
         if (busca != null && !busca.isBlank()) {
-
-            alertas = alertaService.pesquisar(
-                    busca.trim()
-            );
-
+            alertas = alertaService.pesquisar(busca.trim());
         } else {
-
             alertas = alertaService.listarTodos();
         }
 
         request.setAttribute("alertas", alertas);
-
-        request.setAttribute(
-                "usuarios",
-                usuarioService.listarTodos()
-        );
-
-        request.setAttribute(
-                "gondolas",
-                gondolaService.listarTodos()
-        );
-
-        request.setAttribute(
-                "produtos",
-                produtoService.listarTodos()
-        );
-
+        request.setAttribute("usuarios", usuarioService.listarTodos());
+        request.setAttribute("gondolas", gondolaService.listarTodos());
+        request.setAttribute("produtos", produtoService.listarTodos());
         request.setAttribute("busca", busca);
 
-        request.getRequestDispatcher(
-                "/WEB-INF/views/admin/alertas.jsp"
-        ).forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/admin/alertas.jsp")
+                .forward(request, response);
     }
 
-
-    // ==========================
-    // POST
-    // ==========================
-
+    // Processa o cadastro ou a atualização de alertas
     @Override
-    protected void doPost(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String id = request.getParameter("id");
-
-        String descricaoAlerta =
-                request.getParameter("descricaoAlerta");
-
-        String statusParam =
-                request.getParameter("statusAlerta");
-
-        String dataResolucaoParam =
-                request.getParameter("dataResolucao");
+        String descricaoAlerta = request.getParameter("descricaoAlerta");
+        String statusParam = request.getParameter("statusAlerta");
+        String dataResolucaoParam = request.getParameter("dataResolucao");
 
         Map<String, String> erros = new HashMap<>();
 
+        // Valida os campos comuns do formulário
+        validarDescricao(descricaoAlerta, erros);
 
-        // ==========================
-        // VALIDAR CAMPOS COMUNS
-        // ==========================
-
-        validarDescricao(
-                descricaoAlerta,
-                erros
-        );
-
-        StatusAlerta statusAlerta =
-                validarStatus(statusParam, erros);
-
-
-        // ==========================
-        // ATUALIZAR ALERTA
-        // ==========================
+        StatusAlerta statusAlerta = validarStatus(statusParam, erros);
 
         if (id != null) {
 
+            // Atualiza os dados de um alerta existente
             int idAlerta;
 
             try {
@@ -418,239 +252,114 @@ public class AlertaServlet extends HttpServlet {
 
                 if (idAlerta <= 0) {
 
-                    response.sendError(
-                            HttpServletResponse.SC_BAD_REQUEST,
-                            "ID do alerta inválido"
-                    );
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID do alerta inválido");
 
                     return;
                 }
 
             } catch (NumberFormatException e) {
 
-                response.sendError(
-                        HttpServletResponse.SC_BAD_REQUEST,
-                        "ID do alerta inválido"
-                );
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID do alerta inválido");
 
                 return;
             }
 
+            Alerta alerta = alertaService.buscarPorId(idAlerta);
 
-            /*
-             * Busca o alerta existente.
-             *
-             * Usuário, gôndola, produto e data da
-             * ruptura serão preservados.
-             */
-            Alerta alerta =
-                    alertaService.buscarPorId(idAlerta);
+            // Valida a data de resolução do alerta
+            Timestamp dataResolucao = validarDataResolucao(
+                    dataResolucaoParam,
+                    statusAlerta,
+                    alerta.getDataRuptura(),
+                    erros
+            );
 
-
-            // ==========================
-            // VALIDAR DATA DA RESOLUÇÃO
-            // ==========================
-
-            Timestamp dataResolucao =
-                    validarDataResolucao(
-                            dataResolucaoParam,
-                            statusAlerta,
-                            alerta.getDataRuptura(),
-                            erros
-                    );
-
-
-            // ==========================
-            // EXISTEM ERROS
-            // ==========================
-
+            // Retorna ao formulário caso existam erros de validação
             if (!erros.isEmpty()) {
 
-                exibirErros(
-                        request,
-                        response,
-                        erros,
-                        idAlerta
-                );
+                exibirErros(request, response, erros, idAlerta);
 
                 return;
             }
 
+            // Mantém usuário, gôndola, produto e data da ruptura originais
+            alerta.setDescricaoAlerta(descricaoAlerta.trim());
+            alerta.setStatusAlerta(statusAlerta);
+            alerta.setDataResolucao(dataResolucao);
 
-            // ==========================
-            // ALTERAR SOMENTE 3 CAMPOS
-            // ==========================
-
-            alerta.setDescricaoAlerta(
-                    descricaoAlerta.trim()
-            );
-
-            alerta.setStatusAlerta(
-                    statusAlerta
-            );
-
-            alerta.setDataResolucao(
-                    dataResolucao
-            );
-
-
-            /*
-             * Os seguintes dados permanecem
-             * exatamente como estavam:
-             *
-             * - Usuário
-             * - Gôndola
-             * - Produto
-             * - Data da ruptura
-             */
             alertaService.atualizar(alerta);
-
 
         } else {
 
+            // Cadastra um novo alerta
+            String idUsuario = request.getParameter("idUsuario");
+            String idGondola = request.getParameter("idGondola");
+            String idProduto = request.getParameter("idProduto");
+            String dataRupturaParam = request.getParameter("dataRuptura");
 
-            // ==========================
-            // CADASTRAR ALERTA
-            // ==========================
+            // Valida os IDs informados
+            Integer usuarioId = validarId(idUsuario, "idUsuario", "Usuário", erros);
+            Integer gondolaId = validarId(idGondola, "idGondola", "Gôndola", erros);
+            Integer produtoId = validarId(idProduto, "idProduto", "Produto", erros);
 
-            String idUsuario =
-                    request.getParameter("idUsuario");
-
-            String idGondola =
-                    request.getParameter("idGondola");
-
-            String idProduto =
-                    request.getParameter("idProduto");
-
-            String dataRupturaParam =
-                    request.getParameter("dataRuptura");
-
-
-            // ==========================
-            // VALIDAR IDS
-            // ==========================
-
-            Integer usuarioId = validarId(
-                    idUsuario,
-                    "idUsuario",
-                    "Usuário",
-                    erros
-            );
-
-            Integer gondolaId = validarId(
-                    idGondola,
-                    "idGondola",
-                    "Gôndola",
-                    erros
-            );
-
-            Integer produtoId = validarId(
-                    idProduto,
-                    "idProduto",
-                    "Produto",
-                    erros
-            );
-
-
-            // ==========================
-            // VALIDAR USUÁRIO
-            // ==========================
-
+            // Busca e valida o usuário informado
             Usuario usuario = null;
 
             if (usuarioId != null) {
 
                 try {
 
-                    usuario = usuarioService.buscarPorId(
-                            usuarioId
-                    );
+                    usuario = usuarioService.buscarPorId(usuarioId);
 
                 } catch (UsuarioNotFoundException e) {
-
-                    erros.put(
-                            "idUsuario",
-                            "Usuário não encontrado"
-                    );
+                    erros.put("idUsuario", "Usuário não encontrado");
                 }
             }
 
-
-            // ==========================
-            // VALIDAR GÔNDOLA
-            // ==========================
-
+            // Busca e valida a gôndola informada
             Gondola gondola = null;
 
             if (gondolaId != null) {
 
                 try {
 
-                    gondola = gondolaService.buscarPorId(
-                            gondolaId
-                    );
+                    gondola = gondolaService.buscarPorId(gondolaId);
 
                 } catch (GondolaNotFoundException e) {
-
-                    erros.put(
-                            "idGondola",
-                            "Gôndola não encontrada"
-                    );
+                    erros.put("idGondola", "Gôndola não encontrada");
                 }
             }
 
-
-            // ==========================
-            // VALIDAR PRODUTO
-            // ==========================
-
+            // Busca e valida o produto informado
             Produto produto = null;
 
             if (produtoId != null) {
 
                 try {
 
-                    produto = produtoService.buscarPorId(
-                            produtoId
-                    );
+                    produto = produtoService.buscarPorId(produtoId);
 
                 } catch (ProdutoNotFoundException e) {
-
-                    erros.put(
-                            "idProduto",
-                            "Produto não encontrado"
-                    );
+                    erros.put("idProduto", "Produto não encontrado");
                 }
             }
 
-
-            // ==========================
-            // VALIDAR DATA DA RUPTURA
-            // ==========================
-
+            // Converte e valida a data da ruptura
             Date dataRuptura = null;
 
-            if (dataRupturaParam == null
-                    || dataRupturaParam.isBlank()) {
+            if (dataRupturaParam == null || dataRupturaParam.isBlank()) {
 
-                erros.put(
-                        "dataRuptura",
-                        "Data da ruptura é obrigatória"
-                );
+                erros.put("dataRuptura", "Data da ruptura é obrigatória");
 
             } else {
 
                 try {
 
-                    LocalDate data =
-                            LocalDate.parse(dataRupturaParam);
+                    LocalDate data = LocalDate.parse(dataRupturaParam);
 
                     if (data.isAfter(LocalDate.now())) {
 
-                        erros.put(
-                                "dataRuptura",
-                                "Data da ruptura não pode ser futura"
-                        );
+                        erros.put("dataRuptura", "Data da ruptura não pode ser futura");
 
                     } else {
 
@@ -658,49 +367,27 @@ public class AlertaServlet extends HttpServlet {
                     }
 
                 } catch (DateTimeParseException e) {
-
-                    erros.put(
-                            "dataRuptura",
-                            "Data da ruptura inválida"
-                    );
+                    erros.put("dataRuptura", "Data da ruptura inválida");
                 }
             }
 
+            // Valida a data de resolução do alerta
+            Timestamp dataResolucao = validarDataResolucao(
+                    dataResolucaoParam,
+                    statusAlerta,
+                    dataRuptura,
+                    erros
+            );
 
-            // ==========================
-            // VALIDAR DATA DA RESOLUÇÃO
-            // ==========================
-
-            Timestamp dataResolucao =
-                    validarDataResolucao(
-                            dataResolucaoParam,
-                            statusAlerta,
-                            dataRuptura,
-                            erros
-                    );
-
-
-            // ==========================
-            // EXISTEM ERROS
-            // ==========================
-
+            // Retorna ao formulário caso existam erros de validação
             if (!erros.isEmpty()) {
 
-                exibirErros(
-                        request,
-                        response,
-                        erros,
-                        null
-                );
+                exibirErros(request, response, erros, null);
 
                 return;
             }
 
-
-            // ==========================
-            // CRIAR ALERTA
-            // ==========================
-
+            // Cria e cadastra o alerta validado
             Alerta alerta = new Alerta(
                     usuario,
                     gondola,
@@ -714,14 +401,6 @@ public class AlertaServlet extends HttpServlet {
             alertaService.cadastrar(alerta);
         }
 
-
-        // ==========================
-        // REDIRECIONAR
-        // ==========================
-
-        response.sendRedirect(
-                request.getContextPath()
-                        + "/admin/alertas"
-        );
+        response.sendRedirect(request.getContextPath() + "/admin/alertas");
     }
 }

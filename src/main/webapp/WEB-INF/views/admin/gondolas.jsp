@@ -778,7 +778,7 @@ ${not empty erros ? 'checked' : ''}
                             id="capacidadeMaxima"
                             name="capacidadeMaxima"
                             min="1"
-                            value="${param.capacidadeMaxima}"
+                            value="${not empty erros ? param.capacidadeMaxima : ''}"
                     >
 
                     <c:if test="${not empty erros.capacidadeMaxima}">
@@ -799,7 +799,7 @@ ${not empty erros ? 'checked' : ''}
                             type="text"
                             id="nomeSetor"
                             name="nomeSetor"
-                            value="${param.nomeSetor}"
+                            value="${not empty erros ? param.nomeSetor : ''}"
                     >
 
                     <c:if test="${not empty erros.setor}">
