@@ -13,6 +13,8 @@
 
     <title>Kairos - Compras</title>
 
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/images/favicon.png">
+
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/css/compras.css">
 

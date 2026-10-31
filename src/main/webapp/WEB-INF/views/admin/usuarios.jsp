@@ -13,6 +13,8 @@
 
     <title>Kairos - Usuários</title>
 
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/images/favicon.png">
+
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/css/usuarios.css">
 

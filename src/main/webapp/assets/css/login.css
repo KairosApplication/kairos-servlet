@@ -181,6 +181,12 @@ body {
     outline: none;
 }
 
+/* Campos bloqueados */
+.field input[data-bloqueado="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 /* Ícone de visualizar senha */
 .toggle-eye {
     position: absolute;
@@ -190,6 +196,12 @@ body {
     cursor: pointer;
     color: var(--text-dark);
     display: flex;
+}
+
+/* Ícone de senha bloqueado */
+.input-wrap:has(#senha[data-bloqueado="true"]) .toggle-eye {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 /* Botão */
@@ -208,8 +220,15 @@ body {
     transition: background .2s ease;
 }
 
-.submit-btn:hover {
+.submit-btn:hover:not(:disabled) {
     background: var(--green-2);
+}
+
+/* Botão bloqueado */
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: var(--green);
 }
 
 /* Termos */

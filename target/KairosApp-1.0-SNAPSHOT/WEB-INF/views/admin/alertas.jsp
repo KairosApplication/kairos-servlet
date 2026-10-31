@@ -11,6 +11,8 @@
 
     <title>Kairos - Alertas</title>
 
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/images/favicon.png">
+
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/css/alertas.css">
 </head>
