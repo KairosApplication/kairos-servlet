@@ -2,10 +2,9 @@ package com.kairos.servlet.auth;
 
 import com.kairos.model.Admin;
 import com.kairos.service.LoginService;
-import com.kairos.utils.exceptions.regex.InvalidEmailRegexException;
-import com.kairos.utils.exceptions.notfound.UsuarioNotFoundException;
 import com.kairos.utils.exceptions.system.AdminException;
 import com.kairos.utils.exceptions.system.ServiceException;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,46 +16,43 @@ import java.io.IOException;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
+    // Atributos
     private final LoginService loginService;
 
+    // Construtor
     public LoginServlet() {
         this.loginService = new LoginService();
     }
 
+    // Processa a autenticação do administrador
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        // Recupera os dados do formulário
         String email = request.getParameter("email");
         String senha = request.getParameter("senha");
 
         try {
 
+            // Autentica o administrador
             Admin admin = loginService.autenticar(email, senha);
 
+            // Redireciona para a página de usuários
             response.sendRedirect(request.getContextPath() + "/admin/usuarios");
 
         } catch (AdminException e) {
 
-            request.setAttribute(
-                    "erroEmailOuSenha",
-                    "E-mail ou senha inválidos"
-            );
+            // Informa erro de autenticação
+            request.setAttribute("erroEmailOuSenha", "E-mail ou senha inválidos");
 
-            request.getRequestDispatcher(
-                    "/WEB-INF/views/login/login.jsp"
-            ).forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/login/login.jsp").forward(request, response);
 
         } catch (ServiceException e) {
 
-            request.setAttribute(
-                    "erroService",
-                    e.getMessage()
-            );
+            // Informa erro do serviço
+            request.setAttribute("erroService", e.getMessage());
 
-            request.getRequestDispatcher(
-                    "/WEB-INF/views/login/login.jsp"
-            ).forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/login/login.jsp").forward(request, response);
         }
     }
 }

@@ -2,8 +2,7 @@ package com.kairos.model;
 
 public class HistoricoCompraProduto {
 
-    //    Atributos
-
+    // Atributos
     private int id;
     private int compraProdutoId;
     private int compraId;
@@ -11,16 +10,8 @@ public class HistoricoCompraProduto {
     private String produtoMarca;
     private String produtoNome;
 
-    //    Construtores
-
-    public HistoricoCompraProduto(
-            int id,
-            int compraProdutoId,
-            int compraId,
-            int produtoId,
-            String produtoMarca,
-            String produtoNome
-    ) {
+    // Construtores
+    public HistoricoCompraProduto(int id, int compraProdutoId, int compraId, int produtoId, String produtoMarca, String produtoNome) {
         this.id = id;
         this.compraProdutoId = compraProdutoId;
         this.compraId = compraId;
@@ -29,13 +20,7 @@ public class HistoricoCompraProduto {
         this.produtoNome = produtoNome;
     }
 
-    public HistoricoCompraProduto(
-            int compraProdutoId,
-            int compraId,
-            int produtoId,
-            String produtoMarca,
-            String produtoNome
-    ) {
+    public HistoricoCompraProduto(int compraProdutoId, int compraId, int produtoId, String produtoMarca, String produtoNome) {
         this.compraProdutoId = compraProdutoId;
         this.compraId = compraId;
         this.produtoId = produtoId;
@@ -43,8 +28,7 @@ public class HistoricoCompraProduto {
         this.produtoNome = produtoNome;
     }
 
-    //    Getters
-
+    // Getters
     public int getId() {
         return id;
     }
@@ -69,8 +53,7 @@ public class HistoricoCompraProduto {
         return produtoNome;
     }
 
-    //    Setters
-
+    // Setters
     public void setId(int id) {
         this.id = id;
     }
@@ -95,8 +78,7 @@ public class HistoricoCompraProduto {
         this.produtoNome = produtoNome;
     }
 
-    //    toString
-
+    // to String
     @Override
     public String toString() {
         return "\n-= Histórico Compra Produto =-" +

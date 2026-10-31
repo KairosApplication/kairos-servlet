@@ -15,26 +15,25 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @WebServlet("/admin/compras")
 public class CompraServlet extends HttpServlet {
 
+    // Atributos
     private final CompraService compraService = new CompraService();
-
     private final CompraProdutoService compraProdutoService = new CompraProdutoService();
 
-
+    // Processa a exclusão, pesquisa e listagem de compras
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String acao = request.getParameter("acao");
 
-
+        // Exclui uma compra
         if ("deletar".equals(acao)) {
 
             String id = request.getParameter("id");
@@ -46,14 +45,12 @@ public class CompraServlet extends HttpServlet {
                 compraService.deletarPorId(idCompra);
             }
 
-            response.sendRedirect(
-                    request.getContextPath() + "/admin/compras"
-            );
+            response.sendRedirect(request.getContextPath() + "/admin/compras");
 
             return;
         }
 
-
+        // Pesquisa ou lista as compras
         String busca = request.getParameter("busca");
 
         List<Compra> compras;
@@ -67,203 +64,107 @@ public class CompraServlet extends HttpServlet {
             compras = compraService.listarTodos();
         }
 
+        // Recupera os produtos associados a cada compra
+        Map<Integer, List<CompraProduto>> produtosPorCompra = new HashMap<>();
 
-        Map<Integer, List<CompraProduto>> produtosPorCompra =
-                new HashMap<>();
-
-        List<CompraProduto> todosProdutos =
-                compraProdutoService.listarTodos();
+        List<CompraProduto> todosProdutos = compraProdutoService.listarTodos();
 
         for (Compra compra : compras) {
 
-            List<CompraProduto> produtos = todosProdutos.stream()
-                    .filter(compraProduto ->
-                            compraProduto.getCompra().getId()
-                                    == compra.getId()
-                    )
-                    .collect(Collectors.toList());
+            List<CompraProduto> produtos = new ArrayList<>();
 
-            produtosPorCompra.put(
-                    compra.getId(),
-                    produtos
-            );
+            for (CompraProduto compraProduto : todosProdutos) {
+
+                if (compraProduto.getCompra().getId() == compra.getId()) {
+
+                    produtos.add(compraProduto);
+                }
+            }
+
+            produtosPorCompra.put(compra.getId(), produtos);
         }
 
-
-        // ==========================
-        // ERROS AO VINCULAR PRODUTO
-        // ==========================
-
+        // Recupera os erros de vinculação
         @SuppressWarnings("unchecked")
         Map<String, String> errosVincular =
-                (Map<String, String>) request.getSession()
-                        .getAttribute("errosVincular");
+                (Map<String, String>) request.getSession().getAttribute("errosVincular");
 
         Integer idCompraVincular =
-                (Integer) request.getSession()
-                        .getAttribute("idCompraVincular");
+                (Integer) request.getSession().getAttribute("idCompraVincular");
 
         String idProdutoVincular =
-                (String) request.getSession()
-                        .getAttribute("idProdutoVincular");
+                (String) request.getSession().getAttribute("idProdutoVincular");
 
         String quantidadeItemVincular =
-                (String) request.getSession()
-                        .getAttribute("quantidadeItemVincular");
-
+                (String) request.getSession().getAttribute("quantidadeItemVincular");
 
         if (errosVincular != null) {
 
-            request.setAttribute(
-                    "errosVincular",
-                    errosVincular
-            );
+            request.setAttribute("errosVincular", errosVincular);
+            request.setAttribute("idCompraVincular", idCompraVincular);
+            request.setAttribute("idProdutoVincular", idProdutoVincular);
+            request.setAttribute("quantidadeItemVincular", quantidadeItemVincular);
 
-            request.setAttribute(
-                    "idCompraVincular",
-                    idCompraVincular
-            );
-
-            request.setAttribute(
-                    "idProdutoVincular",
-                    idProdutoVincular
-            );
-
-            request.setAttribute(
-                    "quantidadeItemVincular",
-                    quantidadeItemVincular
-            );
-
-
-            request.getSession()
-                    .removeAttribute("errosVincular");
-
-            request.getSession()
-                    .removeAttribute("idCompraVincular");
-
-            request.getSession()
-                    .removeAttribute("idProdutoVincular");
-
-            request.getSession()
-                    .removeAttribute("quantidadeItemVincular");
+            request.getSession().removeAttribute("errosVincular");
+            request.getSession().removeAttribute("idCompraVincular");
+            request.getSession().removeAttribute("idProdutoVincular");
+            request.getSession().removeAttribute("quantidadeItemVincular");
         }
 
-
-        // ==========================
-        // ERROS AO ATUALIZAR PRODUTO
-        // ==========================
-
+        // Recupera os erros de atualização de produto
         @SuppressWarnings("unchecked")
         Map<String, String> errosAtualizarProduto =
-                (Map<String, String>) request.getSession()
-                        .getAttribute("errosAtualizarProduto");
+                (Map<String, String>) request.getSession().getAttribute("errosAtualizarProduto");
 
         String idCompraProdutoAtualizar =
-                (String) request.getSession()
-                        .getAttribute("idCompraProdutoAtualizar");
+                (String) request.getSession().getAttribute("idCompraProdutoAtualizar");
 
         String quantidadeItemAtualizar =
-                (String) request.getSession()
-                        .getAttribute("quantidadeItemAtualizar");
-
+                (String) request.getSession().getAttribute("quantidadeItemAtualizar");
 
         if (errosAtualizarProduto != null) {
 
-            request.setAttribute(
-                    "errosAtualizarProduto",
-                    errosAtualizarProduto
-            );
+            request.setAttribute("errosAtualizarProduto", errosAtualizarProduto);
+            request.setAttribute("idCompraProdutoAtualizar", idCompraProdutoAtualizar);
+            request.setAttribute("quantidadeItemAtualizar", quantidadeItemAtualizar);
 
-            request.setAttribute(
-                    "idCompraProdutoAtualizar",
-                    idCompraProdutoAtualizar
-            );
-
-            request.setAttribute(
-                    "quantidadeItemAtualizar",
-                    quantidadeItemAtualizar
-            );
-
-
-            request.getSession()
-                    .removeAttribute("errosAtualizarProduto");
-
-            request.getSession()
-                    .removeAttribute("idCompraProdutoAtualizar");
-
-            request.getSession()
-                    .removeAttribute("quantidadeItemAtualizar");
+            request.getSession().removeAttribute("errosAtualizarProduto");
+            request.getSession().removeAttribute("idCompraProdutoAtualizar");
+            request.getSession().removeAttribute("quantidadeItemAtualizar");
         }
 
-
-        // ==========================
-        // ERROS AO DESVINCULAR PRODUTO
-        // ==========================
-
+        // Recupera os erros de desvinculação de produto
         String erroDesvincularProduto =
-                (String) request.getSession()
-                        .getAttribute("erroDesvincularProduto");
+                (String) request.getSession().getAttribute("erroDesvincularProduto");
 
         Integer idCompraDesvincular =
-                (Integer) request.getSession()
-                        .getAttribute("idCompraDesvincular");
+                (Integer) request.getSession().getAttribute("idCompraDesvincular");
 
         String idCompraProdutoDesvincular =
-                (String) request.getSession()
-                        .getAttribute("idCompraProdutoDesvincular");
-
+                (String) request.getSession().getAttribute("idCompraProdutoDesvincular");
 
         if (erroDesvincularProduto != null) {
 
-            request.setAttribute(
-                    "erroDesvincularProduto",
-                    erroDesvincularProduto
-            );
+            request.setAttribute("erroDesvincularProduto", erroDesvincularProduto);
+            request.setAttribute("idCompraDesvincular", idCompraDesvincular);
+            request.setAttribute("idCompraProdutoDesvincular", idCompraProdutoDesvincular);
 
-            request.setAttribute(
-                    "idCompraDesvincular",
-                    idCompraDesvincular
-            );
-
-            request.setAttribute(
-                    "idCompraProdutoDesvincular",
-                    idCompraProdutoDesvincular
-            );
-
-
-            request.getSession()
-                    .removeAttribute("erroDesvincularProduto");
-
-            request.getSession()
-                    .removeAttribute("idCompraDesvincular");
-
-            request.getSession()
-                    .removeAttribute("idCompraProdutoDesvincular");
+            request.getSession().removeAttribute("erroDesvincularProduto");
+            request.getSession().removeAttribute("idCompraDesvincular");
+            request.getSession().removeAttribute("idCompraProdutoDesvincular");
         }
 
+        // Envia os dados para o JSP
+        request.setAttribute("compras", compras);
+        request.setAttribute("produtosPorCompra", produtosPorCompra);
 
-        request.setAttribute(
-                "compras",
-                compras
-        );
-
-        request.setAttribute(
-                "produtosPorCompra",
-                produtosPorCompra
-        );
-
-
-        request.getRequestDispatcher(
-                "/WEB-INF/views/admin/compras.jsp"
-        ).forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/admin/compras.jsp")
+                .forward(request, response);
     }
 
-
+    // Processa o cadastro e a atualização de compras
     @Override
-    protected void doPost(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String id = request.getParameter("id");
         String dataCompra = request.getParameter("dataCompra");
@@ -272,77 +173,49 @@ public class CompraServlet extends HttpServlet {
 
         Timestamp dataCompraConvertida = null;
 
-
-        // ==========================
-        // DATA DA COMPRA
-        // ==========================
-
+        // Valida a data da compra
         if (dataCompra == null || dataCompra.isBlank()) {
 
-            erros.put(
-                    "dataCompra",
-                    "Data da compra é obrigatória"
-            );
+            erros.put("dataCompra", "Data da compra é obrigatória");
 
         } else {
 
             try {
 
-                LocalDateTime dataConvertida =
-                        LocalDateTime.parse(dataCompra);
+                LocalDateTime dataConvertida = LocalDateTime.parse(dataCompra);
 
                 if (dataConvertida.isAfter(LocalDateTime.now())) {
 
-                    erros.put(
-                            "dataCompra",
-                            "A data da compra não pode ser futura"
-                    );
+                    erros.put("dataCompra", "A data da compra não pode ser futura");
 
                 } else {
 
-                    dataCompraConvertida =
-                            Timestamp.valueOf(dataConvertida);
+                    dataCompraConvertida = Timestamp.valueOf(dataConvertida);
                 }
 
             } catch (DateTimeParseException e) {
 
-                erros.put(
-                        "dataCompra",
-                        "Data da compra inválida"
-                );
+                erros.put("dataCompra", "Data da compra inválida");
             }
         }
 
-
+        // Atualiza uma compra existente
         if (id != null && !id.isBlank()) {
-
-            // ==========================
-            // ATUALIZAR COMPRA
-            // ==========================
 
             int idCompra = Integer.parseInt(id);
 
             if (!erros.isEmpty()) {
 
-                request.setAttribute(
-                        "errosAtualizacao",
-                        erros
-                );
-
-                request.setAttribute(
-                        "idCompraAtualizacao",
-                        idCompra
-                );
+                request.setAttribute("errosAtualizacao", erros);
+                request.setAttribute("idCompraAtualizacao", idCompra);
 
                 carregarCompras(request);
 
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/admin/compras.jsp"
-                ).forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/admin/compras.jsp")
+                        .forward(request, response);
 
                 return;
             }
-
 
             Compra compra = compraService.buscarPorId(idCompra);
 
@@ -352,80 +225,52 @@ public class CompraServlet extends HttpServlet {
 
         } else {
 
-            // ==========================
-            // ADICIONAR COMPRA
-            // ==========================
-
+            // Cadastra uma nova compra
             if (!erros.isEmpty()) {
 
-                request.setAttribute(
-                        "erros",
-                        erros
-                );
+                request.setAttribute("erros", erros);
 
                 carregarCompras(request);
 
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/admin/compras.jsp"
-                ).forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/admin/compras.jsp")
+                        .forward(request, response);
 
                 return;
             }
 
-
-            Compra compra = new Compra(
-                    dataCompraConvertida
-            );
+            Compra compra = new Compra(dataCompraConvertida);
 
             compraService.cadastrar(compra);
         }
 
-
-        response.sendRedirect(
-                request.getContextPath() + "/admin/compras"
-        );
+        response.sendRedirect(request.getContextPath() + "/admin/compras");
     }
 
-
-    // ==========================
-    // CARREGAR COMPRAS
-    // ==========================
-
+    // Carrega as compras e seus produtos associados
     private void carregarCompras(HttpServletRequest request) {
 
-        List<Compra> compras =
-                compraService.listarTodos();
+        List<Compra> compras = compraService.listarTodos();
 
-        Map<Integer, List<CompraProduto>> produtosPorCompra =
-                new HashMap<>();
+        Map<Integer, List<CompraProduto>> produtosPorCompra = new HashMap<>();
 
-        List<CompraProduto> todosProdutos =
-                compraProdutoService.listarTodos();
+        List<CompraProduto> todosProdutos = compraProdutoService.listarTodos();
 
         for (Compra compra : compras) {
 
-            List<CompraProduto> produtos = todosProdutos.stream()
-                    .filter(compraProduto ->
-                            compraProduto.getCompra().getId()
-                                    == compra.getId()
-                    )
-                    .collect(Collectors.toList());
+            List<CompraProduto> produtos = new ArrayList<>();
 
-            produtosPorCompra.put(
-                    compra.getId(),
-                    produtos
-            );
+            for (CompraProduto compraProduto : todosProdutos) {
+
+                if (compraProduto.getCompra().getId() == compra.getId()) {
+
+                    produtos.add(compraProduto);
+                }
+            }
+
+            produtosPorCompra.put(compra.getId(), produtos);
         }
 
-
-        request.setAttribute(
-                "compras",
-                compras
-        );
-
-        request.setAttribute(
-                "produtosPorCompra",
-                produtosPorCompra
-        );
+        request.setAttribute("compras", compras);
+        request.setAttribute("produtosPorCompra", produtosPorCompra);
     }
 }

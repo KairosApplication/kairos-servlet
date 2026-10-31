@@ -10,12 +10,15 @@ import java.util.List;
 
 public class CompraService {
 
+    // Atributos
     private final CompraDAO compraDAO;
 
+    // Construtor
     public CompraService() {
         this.compraDAO = new CompraDAO();
     }
 
+    // Cadastra uma nova compra
     public Compra cadastrar(Compra compra) {
 
         validarCampos(compra);
@@ -23,6 +26,7 @@ public class CompraService {
         return compraDAO.inserir(compra);
     }
 
+    // Busca uma compra pelo ID
     public Compra buscarPorId(int id) {
 
         if (id <= 0) {
@@ -38,16 +42,19 @@ public class CompraService {
         return compra;
     }
 
+    // Lista todas as compras
     public List<Compra> listarTodos() {
 
         return compraDAO.listarTodos();
     }
 
+    // Pesquisa compras
     public List<Compra> pesquisar(String busca) {
 
         return compraDAO.pesquisar(busca);
     }
 
+    // Atualiza uma compra existente
     public void atualizar(Compra compra) {
 
         validarCampos(compra);
@@ -59,6 +66,7 @@ public class CompraService {
         compraDAO.atualizar(compra);
     }
 
+    // Exclui uma compra pelo ID
     public void deletarPorId(int id) {
 
         if (id <= 0) {
@@ -72,6 +80,7 @@ public class CompraService {
         compraDAO.deletarPorId(id);
     }
 
+    // Valida os campos da compra
     private void validarCampos(Compra compra) {
 
         if (compra == null) {

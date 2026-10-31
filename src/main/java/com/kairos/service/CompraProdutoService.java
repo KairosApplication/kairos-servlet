@@ -10,16 +10,19 @@ import java.util.List;
 
 public class CompraProdutoService {
 
+    // Atributos
     private final CompraProdutoDAO compraProdutoDAO;
     private final CompraService compraService;
     private final ProdutoService produtoService;
 
+    // Construtor
     public CompraProdutoService() {
         this.compraProdutoDAO = new CompraProdutoDAO();
         this.compraService = new CompraService();
         this.produtoService = new ProdutoService();
     }
 
+    // Cadastra um produto em uma compra
     public CompraProduto cadastrar(CompraProduto compraProduto) {
 
         validarCampos(compraProduto);
@@ -32,14 +35,13 @@ public class CompraProdutoService {
                 compraProduto.getCompra().getId(),
                 compraProduto.getProduto().getId())) {
 
-            throw new ServiceException(
-                    "Este produto já está vinculado a esta compra."
-            );
+            throw new ServiceException("Este produto já está vinculado a esta compra.");
         }
 
         return compraProdutoDAO.inserir(compraProduto);
     }
 
+    // Busca um produto da compra pelo ID
     public CompraProduto buscarPorId(int id) {
 
         if (id <= 0) {
@@ -49,19 +51,19 @@ public class CompraProdutoService {
         CompraProduto compraProduto = compraProdutoDAO.buscarPorId(id);
 
         if (compraProduto == null) {
-            throw new CompraProdutoNotFoundException(
-                    "Produto da compra não encontrado"
-            );
+            throw new CompraProdutoNotFoundException("Produto da compra não encontrado");
         }
 
         return compraProduto;
     }
 
+    // Lista todos os produtos das compras
     public List<CompraProduto> listarTodos() {
 
         return compraProdutoDAO.listarTodos();
     }
 
+    // Atualiza um produto associado a uma compra
     public void atualizar(CompraProduto compraProduto) {
 
         if (compraProduto == null) {
@@ -73,18 +75,15 @@ public class CompraProdutoService {
         }
 
         if (compraProduto.getQuantidadeItem() < 1) {
-            throw new PurchaseQuantityException(
-                    "A quantidade do item deve ser maior que 0"
-            );
+            throw new PurchaseQuantityException("A quantidade do item deve ser maior que 0");
         }
 
         if (compraProdutoDAO.atualizar(compraProduto) == 0) {
-            throw new CompraProdutoNotFoundException(
-                    "Produto da compra não encontrado"
-            );
+            throw new CompraProdutoNotFoundException("Produto da compra não encontrado");
         }
     }
 
+    // Exclui um produto associado a uma compra
     public void deletarPorId(int id) {
 
         if (id <= 0) {
@@ -92,14 +91,13 @@ public class CompraProdutoService {
         }
 
         if (compraProdutoDAO.buscarPorId(id) == null) {
-            throw new CompraProdutoNotFoundException(
-                    "Produto da compra não encontrado"
-            );
+            throw new CompraProdutoNotFoundException("Produto da compra não encontrado");
         }
 
         compraProdutoDAO.deletarPorId(id);
     }
 
+    // Valida os campos do produto da compra
     private void validarCampos(CompraProduto compraProduto) {
 
         if (compraProduto == null) {
@@ -115,9 +113,7 @@ public class CompraProdutoService {
         }
 
         if (compraProduto.getQuantidadeItem() < 1) {
-            throw new PurchaseQuantityException(
-                    "A quantidade do item deve ser maior que 0"
-            );
+            throw new PurchaseQuantityException("A quantidade do item deve ser maior que 0");
         }
     }
 }

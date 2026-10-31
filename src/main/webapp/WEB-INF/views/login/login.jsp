@@ -20,7 +20,6 @@
 
     <div class="circulo"></div>
 
-    <!-- Logo -->
     <a href="${pageContext.request.contextPath}/index.jsp" class="logo">
         <img src="${pageContext.request.contextPath}/assets/images/logo-kairos.svg" alt="Logo Kairos">
     </a>
@@ -37,7 +36,6 @@
             </div>
         </div>
 
-        <!-- Card do formulário -->
         <div class="form-card">
 
             <div class="tabs">
@@ -45,7 +43,6 @@
                 <button class="tab active" type="button">Login</button>
             </div>
 
-            <!-- Formulário de Login -->
             <form action="login"
                   method="post"
                   autocomplete="off">

@@ -115,12 +115,12 @@ public class CompraDAO {
     public List<Compra> pesquisar(String pesquisa) {
 
         String sql = """
-                     SELECT id, data_compra
-                     FROM compras
-                     WHERE CAST(id AS TEXT) ILIKE ?
-                        OR CAST(data_compra AS TEXT) ILIKE ?
-                     ORDER BY id
-                     """;
+            SELECT id, data_compra
+            FROM compras
+            WHERE CAST(id AS TEXT) ILIKE ?
+               OR TO_CHAR(data_compra, 'DD/MM/YYYY "às" HH24:MI') ILIKE ?
+            ORDER BY id
+            """;
 
         List<Compra> compras = new ArrayList<>();
 

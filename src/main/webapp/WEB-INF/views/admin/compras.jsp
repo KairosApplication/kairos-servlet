@@ -32,7 +32,6 @@
 
     </div>
 
-
     <nav class="menu">
 
         <a href="${pageContext.request.contextPath}/admin/usuarios"
@@ -49,7 +48,6 @@
 
         </a>
 
-
         <a href="${pageContext.request.contextPath}/admin/empresas"
            class="menu-item">
 
@@ -63,7 +61,6 @@
             <span>Empresa</span>
 
         </a>
-
 
         <a href="${pageContext.request.contextPath}/admin/setores"
            class="menu-item">
@@ -79,7 +76,6 @@
 
         </a>
 
-
         <a href="${pageContext.request.contextPath}/admin/gondolas"
            class="menu-item">
 
@@ -93,7 +89,6 @@
             <span>Gôndola</span>
 
         </a>
-
 
         <a href="${pageContext.request.contextPath}/admin/produtos"
            class="menu-item">
@@ -109,7 +104,6 @@
 
         </a>
 
-
         <a href="${pageContext.request.contextPath}/admin/reposicoes"
            class="menu-item">
 
@@ -124,7 +118,6 @@
 
         </a>
 
-
         <a href="${pageContext.request.contextPath}/admin/alertas"
            class="menu-item">
 
@@ -138,7 +131,6 @@
             <span>Alerta</span>
 
         </a>
-
 
         <a href="#" class="menu-item active">
 
@@ -155,7 +147,6 @@
 
     </nav>
 
-
     <div class="logout-area">
 
         <label
@@ -169,12 +160,7 @@
 
 </aside>
 
-
 <main class="main-content">
-
-    <!-- ==========================
-         PESQUISA
-         ========================== -->
 
     <section class="search-area">
 
@@ -201,7 +187,6 @@
 
         </form>
 
-
         <label
                 for="add-compra-toggle"
                 class="add-compra-button"
@@ -211,11 +196,6 @@
 
     </section>
 
-
-    <!-- ==========================
-         TABELA DE COMPRAS
-         ========================== -->
-
     <section class="content-card">
 
         <h1>Compras</h1>
@@ -223,9 +203,6 @@
         <div class="table-wrapper">
 
             <table class="compras-table">
-
-                <!-- CABEÇALHO SEMPRE VISÍVEL,
-                     NOMES SOMENTE QUANDO HOUVER REGISTROS -->
 
                 <thead>
 
@@ -253,7 +230,6 @@
 
                 </thead>
 
-
                 <tbody>
 
                 <c:choose>
@@ -272,7 +248,6 @@
                         </tr>
 
                     </c:when>
-
 
                     <c:otherwise>
 
@@ -321,7 +296,6 @@
 
                                     </label>
 
-
                                     <label
                                             for="update-compra-${compra.id}"
                                             class="update-button"
@@ -329,7 +303,6 @@
                                     >
                                         Atualizar
                                     </label>
-
 
                                     <label
                                             for="delete-compra-${compra.id}"
@@ -341,11 +314,6 @@
                                 </td>
 
                             </tr>
-
-
-                            <!-- ==========================
-                            DETALHES DA COMPRA
-                            ========================== -->
 
                             <tr
                                     class="details-row"
@@ -371,11 +339,7 @@
 
                                         </div>
 
-
                                         <table class="details-table">
-
-                                            <!-- CABEÇALHO VISÍVEL,
-                                                 NOMES SOMENTE COM PRODUTOS -->
 
                                             <thead>
 
@@ -403,7 +367,6 @@
 
                                             </thead>
 
-
                                             <tbody>
 
                                             <c:choose>
@@ -422,7 +385,6 @@
                                                     </tr>
 
                                                 </c:when>
-
 
                                                 <c:otherwise>
 
@@ -471,7 +433,6 @@
 
                                                         </tr>
 
-
                                                         <tr>
 
                                                             <td>
@@ -494,10 +455,7 @@
 
                                                             </td>
 
-
-
                                                         </tr>
-
 
                                                         <tr>
 
@@ -522,7 +480,6 @@
                                                             </td>
 
                                                         </tr>
-
 
                                                         <tr>
 
@@ -568,11 +525,6 @@
 
 </main>
 
-
-<!-- ==========================
-     POPUPS DE ATUALIZAÇÃO
-     ========================== -->
-
 <c:forEach
         var="compra"
         items="${compras}"
@@ -584,7 +536,6 @@
             class="popup-toggle"
         ${idCompraAtualizacao == compra.id ? 'checked' : ''}
     >
-
 
     <div class="popup-overlay">
 
@@ -606,7 +557,6 @@
 
             </div>
 
-
             <form
                     id="update-compra-form-${compra.id}"
                     action="${pageContext.request.contextPath}/admin/compras"
@@ -625,7 +575,6 @@
                         name="id"
                         value="${compra.id}"
                 >
-
 
                 <div class="form-grid">
 
@@ -658,7 +607,6 @@
 
                 </div>
 
-
                 <div class="popup-actions">
 
                     <label
@@ -686,11 +634,6 @@
 
 </c:forEach>
 
-
-<!-- ==========================
-     POPUPS DE VINCULAR PRODUTO
-     ========================== -->
-
 <c:forEach
         var="compra"
         items="${compras}"
@@ -702,7 +645,6 @@
             class="popup-toggle"
         ${idCompraVincular == compra.id ? 'checked' : ''}
     >
-
 
     <div class="popup-overlay">
 
@@ -724,7 +666,6 @@
 
             </div>
 
-
             <form
                     id="link-produto-form-${compra.id}"
                     action="${pageContext.request.contextPath}/admin/compras-produtos"
@@ -743,7 +684,6 @@
                         name="idCompra"
                         value="${compra.id}"
                 >
-
 
                 <div class="form-grid">
 
@@ -774,7 +714,6 @@
 
                     </div>
 
-
                     <div class="form-field">
 
                         <label for="quantidade-item-${compra.id}">
@@ -804,7 +743,6 @@
 
                 </div>
 
-
                 <div class="popup-actions">
 
                     <label
@@ -831,11 +769,6 @@
     </div>
 
 </c:forEach>
-
-
-<!-- ==========================
-     POPUPS DE ATUALIZAR PRODUTO COMPRADO
-     ========================== -->
 
 <c:forEach var="compra" items="${compras}">
     <c:forEach var="compraProduto" items="${produtosPorCompra[compra.id]}">
@@ -914,11 +847,6 @@
     </c:forEach>
 </c:forEach>
 
-
-<!-- ==========================
-     POPUPS DE DESVINCULAR PRODUTO
-     ========================== -->
-
 <c:forEach
         var="compra"
         items="${compras}"
@@ -938,7 +866,6 @@
                     ? 'checked' : ''}
         >
 
-
         <div class="popup-overlay">
 
             <div class="popup">
@@ -957,7 +884,6 @@
                     </label>
 
                 </div>
-
 
                 <p>
                     Você deseja realmente desvincular o produto
@@ -979,7 +905,6 @@
                     da compra ${compra.id}?
                 </p>
 
-
                 <c:if test="${idCompraDesvincular == compra.id
                               and idCompraProdutoDesvincular == compraProduto.id
                               and not empty erroDesvincularProduto}">
@@ -989,7 +914,6 @@
                     </div>
 
                 </c:if>
-
 
                 <form
                         action="${pageContext.request.contextPath}/admin/compras-produtos"
@@ -1014,7 +938,6 @@
                             name="idCompraProduto"
                             value="${compraProduto.id}"
                     >
-
 
                     <div class="popup-actions">
 
@@ -1044,11 +967,6 @@
 
 </c:forEach>
 
-
-<!-- ==========================
-     POPUPS DE DELETAR COMPRA
-     ========================== -->
-
 <c:forEach
         var="compra"
         items="${compras}"
@@ -1059,7 +977,6 @@
             id="delete-compra-${compra.id}"
             class="popup-toggle"
     >
-
 
     <div class="popup-overlay">
 
@@ -1080,14 +997,12 @@
 
             </div>
 
-
             <p>
                 Você deseja realmente deletar a compra
                 <strong>
                         ${compra.id}
                 </strong>?
             </p>
-
 
             <div class="popup-actions">
 
@@ -1113,18 +1028,12 @@
 
 </c:forEach>
 
-
-<!-- ==========================
-     POPUP DE ADICIONAR COMPRA
-     ========================== -->
-
 <input
         type="checkbox"
         id="add-compra-toggle"
         class="popup-toggle"
 ${not empty erros ? 'checked' : ''}
 >
-
 
 <div class="popup-overlay">
 
@@ -1146,7 +1055,6 @@ ${not empty erros ? 'checked' : ''}
 
         </div>
 
-
         <form
                 id="add-compra-form"
                 action="${pageContext.request.contextPath}/admin/compras"
@@ -1159,7 +1067,6 @@ ${not empty erros ? 'checked' : ''}
                     name="acao"
                     value="adicionar"
             >
-
 
             <div class="form-grid">
 
@@ -1188,7 +1095,6 @@ ${not empty erros ? 'checked' : ''}
 
             </div>
 
-
             <div class="popup-actions">
 
                 <label
@@ -1214,17 +1120,11 @@ ${not empty erros ? 'checked' : ''}
 
 </div>
 
-
-<!-- ==========================
-     POPUP LOGOUT
-     ========================== -->
-
 <input
         type="checkbox"
         id="logout-popup"
         class="popup-toggle"
 >
-
 
 <div class="popup-overlay">
 
@@ -1245,11 +1145,9 @@ ${not empty erros ? 'checked' : ''}
 
         </div>
 
-
         <p>
             Você deseja realmente sair da página do administrador?
         </p>
-
 
         <div class="popup-actions">
 
@@ -1272,7 +1170,6 @@ ${not empty erros ? 'checked' : ''}
     </div>
 
 </div>
-
 
 <script
         src="${pageContext.request.contextPath}/assets/js/compras.js">

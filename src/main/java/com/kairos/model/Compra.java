@@ -4,13 +4,11 @@ import java.sql.Timestamp;
 
 public class Compra {
 
-//    Atributos
-
+    // Atributos
     private int id;
     private Timestamp dataCompra;
 
-//    Construtores
-
+    // Construtores
     public Compra(int id, Timestamp dataCompra) {
         this.id = id;
         this.dataCompra = dataCompra;
@@ -20,6 +18,7 @@ public class Compra {
         this.dataCompra = dataCompra;
     }
 
+    // Getters
     public int getId() {
         return id;
     }
@@ -28,6 +27,7 @@ public class Compra {
         return dataCompra;
     }
 
+    // Setters
     public void setId(int id) {
         this.id = id;
     }
@@ -36,11 +36,11 @@ public class Compra {
         this.dataCompra = dataCompra;
     }
 
-    //    toString
+    // to String
     @Override
     public String toString() {
         return "\n-= Compra =- " +
-               "\nID: " + getId() +
-               "\nData da compra: " + getDataCompra();
+                "\nID: " + getId() +
+                "\nData da compra: " + getDataCompra();
     }
 }

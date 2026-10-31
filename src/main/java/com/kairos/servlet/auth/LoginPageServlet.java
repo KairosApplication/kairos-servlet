@@ -11,11 +11,11 @@ import java.io.IOException;
 @WebServlet("/login-page")
 public class LoginPageServlet extends HttpServlet {
 
+    // Carrega a página de login
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        request.getRequestDispatcher("/WEB-INF/views/login/login.jsp")
-                .forward(request, response);
+        // Encaminha para a página de login
+        request.getRequestDispatcher("/WEB-INF/views/login/login.jsp").forward(request, response);
     }
 }
