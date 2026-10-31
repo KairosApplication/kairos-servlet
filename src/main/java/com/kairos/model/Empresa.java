@@ -1,46 +1,58 @@
 package com.kairos.model;
 
+import com.kairos.model.enums.TipoPlano;
+import com.kairos.utils.Formatter;
+
 public class Empresa {
 
-//    Atributos
-
+    // Atributos
     private int id;
+    private String nome;
     private String cnpj;
     private TipoPlano tipoPlano;
 
-//    Construtores
-
-    public Empresa(String cnpj, TipoPlano tipoPlano) {
+    // Construtores
+    public Empresa(int id, String nome, String cnpj, TipoPlano tipoPlano) {
+        this.id = id;
+        this.nome = nome;
         this.cnpj = cnpj;
         this.tipoPlano = tipoPlano;
     }
 
-    public Empresa(int id, String cnpj, TipoPlano tipoPlano) {
-        this.id = id;
+    public Empresa(String nome, String cnpj, TipoPlano tipoPlano) {
+        this.nome = nome;
         this.cnpj = cnpj;
         this.tipoPlano = tipoPlano;
     }
 
-    public Empresa (int id) {
-        this.id = id;
-    }
-
-//    Getters e Setters
-
+    // Getters
     public int getId() {
         return id;
+    }
+
+    public String getNome() {
+        return nome;
     }
 
     public String getCnpj() {
         return cnpj;
     }
 
+    public String getCnpjFormatado() {
+        return Formatter.cnpj(cnpj);
+    }
+
     public TipoPlano getTipoPlano() {
         return tipoPlano;
     }
 
+    // Setters
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public void setCnpj(String cnpj) {
@@ -51,11 +63,13 @@ public class Empresa {
         this.tipoPlano = tipoPlano;
     }
 
-//    toString
+    // to String
     @Override
     public String toString() {
-        return "-= Empresa " + getId() + "=-" +
-               "\nCNPJ: " + getCnpj() +
-               "\nTipo do plano: " + getTipoPlano();
+        return "\n-= Empresa =-" +
+                "\nID: " + getId() +
+                "\nNome: " + getNome() +
+                "\nCNPJ: " + getCnpj() +
+                "\nTipo do plano: " + getTipoPlano();
     }
 }
