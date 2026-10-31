@@ -1,9 +1,9 @@
 package com.kairos.dao;
 
 import com.kairos.model.Empresa;
-import com.kairos.model.TipoPlano;
-import com.kairos.utils.ConnectionFactory;
-import com.kairos.utils.exceptions.DAOException;
+import com.kairos.model.enums.TipoPlano;
+import com.kairos.utils.connection.ConnectionFactory;
+import com.kairos.utils.exceptions.system.DAOException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,40 +14,47 @@ import java.util.List;
 
 public class EmpresaDAO {
 
+    // Insere uma nova empresa
     public Empresa inserir(Empresa empresa) {
 
         String sql = """
-                     INSERT INTO empresas (cnpj, tipo_plano)
-                     VALUES (?, ?)
-                     RETURNING id, cnpj, tipo_plano;
+                     INSERT INTO empresas (nome, cnpj, tipo_plano)
+                     VALUES (?, ?, ?)
+                     RETURNING id, nome, cnpj, tipo_plano;
                      """;
 
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, empresa.getCnpj());
-            statement.setString(2, empresa.getTipoPlano().name());
+            statement.setString(1, empresa.getNome());
+            statement.setString(2, empresa.getCnpj());
+            statement.setString(3, empresa.getTipoPlano().name());
 
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
+
                     return new Empresa(
-                        rs.getInt("id"),
-                        rs.getString("cnpj"),
-                        TipoPlano.valueOf(rs.getString("tipo_plano"))
+                            rs.getInt("id"),
+                            rs.getString("nome"),
+                            rs.getString("cnpj"),
+                            TipoPlano.valueOf(rs.getString("tipo_plano"))
                     );
                 }
-                throw new DAOException("Não foi possível retornar a empresa criada");
+
+                return null;
             }
+
         } catch (SQLException e) {
             throw new DAOException("Erro ao inserir a empresa", e);
         }
     }
 
+    // Busca uma empresa pelo ID
     public Empresa buscarPorId(int id) {
 
         String sql = """
-                     SELECT id, cnpj, tipo_plano
+                     SELECT id, nome, cnpj, tipo_plano
                      FROM empresas
                      WHERE id = ?
                      """;
@@ -60,13 +67,15 @@ public class EmpresaDAO {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
-                    Empresa empresa = new Empresa(
+
+                    return new Empresa(
                             rs.getInt("id"),
+                            rs.getString("nome"),
                             rs.getString("cnpj"),
                             TipoPlano.valueOf(rs.getString("tipo_plano"))
                     );
-                    return empresa;
                 }
+
                 return null;
             }
 
@@ -75,11 +84,47 @@ public class EmpresaDAO {
         }
     }
 
-    public List<Empresa> listarTodas() {
+    // Busca uma empresa pelo nome
+    public Empresa buscarPorNome(String nome) {
 
         String sql = """
-                     SELECT id, cnpj, tipo_plano
+                     SELECT id, nome, cnpj, tipo_plano
                      FROM empresas
+                     WHERE nome = ?
+                     """;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, nome);
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                if (rs.next()) {
+
+                    return new Empresa(
+                            rs.getInt("id"),
+                            rs.getString("nome"),
+                            rs.getString("cnpj"),
+                            TipoPlano.valueOf(rs.getString("tipo_plano"))
+                    );
+                }
+
+                return null;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao buscar empresa pelo nome " + nome, e);
+        }
+    }
+
+    // Lista todas as empresas cadastradas
+    public List<Empresa> listarTodos() {
+
+        String sql = """
+                     SELECT id, nome, cnpj, tipo_plano
+                     FROM empresas
+                     ORDER BY id
                      """;
 
         List<Empresa> empresas = new ArrayList<>();
@@ -89,14 +134,18 @@ public class EmpresaDAO {
 
             try (ResultSet rs = statement.executeQuery()) {
 
-                if (rs.next()) {
+                while (rs.next()) {
+
                     Empresa empresa = new Empresa(
                             rs.getInt("id"),
+                            rs.getString("nome"),
                             rs.getString("cnpj"),
                             TipoPlano.valueOf(rs.getString("tipo_plano"))
                     );
+
                     empresas.add(empresa);
                 }
+
                 return empresas;
             }
 
@@ -105,21 +154,24 @@ public class EmpresaDAO {
         }
     }
 
+    // Atualiza os dados de uma empresa
     public int atualizar(Empresa empresa) {
 
         String sql = """
                      UPDATE empresas
-                     SET cnpj = ?,
-                         tipo_plano = ?,
+                     SET nome = ?,
+                         cnpj = ?,
+                         tipo_plano = ?
                      WHERE id = ?
                      """;
 
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, empresa.getCnpj());
-            statement.setString(2, empresa.getTipoPlano().name());
-            statement.setInt(3, empresa.getId());
+            statement.setString(1, empresa.getNome());
+            statement.setString(2, empresa.getCnpj());
+            statement.setString(3, empresa.getTipoPlano().name());
+            statement.setInt(4, empresa.getId());
 
             return statement.executeUpdate();
 
@@ -128,6 +180,7 @@ public class EmpresaDAO {
         }
     }
 
+    // Exclui uma empresa pelo ID
     public void deletarPorId(int id) {
 
         String sql = """
@@ -147,6 +200,7 @@ public class EmpresaDAO {
         }
     }
 
+    // Verifica se existe uma empresa cadastrada com o CNPJ informado
     public boolean existePorCnpj(String cnpj) {
 
         String sql = """
@@ -169,7 +223,7 @@ public class EmpresaDAO {
         }
     }
 
-
+    // Verifica se o CNPJ pertence a outra empresa
     public boolean existePorCnpjExcetoId(String cnpj, int id) {
 
         String sql = """
@@ -193,10 +247,11 @@ public class EmpresaDAO {
         }
     }
 
+    // Busca uma empresa pelo CNPJ
     public Empresa buscarPorCnpj(String cnpj) {
 
         String sql = """
-                     SELECT id, cnpj, tipo_plano
+                     SELECT id, nome, cnpj, tipo_plano
                      FROM empresas
                      WHERE cnpj = ?
                      """;
@@ -207,18 +262,113 @@ public class EmpresaDAO {
             statement.setString(1, cnpj);
 
             try (ResultSet rs = statement.executeQuery()) {
+
                 if (rs.next()) {
+
                     return new Empresa(
                             rs.getInt("id"),
+                            rs.getString("nome"),
                             rs.getString("cnpj"),
                             TipoPlano.valueOf(rs.getString("tipo_plano"))
                     );
                 }
-                throw new DAOException("Não foi possível encontrar a empresa pelo CNPJ");
+
+                return null;
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Erro ao buscar empresa por CNPJ");
+            throw new DAOException("Erro ao buscar empresa por CNPJ", e);
+        }
+    }
+
+    // Verifica se existe uma empresa cadastrada com o nome informado
+    public boolean existePorNome(String nome) {
+
+        String sql = """
+                     SELECT id, nome, cnpj, tipo_plano
+                     FROM empresas
+                     WHERE nome = ?
+                     """;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, nome);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao buscar outra empresa por nome", e);
+        }
+    }
+
+    // Verifica se o nome pertence a outra empresa
+    public boolean existePorNomeExcetoId(String nome, int id) {
+
+        String sql = """
+                     SELECT id, nome, cnpj, tipo_plano
+                     FROM empresas
+                     WHERE nome = ? AND id <> ?
+                     """;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, nome);
+            statement.setInt(2, id);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao buscar outra empresa por nome", e);
+        }
+    }
+
+    // Pesquisa empresas pelo ID, nome, CNPJ ou tipo de plano
+    public List<Empresa> pesquisar(String pesquisa) {
+
+        String sql = """
+                     SELECT id, nome, cnpj, tipo_plano
+                     FROM empresas
+                     WHERE CAST(id AS TEXT) ILIKE ?
+                        OR nome ILIKE ?
+                        OR cnpj ILIKE REGEXP_REPLACE(?, '[^0-9]', '', 'g')
+                        OR tipo_plano ILIKE ?
+                     ORDER BY id
+                     """;
+
+        List<Empresa> empresas = new ArrayList<>();
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            for (int i = 1; i <= 4; i++) {
+                statement.setString(i, pesquisa);
+            }
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                while (rs.next()) {
+
+                    Empresa empresa = new Empresa(
+                            rs.getInt("id"),
+                            rs.getString("nome"),
+                            rs.getString("cnpj"),
+                            TipoPlano.valueOf(rs.getString("tipo_plano"))
+                    );
+
+                    empresas.add(empresa);
+                }
+
+                return empresas;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao listar empresas por pesquisa", e);
         }
     }
 }

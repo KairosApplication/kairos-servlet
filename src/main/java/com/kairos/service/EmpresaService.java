@@ -2,38 +2,49 @@ package com.kairos.service;
 
 import com.kairos.dao.EmpresaDAO;
 import com.kairos.model.Empresa;
-import com.kairos.model.Usuario;
-import com.kairos.utils.AuthorizationValidator;
-import com.kairos.utils.exceptions.CnpjExistsException;
-import com.kairos.utils.exceptions.EmpresaNotFoundException;
-import com.kairos.utils.exceptions.ServiceException;
+import com.kairos.utils.Regex;
+import com.kairos.utils.exceptions.exists.CnpjExistsException;
+import com.kairos.utils.exceptions.exists.NameExistsException;
+import com.kairos.utils.exceptions.notfound.EmpresaNotFoundException;
+import com.kairos.utils.exceptions.regex.InvalidCnpjRegexException;
+import com.kairos.utils.exceptions.system.ServiceException;
 
 import java.util.List;
 
 public class EmpresaService {
 
-    private EmpresaDAO empresaDAO;
+    // DAO
+    private final EmpresaDAO empresaDAO;
 
+    // Construtor
     public EmpresaService() {
         this.empresaDAO = new EmpresaDAO();
     }
 
+    // Cadastrar empresa
     public Empresa cadastrar(Empresa empresa) {
 
-//        AuthorizationValidator.validarAdmin(usuarioAtual);
-
         validarCampos(empresa);
+
+        if (empresaDAO.existePorNome(empresa.getNome())) {
+            throw new NameExistsException("Nome já cadastrado");
+        }
 
         if (empresaDAO.existePorCnpj(empresa.getCnpj())) {
             throw new CnpjExistsException("CNPJ já cadastrado");
         }
 
+        if (!empresa.getCnpj().matches(Regex.CNPJ)) {
+            throw new InvalidCnpjRegexException("Formato do CNPJ inválido");
+        }
+
+        empresa.setCnpj(empresa.getCnpj().replaceAll("[^0-9]", ""));
+
         return empresaDAO.inserir(empresa);
     }
 
-    public Empresa buscarPorId(int id, Usuario usuarioAtual) {
-
-        AuthorizationValidator.validarAdmin(usuarioAtual);
+    // Buscar empresa por ID
+    public Empresa buscarPorId(int id) {
 
         if (id <= 0) {
             throw new ServiceException("O id deve ser maior que 0");
@@ -44,19 +55,34 @@ public class EmpresaService {
         if (empresa == null) {
             throw new EmpresaNotFoundException("Empresa não encontrada");
         }
+
         return empresa;
     }
 
-    public List<Empresa> listarTodas(Usuario usuarioAtual) {
+    // Buscar empresa por nome
+    public Empresa buscarPorNome(String nome) {
 
-        AuthorizationValidator.validarAdmin(usuarioAtual);
+        if (nome == null || nome.isBlank()) {
+            throw new ServiceException("Nome da empresa é obrigatório");
+        }
 
-        return empresaDAO.listarTodas();
+        Empresa empresa = empresaDAO.buscarPorNome(nome);
+
+        if (empresa == null) {
+            throw new EmpresaNotFoundException("Empresa não encontrada");
+        }
+
+        return empresa;
     }
 
-    public void atualizar(Empresa empresa, Usuario usuarioAtual) {
+    // Listar empresas
+    public List<Empresa> listarTodos() {
 
-        AuthorizationValidator.validarAdmin(usuarioAtual);
+        return empresaDAO.listarTodos();
+    }
+
+    // Atualizar empresa
+    public void atualizar(Empresa empresa) {
 
         validarCampos(empresa);
 
@@ -64,19 +90,27 @@ public class EmpresaService {
             throw new ServiceException("O id deve ser maior que 0");
         }
 
+        if (empresaDAO.existePorNomeExcetoId(empresa.getNome(), empresa.getId())) {
+            throw new NameExistsException("Nome já cadastrado");
+        }
+
         if (empresaDAO.existePorCnpjExcetoId(empresa.getCnpj(), empresa.getId())) {
             throw new CnpjExistsException("CNPJ já cadastrado");
         }
+
+        if (!empresa.getCnpj().matches(Regex.CNPJ)) {
+            throw new InvalidCnpjRegexException("Formato do CNPJ inválido");
+        }
+
+        empresa.setCnpj(empresa.getCnpj().replaceAll("[^0-9]", ""));
 
         if (empresaDAO.atualizar(empresa) == 0) {
             throw new EmpresaNotFoundException("Empresa não encontrada");
         }
     }
 
-
-    public void deletarPorId(int id, Usuario usuarioAtual) {
-
-        AuthorizationValidator.validarAdmin(usuarioAtual);
+    // Deletar empresa por ID
+    public void deletarPorId(int id) {
 
         if (id <= 0) {
             throw new ServiceException("O id deve ser maior que 0");
@@ -91,24 +125,97 @@ public class EmpresaService {
         empresaDAO.deletarPorId(id);
     }
 
+    // Verificar CNPJ existente
+    public boolean existePorCnpj(String cnpj) {
+
+        if (cnpj == null || cnpj.isBlank()) {
+            throw new ServiceException("CNPJ é obrigatório");
+        }
+
+        if (!cnpj.matches(Regex.CNPJ)) {
+            throw new InvalidCnpjRegexException("Formato do CNPJ inválido");
+        }
+
+        cnpj = cnpj.replaceAll("[^0-9]", "");
+
+        return empresaDAO.existePorCnpj(cnpj);
+    }
+
+    // Verificar CNPJ existente, exceto ID
+    public boolean existePorCnpjExcetoId(String cnpj, int id) {
+
+        if (cnpj == null || cnpj.isBlank()) {
+            throw new ServiceException("O CNPJ é obrigatório");
+        }
+
+        if (!cnpj.matches(Regex.CNPJ)) {
+            throw new InvalidCnpjRegexException("Formato do CNPJ inválido");
+        }
+
+        if (id <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        cnpj = cnpj.replaceAll("[^0-9]", "");
+
+        return empresaDAO.existePorCnpjExcetoId(cnpj, id);
+    }
+
+    // Buscar empresa por CNPJ
     public Empresa buscarPorCnpj(String cnpj) {
 
         if (cnpj == null || cnpj.isBlank()) {
             throw new ServiceException("CNPJ é obrigatório");
         }
 
+        if (!cnpj.matches(Regex.CNPJ)) {
+            throw new InvalidCnpjRegexException("Formato do CNPJ inválido");
+        }
+
+        cnpj = cnpj.replaceAll("[^0-9]", "");
+
         Empresa empresa = empresaDAO.buscarPorCnpj(cnpj);
 
         if (empresa == null) {
             throw new EmpresaNotFoundException("Empresa não encontrada");
         }
+
         return empresa;
     }
 
+    // Verificar nome existente
+    public boolean existePorNome(String nome) {
+
+        if (nome == null || nome.isBlank()) {
+            throw new ServiceException("Nome da empresa é obrigatório");
+        }
+
+        return empresaDAO.existePorNome(nome);
+    }
+
+    // Verificar nome existente, exceto ID
+    public boolean existePorNomeExcetoId(String nome, int id) {
+
+        if (nome == null || nome.isBlank()) {
+            throw new ServiceException("Nome da empresa é obrigatório");
+        }
+
+        if (id <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        return empresaDAO.existePorNomeExcetoId(nome, id);
+    }
+
+    // Validar campos da empresa
     private void validarCampos(Empresa empresa) {
 
         if (empresa == null) {
             throw new ServiceException("Empresa não pode ser nula");
+        }
+
+        if (empresa.getNome() == null || empresa.getNome().isBlank()) {
+            throw new ServiceException("Nome da empresa é obrigatório");
         }
 
         if (empresa.getCnpj() == null || empresa.getCnpj().isBlank()) {
@@ -120,6 +227,9 @@ public class EmpresaService {
         }
     }
 
+    // Pesquisar empresas
+    public List<Empresa> pesquisar(String pesquisa) {
 
-
+        return empresaDAO.pesquisar(pesquisa);
+    }
 }

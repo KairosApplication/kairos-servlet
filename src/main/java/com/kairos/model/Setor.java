@@ -1,21 +1,25 @@
 package com.kairos.model;
 
 public class Setor {
+
+    // Atributos
     private int id;
     private String nome;
     private String categoria;
 
-    public Setor(String nome, String categoria) {
-        this.nome = nome;
-        this.categoria = categoria;
-    }
-
+    // Construtores
     public Setor(int id, String nome, String categoria) {
         this.id = id;
         this.nome = nome;
         this.categoria = categoria;
     }
 
+    public Setor(String nome, String categoria) {
+        this.nome = nome;
+        this.categoria = categoria;
+    }
+
+    // Getters
     public int getId() {
         return id;
     }
@@ -28,6 +32,7 @@ public class Setor {
         return categoria;
     }
 
+    // Setters
     public void setId(int id) {
         this.id = id;
     }
@@ -38,5 +43,14 @@ public class Setor {
 
     public void setCategoria(String categoria) {
         this.categoria = categoria;
+    }
+
+    // to String
+    @Override
+    public String toString() {
+        return "\n-= Setor =-" +
+                "\nID: " + getId() +
+                "\nNome: " + getNome() +
+                "\nCategoria: " + getCategoria();
     }
 }

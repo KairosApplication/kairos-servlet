@@ -1,0 +1,1181 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kairos - Compras</title>
+
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/images/favicon.png">
+
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/assets/css/compras.css">
+
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+    <div class="logo-area">
+
+        <img
+                src="${pageContext.request.contextPath}/assets/images/logo-kairos.svg"
+                alt="Kairos"
+                class="logo"
+        >
+
+    </div>
+
+    <nav class="menu">
+
+        <a href="${pageContext.request.contextPath}/admin/usuarios"
+           class="menu-item">
+
+            <span class="menu-icon">
+                <img
+                        src="${pageContext.request.contextPath}/assets/images/usuario.svg"
+                        alt=""
+                >
+            </span>
+
+            <span>Usuários</span>
+
+        </a>
+
+        <a href="${pageContext.request.contextPath}/admin/empresas"
+           class="menu-item">
+
+            <span class="menu-icon">
+                <img
+                        src="${pageContext.request.contextPath}/assets/images/empresa.svg"
+                        alt=""
+                >
+            </span>
+
+            <span>Empresa</span>
+
+        </a>
+
+        <a href="${pageContext.request.contextPath}/admin/setores"
+           class="menu-item">
+
+            <span class="menu-icon">
+                <img
+                        src="${pageContext.request.contextPath}/assets/images/setor.svg"
+                        alt=""
+                >
+            </span>
+
+            <span>Setor</span>
+
+        </a>
+
+        <a href="${pageContext.request.contextPath}/admin/gondolas"
+           class="menu-item">
+
+            <span class="menu-icon">
+                <img
+                        src="${pageContext.request.contextPath}/assets/images/gondola.svg"
+                        alt=""
+                >
+            </span>
+
+            <span>Gôndola</span>
+
+        </a>
+
+        <a href="${pageContext.request.contextPath}/admin/produtos"
+           class="menu-item">
+
+            <span class="menu-icon">
+                <img
+                        src="${pageContext.request.contextPath}/assets/images/produto.svg"
+                        alt=""
+                >
+            </span>
+
+            <span>Produto</span>
+
+        </a>
+
+        <a href="${pageContext.request.contextPath}/admin/reposicoes"
+           class="menu-item">
+
+            <span class="menu-icon">
+                <img
+                        src="${pageContext.request.contextPath}/assets/images/reposicao.svg"
+                        alt=""
+                >
+            </span>
+
+            <span>Reposição</span>
+
+        </a>
+
+        <a href="${pageContext.request.contextPath}/admin/alertas"
+           class="menu-item">
+
+            <span class="menu-icon">
+                <img
+                        src="${pageContext.request.contextPath}/assets/images/alerta.svg"
+                        alt=""
+                >
+            </span>
+
+            <span>Alerta</span>
+
+        </a>
+
+        <a href="#" class="menu-item active">
+
+            <span class="menu-icon">
+                <img
+                        src="${pageContext.request.contextPath}/assets/images/compra.svg"
+                        alt=""
+                >
+            </span>
+
+            <span>Compra</span>
+
+        </a>
+
+    </nav>
+
+    <div class="logout-area">
+
+        <label
+                for="logout-popup"
+                class="logout-button"
+        >
+            Sair
+        </label>
+
+    </div>
+
+</aside>
+
+<main class="main-content">
+
+    <section class="search-area">
+
+        <form
+                action="${pageContext.request.contextPath}/admin/compras"
+                method="get"
+                class="search-form"
+        >
+
+            <input
+                    type="text"
+                    name="busca"
+                    placeholder="Buscar compra..."
+                    class="search-input"
+                    value="${fn:escapeXml(param.busca)}"
+            >
+
+            <button
+                    type="submit"
+                    class="search-button"
+            >
+                Buscar
+            </button>
+
+        </form>
+
+        <label
+                for="add-compra-toggle"
+                class="add-compra-button"
+        >
+            + Adicionar Compra
+        </label>
+
+    </section>
+
+    <section class="content-card">
+
+        <h1>Compras</h1>
+
+        <div class="table-wrapper">
+
+            <table class="compras-table">
+
+                <thead>
+
+                <tr>
+
+                    <th>
+                        <c:if test="${not empty compras}">
+                            ID
+                        </c:if>
+                    </th>
+
+                    <th>
+                        <c:if test="${not empty compras}">
+                            Data da compra
+                        </c:if>
+                    </th>
+
+                    <th>
+                        <c:if test="${not empty compras}">
+                            Ações
+                        </c:if>
+                    </th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                <c:choose>
+
+                    <c:when test="${empty compras}">
+
+                        <tr>
+
+                            <td
+                                    colspan="3"
+                                    class="empty-message"
+                            >
+                                Nenhuma compra cadastrada.
+                            </td>
+
+                        </tr>
+
+                    </c:when>
+
+                    <c:otherwise>
+
+                        <c:forEach
+                                var="compra"
+                                items="${compras}"
+                        >
+
+                            <tr class="compra-row">
+
+                                <td>
+                                        ${compra.id}
+                                </td>
+
+                                <td>
+                                    <fmt:formatDate
+                                            value="${compra.dataCompra}"
+                                            pattern="dd/MM/yyyy 'às' HH:mm"
+                                            timeZone="America/Sao_Paulo"
+                                    />
+                                </td>
+
+                                <td class="actions">
+
+                                    <input
+                                            type="checkbox"
+                                            id="details-${compra.id}"
+                                            class="details-toggle"
+                                        ${idCompraVincular == compra.id
+                                                or idCompraDesvincular == compra.id
+                                                ? 'checked' : ''}
+                                    >
+
+                                    <label
+                                            for="details-${compra.id}"
+                                            class="details-button"
+                                    >
+
+                                        <span class="button-text">
+                                            Ver mais
+                                        </span>
+
+                                        <span class="arrow">
+                                            ▼
+                                        </span>
+
+                                    </label>
+
+                                    <label
+                                            for="update-compra-${compra.id}"
+                                            class="update-button"
+                                            onclick="limparFormularioAtualizacao(${compra.id})"
+                                    >
+                                        Atualizar
+                                    </label>
+
+                                    <label
+                                            for="delete-compra-${compra.id}"
+                                            class="delete-button"
+                                    >
+                                        Deletar
+                                    </label>
+
+                                </td>
+
+                            </tr>
+
+                            <tr
+                                    class="details-row"
+                                    id="details-row-${compra.id}"
+                            >
+
+                                <td colspan="3">
+
+                                    <div class="details-box">
+
+                                        <div class="details-header">
+
+                                            <h2>
+                                                Produtos Associados
+                                            </h2>
+
+                                            <label
+                                                    for="link-produto-${compra.id}"
+                                                    class="link-button"
+                                            >
+                                                Vincular
+                                            </label>
+
+                                        </div>
+
+                                        <table class="details-table">
+
+                                            <thead>
+
+                                            <tr>
+
+                                                <th>
+                                                    <c:if test="${not empty produtosPorCompra[compra.id]}">
+                                                        Campo
+                                                    </c:if>
+                                                </th>
+
+                                                <th>
+                                                    <c:if test="${not empty produtosPorCompra[compra.id]}">
+                                                        Informação
+                                                    </c:if>
+                                                </th>
+
+                                                <th>
+                                                    <c:if test="${not empty produtosPorCompra[compra.id]}">
+                                                        Ação
+                                                    </c:if>
+                                                </th>
+
+                                            </tr>
+
+                                            </thead>
+
+                                            <tbody>
+
+                                            <c:choose>
+
+                                                <c:when test="${empty produtosPorCompra[compra.id]}">
+
+                                                    <tr>
+
+                                                        <td
+                                                                colspan="3"
+                                                                class="empty-message"
+                                                        >
+                                                            Nenhum produto associado a esta compra.
+                                                        </td>
+
+                                                    </tr>
+
+                                                </c:when>
+
+                                                <c:otherwise>
+
+                                                    <c:forEach
+                                                            var="compraProduto"
+                                                            items="${produtosPorCompra[compra.id]}"
+                                                    >
+
+                                                        <tr>
+
+                                                            <td>
+                                                                ID do produto
+                                                            </td>
+
+                                                            <td>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty compraProduto.historicoCompraProduto}">
+                                                                        <c:out value="${compraProduto.historicoCompraProduto.produtoId}"/>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <c:out value="${compraProduto.produto.id}"/>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </td>
+
+                                                            <td
+                                                                    rowspan="4"
+                                                                    class="produto-action-cell"
+                                                            >
+                                                                <div style="display: flex; align-items: center; justify-content: center; gap: 7px;">
+                                                                    <label
+                                                                            for="update-produto-${compra.id}-${compraProduto.id}"
+                                                                            class="update-button"
+                                                                    >
+                                                                        Atualizar
+                                                                    </label>
+
+                                                                    <label
+                                                                            for="unlink-produto-${compra.id}-${compraProduto.id}"
+                                                                            class="unlink-button"
+                                                                    >
+                                                                        Desvincular
+                                                                    </label>
+                                                                </div>
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr>
+
+                                                            <td>
+                                                                Marca do produto
+                                                            </td>
+
+                                                            <td>
+
+                                                                <c:choose>
+
+                                                                    <c:when test="${not empty compraProduto.historicoCompraProduto}">
+                                                                        <c:out value="${compraProduto.historicoCompraProduto.produtoMarca}"/>
+                                                                    </c:when>
+
+                                                                    <c:otherwise>
+                                                                        <c:out value="${compraProduto.produto.marca}"/>
+                                                                    </c:otherwise>
+
+                                                                </c:choose>
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr>
+
+                                                            <td>
+                                                                Nome do produto
+                                                            </td>
+
+                                                            <td>
+
+                                                                <c:choose>
+
+                                                                    <c:when test="${not empty compraProduto.historicoCompraProduto}">
+                                                                        <c:out value="${compraProduto.historicoCompraProduto.produtoNome}"/>
+                                                                    </c:when>
+
+                                                                    <c:otherwise>
+                                                                        <c:out value="${compraProduto.produto.nome}"/>
+                                                                    </c:otherwise>
+
+                                                                </c:choose>
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr>
+
+                                                            <td>
+                                                                Quantidade comprada
+                                                            </td>
+
+                                                            <td>
+                                                                    ${compraProduto.quantidadeItem}
+                                                            </td>
+
+                                                        </tr>
+
+                                                    </c:forEach>
+
+                                                </c:otherwise>
+
+                                            </c:choose>
+
+                                            </tbody>
+
+                                        </table>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        </c:forEach>
+
+                    </c:otherwise>
+
+                </c:choose>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+<c:forEach
+        var="compra"
+        items="${compras}"
+>
+
+    <input
+            type="checkbox"
+            id="update-compra-${compra.id}"
+            class="popup-toggle"
+        ${idCompraAtualizacao == compra.id ? 'checked' : ''}
+    >
+
+    <div class="popup-overlay">
+
+        <div class="popup">
+
+            <div class="popup-header">
+
+                <h2>
+                    Atualizar Compra
+                </h2>
+
+                <label
+                        for="update-compra-${compra.id}"
+                        class="popup-close"
+                        onclick="limparFormularioAtualizacao(${compra.id})"
+                >
+                    &times;
+                </label>
+
+            </div>
+
+            <form
+                    id="update-compra-form-${compra.id}"
+                    action="${pageContext.request.contextPath}/admin/compras"
+                    method="post"
+                    class="compra-form"
+            >
+
+                <input
+                        type="hidden"
+                        name="acao"
+                        value="atualizar"
+                >
+
+                <input
+                        type="hidden"
+                        name="id"
+                        value="${compra.id}"
+                >
+
+                <div class="form-grid">
+
+                    <div class="form-field full-width">
+
+                        <label for="dataCompra-${compra.id}">
+                            Data da compra
+                        </label>
+
+                        <input
+                                type="datetime-local"
+                                id="dataCompra-${compra.id}"
+                                name="dataCompra"
+                                value="${idCompraAtualizacao == compra.id
+                                         ? fn:escapeXml(param.dataCompra)
+                                         : fn:escapeXml(fn:replace(compra.dataCompra, ' ', 'T'))}"
+                                data-original="${fn:escapeXml(fn:replace(compra.dataCompra, ' ', 'T'))}"
+                        >
+
+                        <c:if test="${idCompraAtualizacao == compra.id
+                                      and not empty errosAtualizacao.dataCompra}">
+
+                            <div class="campo-erro">
+                                <c:out value="${errosAtualizacao.dataCompra}"/>
+                            </div>
+
+                        </c:if>
+
+                    </div>
+
+                </div>
+
+                <div class="popup-actions">
+
+                    <label
+                            for="update-compra-${compra.id}"
+                            class="cancel-button"
+                            onclick="limparFormularioAtualizacao(${compra.id})"
+                    >
+                        Cancelar
+                    </label>
+
+                    <button
+                            type="submit"
+                            class="save-button"
+                    >
+                        Atualizar Compra
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</c:forEach>
+
+<c:forEach
+        var="compra"
+        items="${compras}"
+>
+
+    <input
+            type="checkbox"
+            id="link-produto-${compra.id}"
+            class="popup-toggle"
+        ${idCompraVincular == compra.id ? 'checked' : ''}
+    >
+
+    <div class="popup-overlay">
+
+        <div class="popup">
+
+            <div class="popup-header">
+
+                <h2>
+                    Vincular Produto
+                </h2>
+
+                <label
+                        for="link-produto-${compra.id}"
+                        class="popup-close"
+                        onclick="limparFormularioVincular(${compra.id})"
+                >
+                    &times;
+                </label>
+
+            </div>
+
+            <form
+                    id="link-produto-form-${compra.id}"
+                    action="${pageContext.request.contextPath}/admin/compras-produtos"
+                    method="post"
+                    class="compra-form"
+            >
+
+                <input
+                        type="hidden"
+                        name="acao"
+                        value="vincular"
+                >
+
+                <input
+                        type="hidden"
+                        name="idCompra"
+                        value="${compra.id}"
+                >
+
+                <div class="form-grid">
+
+                    <div class="form-field">
+
+                        <label for="id-produto-${compra.id}">
+                            ID do produto
+                        </label>
+
+                        <input
+                                type="number"
+                                id="id-produto-${compra.id}"
+                                name="idProduto"
+                                min="1"
+                                value="${idCompraVincular == compra.id
+                                         ? fn:escapeXml(idProdutoVincular)
+                                         : ''}"
+                        >
+
+                        <c:if test="${idCompraVincular == compra.id
+                                      and not empty errosVincular.idProduto}">
+
+                            <div class="campo-erro">
+                                <c:out value="${errosVincular.idProduto}"/>
+                            </div>
+
+                        </c:if>
+
+                    </div>
+
+                    <div class="form-field">
+
+                        <label for="quantidade-item-${compra.id}">
+                            Quantidade comprada
+                        </label>
+
+                        <input
+                                type="number"
+                                id="quantidade-item-${compra.id}"
+                                name="quantidadeItem"
+                                min="1"
+                                value="${idCompraVincular == compra.id
+                                         ? fn:escapeXml(quantidadeItemVincular)
+                                         : ''}"
+                        >
+
+                        <c:if test="${idCompraVincular == compra.id
+                                      and not empty errosVincular.quantidadeItem}">
+
+                            <div class="campo-erro">
+                                <c:out value="${errosVincular.quantidadeItem}"/>
+                            </div>
+
+                        </c:if>
+
+                    </div>
+
+                </div>
+
+                <div class="popup-actions">
+
+                    <label
+                            for="link-produto-${compra.id}"
+                            class="cancel-button"
+                            onclick="limparFormularioVincular(${compra.id})"
+                    >
+                        Cancelar
+                    </label>
+
+                    <button
+                            type="submit"
+                            class="save-button"
+                    >
+                        Vincular Produto
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</c:forEach>
+
+<c:forEach var="compra" items="${compras}">
+    <c:forEach var="compraProduto" items="${produtosPorCompra[compra.id]}">
+
+        <input
+                type="checkbox"
+                id="update-produto-${compra.id}-${compraProduto.id}"
+                class="popup-toggle"
+            ${idCompraProdutoAtualizar == compraProduto.id ? 'checked' : ''}
+        >
+
+        <div class="popup-overlay">
+            <div class="popup">
+
+                <div class="popup-header">
+                    <h2>Atualizar Produto Comprado</h2>
+
+                    <label
+                            for="update-produto-${compra.id}-${compraProduto.id}"
+                            class="popup-close"
+                    >
+                        &times;
+                    </label>
+                </div>
+
+                <form
+                        action="${pageContext.request.contextPath}/admin/compras-produtos"
+                        method="post"
+                        class="compra-form"
+                >
+
+                    <input type="hidden" name="acao" value="atualizar">
+                    <input type="hidden" name="idCompraProduto" value="${compraProduto.id}">
+                    <input type="hidden" name="idCompra" value="${compra.id}">
+
+                    <div class="form-grid">
+                        <div class="form-field full-width">
+                            <label for="update-quantidade-${compra.id}-${compraProduto.id}">
+                                Quantidade comprada
+                            </label>
+
+                            <input
+                                    type="number"
+                                    id="update-quantidade-${compra.id}-${compraProduto.id}"
+                                    name="quantidadeItem"
+                                    min="1"
+                                    required
+                                    value="${idCompraProdutoAtualizar == compraProduto.id and not empty quantidadeItemAtualizar ? fn:escapeXml(quantidadeItemAtualizar) : compraProduto.quantidadeItem}"
+                            >
+
+                            <c:if test="${idCompraProdutoAtualizar == compraProduto.id and not empty errosAtualizarProduto.quantidadeItem}">
+                                <div class="campo-erro">
+                                    <c:out value="${errosAtualizarProduto.quantidadeItem}"/>
+                                </div>
+                            </c:if>
+                        </div>
+                    </div>
+
+                    <div class="popup-actions">
+                        <label
+                                for="update-produto-${compra.id}-${compraProduto.id}"
+                                class="cancel-button"
+                        >
+                            Cancelar
+                        </label>
+
+                        <button type="submit" class="save-button">
+                            Atualizar Produto
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </c:forEach>
+</c:forEach>
+
+<c:forEach
+        var="compra"
+        items="${compras}"
+>
+
+    <c:forEach
+            var="compraProduto"
+            items="${produtosPorCompra[compra.id]}"
+    >
+
+        <input
+                type="checkbox"
+                id="unlink-produto-${compra.id}-${compraProduto.id}"
+                class="popup-toggle"
+            ${idCompraDesvincular == compra.id
+                    and idCompraProdutoDesvincular == compraProduto.id
+                    ? 'checked' : ''}
+        >
+
+        <div class="popup-overlay">
+
+            <div class="popup">
+
+                <div class="popup-header">
+
+                    <h2>
+                        Desvincular Produto
+                    </h2>
+
+                    <label
+                            for="unlink-produto-${compra.id}-${compraProduto.id}"
+                            class="popup-close"
+                    >
+                        &times;
+                    </label>
+
+                </div>
+
+                <p>
+                    Você deseja realmente desvincular o produto
+                    <strong>
+
+                        <c:choose>
+
+                            <c:when test="${not empty compraProduto.historicoCompraProduto}">
+                                <c:out value="${compraProduto.historicoCompraProduto.produtoNome}"/>
+                            </c:when>
+
+                            <c:otherwise>
+                                <c:out value="${compraProduto.produto.nome}"/>
+                            </c:otherwise>
+
+                        </c:choose>
+
+                    </strong>
+                    da compra ${compra.id}?
+                </p>
+
+                <c:if test="${idCompraDesvincular == compra.id
+                              and idCompraProdutoDesvincular == compraProduto.id
+                              and not empty erroDesvincularProduto}">
+
+                    <div class="campo-erro">
+                        <c:out value="${erroDesvincularProduto}"/>
+                    </div>
+
+                </c:if>
+
+                <form
+                        action="${pageContext.request.contextPath}/admin/compras-produtos"
+                        method="post"
+                        class="compra-form"
+                >
+
+                    <input
+                            type="hidden"
+                            name="acao"
+                            value="desvincular"
+                    >
+
+                    <input
+                            type="hidden"
+                            name="idCompra"
+                            value="${compra.id}"
+                    >
+
+                    <input
+                            type="hidden"
+                            name="idCompraProduto"
+                            value="${compraProduto.id}"
+                    >
+
+                    <div class="popup-actions">
+
+                        <label
+                                for="unlink-produto-${compra.id}-${compraProduto.id}"
+                                class="cancel-button"
+                        >
+                            Cancelar
+                        </label>
+
+                        <button
+                                type="submit"
+                                class="unlink-confirm-button"
+                        >
+                            Desvincular
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </c:forEach>
+
+</c:forEach>
+
+<c:forEach
+        var="compra"
+        items="${compras}"
+>
+
+    <input
+            type="checkbox"
+            id="delete-compra-${compra.id}"
+            class="popup-toggle"
+    >
+
+    <div class="popup-overlay">
+
+        <div class="popup">
+
+            <div class="popup-header">
+
+                <h2>
+                    Deletar Compra
+                </h2>
+
+                <label
+                        for="delete-compra-${compra.id}"
+                        class="popup-close"
+                >
+                    &times;
+                </label>
+
+            </div>
+
+            <p>
+                Você deseja realmente deletar a compra
+                <strong>
+                        ${compra.id}
+                </strong>?
+            </p>
+
+            <div class="popup-actions">
+
+                <label
+                        for="delete-compra-${compra.id}"
+                        class="cancel-button"
+                >
+                    Cancelar
+                </label>
+
+                <a
+                        href="${pageContext.request.contextPath}/admin/compras?acao=deletar&amp;id=${compra.id}"
+                        class="delete-confirm-button"
+                >
+                    Deletar
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</c:forEach>
+
+<input
+        type="checkbox"
+        id="add-compra-toggle"
+        class="popup-toggle"
+${not empty erros ? 'checked' : ''}
+>
+
+<div class="popup-overlay">
+
+    <div class="popup">
+
+        <div class="popup-header">
+
+            <h2>
+                Adicionar Compra
+            </h2>
+
+            <label
+                    for="add-compra-toggle"
+                    class="popup-close"
+                    onclick="limparFormularioAdicionar()"
+            >
+                &times;
+            </label>
+
+        </div>
+
+        <form
+                id="add-compra-form"
+                action="${pageContext.request.contextPath}/admin/compras"
+                method="post"
+                class="compra-form"
+        >
+
+            <input
+                    type="hidden"
+                    name="acao"
+                    value="adicionar"
+            >
+
+            <div class="form-grid">
+
+                <div class="form-field full-width">
+
+                    <label for="dataCompra">
+                        Data da compra
+                    </label>
+
+                    <input
+                            type="datetime-local"
+                            id="dataCompra"
+                            name="dataCompra"
+                            value="${fn:escapeXml(param.dataCompra)}"
+                    >
+
+                    <c:if test="${not empty erros.dataCompra}">
+
+                        <div class="campo-erro">
+                            <c:out value="${erros.dataCompra}"/>
+                        </div>
+
+                    </c:if>
+
+                </div>
+
+            </div>
+
+            <div class="popup-actions">
+
+                <label
+                        for="add-compra-toggle"
+                        class="cancel-button"
+                        onclick="limparFormularioAdicionar()"
+                >
+                    Cancelar
+                </label>
+
+                <button
+                        type="submit"
+                        class="save-button"
+                >
+                    Adicionar Compra
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<input
+        type="checkbox"
+        id="logout-popup"
+        class="popup-toggle"
+>
+
+<div class="popup-overlay">
+
+    <div class="popup">
+
+        <div class="popup-header">
+
+            <h2>
+                Confirmar saída
+            </h2>
+
+            <label
+                    for="logout-popup"
+                    class="popup-close"
+            >
+                &times;
+            </label>
+
+        </div>
+
+        <p>
+            Você deseja realmente sair da página do administrador?
+        </p>
+
+        <div class="popup-actions">
+
+            <label
+                    for="logout-popup"
+                    class="cancel-button"
+            >
+                Cancelar
+            </label>
+
+            <a
+                    href="${pageContext.request.contextPath}/logout"
+                    class="delete-confirm-button"
+            >
+                Sair
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script
+        src="${pageContext.request.contextPath}/assets/js/compras.js">
+</script>
+
+</body>
+</html>

@@ -1,11 +1,13 @@
 package com.kairos.model;
 
+import com.kairos.model.enums.TipoUsuario;
+import com.kairos.utils.Formatter;
+
 import java.time.LocalDate;
 
 public class Usuario {
 
-//    Atributos
-
+    // Atributos
     private int id;
     private String cpf;
     private String senha;
@@ -17,8 +19,7 @@ public class Usuario {
     private String email;
     private Empresa empresa;
 
-//    Construtuores
-
+    // Construtores
     public Usuario(int id, String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, TipoUsuario tipoUsuario, String email, Empresa empresa) {
         this.id = id;
         this.cpf = cpf;
@@ -32,31 +33,31 @@ public class Usuario {
         this.empresa = empresa;
     }
 
-    public Usuario(String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, String email) {
+    public Usuario(int id, String cpf, String nome, String sobrenome, LocalDate dataNascimento, String cep, TipoUsuario tipoUsuario, String email, Empresa empresa) {
+        this.id = id;
         this.cpf = cpf;
-        this.senha = senha;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.dataNascimento = dataNascimento;
         this.cep = cep;
-        this.tipoUsuario = TipoUsuario.FUNCIONARIO;
-        this.email = email;
-    }
-
-    public Usuario(String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, String email, Empresa empresa) {
-        this.cpf = cpf;
-        this.senha = senha;
-        this.nome = nome;
-        this.sobrenome = sobrenome;
-        this.dataNascimento = dataNascimento;
-        this.cep = cep;
-        this.tipoUsuario = TipoUsuario.FUNCIONARIO;
+        this.tipoUsuario = tipoUsuario;
         this.email = email;
         this.empresa = empresa;
     }
 
-//    Getters e Setters
+    public Usuario(String cpf, String senha, String nome, String sobrenome, LocalDate dataNascimento, String cep, TipoUsuario tipoUsuario, String email, Empresa empresa) {
+        this.cpf = cpf;
+        this.senha = senha;
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.dataNascimento = dataNascimento;
+        this.cep = cep;
+        this.tipoUsuario = tipoUsuario;
+        this.email = email;
+        this.empresa = empresa;
+    }
 
+    // Getters
     public int getId() {
         return id;
     }
@@ -93,7 +94,14 @@ public class Usuario {
         return email;
     }
 
-    public Empresa getEmpresa() { return empresa; }
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    // Setters
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
@@ -131,21 +139,37 @@ public class Usuario {
         this.empresa = empresa;
     }
 
-//    toString
+    // CPF formatado
+    public String getCpfFormatado() {
+        return Formatter.cpf(cpf);
+    }
 
+    // CEP formatado
+    public String getCepFormatado() {
+        return Formatter.cep(cep);
+    }
+
+    // Data de nascimento formatada
+    public String getDataNascimentoFormatada() {
+        return Formatter.data(dataNascimento);
+    }
+
+    // to String
     @Override
     public String toString() {
-        return "-= USUARIO " + getId() + " =-" +
-               "\nCPF: " + getCpf() +
-               "\nSenha: " + getSenha() +
-               "\nNome: " + getNome() +
-               "\nSobrenome: " + getSobrenome() +
-               "\nData de nascimento: " + getDataNascimento() +
-               "\nCEP: " + getCep() +
-               "\nTipo Usuario: " + getTipoUsuario() +
-               "\nEmail: " + getEmail() +
-               "\nEmpresa: " +
-               "\n   CNPJ: " + empresa.getCnpj() +
-               "\n   Tipo Plano: " + empresa.getTipoPlano() ;
+        return "\n-= USUARIO =-" +
+                "\nID: " + getId() +
+                "\nCPF: " + getCpf() +
+                "\nSenha: " + getSenha() +
+                "\nNome: " + getNome() +
+                "\nSobrenome: " + getSobrenome() +
+                "\nData de nascimento: " + getDataNascimento() +
+                "\nCEP: " + getCep() +
+                "\nTipo Usuario: " + getTipoUsuario() +
+                "\nEmail: " + getEmail() +
+                "\nEmpresa: " +
+                "\n   - ID: " + getEmpresa().getId() +
+                "\n   - CNPJ: " + empresa.getCnpj() +
+                "\n   - Tipo Plano: " + empresa.getTipoPlano();
     }
 }

@@ -1,0 +1,222 @@
+package com.kairos.dao;
+
+import com.kairos.model.Gondola;
+import com.kairos.model.Setor;
+import com.kairos.utils.connection.ConnectionFactory;
+import com.kairos.utils.exceptions.system.DAOException;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class GondolaDAO {
+
+    // Insere uma nova gôndola
+    public Gondola inserir(Gondola gondola) {
+
+        String sql = """
+                     INSERT INTO gondolas (capacidade_maxima, setor_id)
+                     VALUES (?, ?)
+                     RETURNING id AS gondola_id, capacidade_maxima
+                     """;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, gondola.getCapacidadeMaxima());
+            statement.setInt(2, gondola.getSetor().getId());
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                if (rs.next()) {
+
+                    return new Gondola(
+                            rs.getInt("gondola_id"),
+                            rs.getInt("capacidade_maxima"),
+                            gondola.getSetor()
+                    );
+                }
+
+                return null;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao inserir gôndola", e);
+        }
+    }
+
+    // Busca uma gôndola pelo ID
+    public Gondola buscarPorId(int id) {
+
+        String sql = """
+                     SELECT g.id AS gondola_id, g.capacidade_maxima, g.setor_id,
+                            s.id AS setor_id, s.nome, s.categoria_setor
+                     FROM gondolas g
+                     JOIN setores s ON s.id = g.setor_id
+                     WHERE g.id = ?
+                     """;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                if (rs.next()) {
+
+                    return new Gondola(
+                            rs.getInt("gondola_id"),
+                            rs.getInt("capacidade_maxima"),
+                            new Setor(
+                                    rs.getInt("setor_id"),
+                                    rs.getString("nome"),
+                                    rs.getString("categoria_setor")
+                            )
+                    );
+                }
+
+                return null;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao buscar gôndola pelo ID", e);
+        }
+    }
+
+    // Lista todas as gôndolas cadastradas
+    public List<Gondola> listarTodos() {
+
+        String sql = """
+                     SELECT g.id AS gondola_id, g.capacidade_maxima, g.setor_id,
+                            s.id AS setor_id, s.nome, s.categoria_setor
+                     FROM gondolas g
+                     JOIN setores s ON s.id = g.setor_id
+                     ORDER BY g.id
+                     """;
+
+        List<Gondola> gondolas = new ArrayList<>();
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                while (rs.next()) {
+
+                    Gondola gondola = new Gondola(
+                            rs.getInt("gondola_id"),
+                            rs.getInt("capacidade_maxima"),
+                            new Setor(
+                                    rs.getInt("setor_id"),
+                                    rs.getString("nome"),
+                                    rs.getString("categoria_setor")
+                            )
+                    );
+
+                    gondolas.add(gondola);
+                }
+
+                return gondolas;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao listar gôndolas", e);
+        }
+    }
+
+    // Atualiza os dados de uma gôndola
+    public int atualizar(Gondola gondola) {
+
+        String sql = """
+                     UPDATE gondolas
+                     SET capacidade_maxima = ?,
+                         setor_id = ?
+                     WHERE id = ?
+                     """;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, gondola.getCapacidadeMaxima());
+            statement.setInt(2, gondola.getSetor().getId());
+            statement.setInt(3, gondola.getId());
+
+            return statement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao atualizar gôndola", e);
+        }
+    }
+
+    // Exclui uma gôndola pelo ID
+    public void deletarPorId(int id) {
+
+        String sql = """
+                     DELETE FROM gondolas
+                     WHERE id = ?
+                     """;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao excluir gôndola", e);
+        }
+    }
+
+    // Pesquisa gôndolas pelo ID, capacidade máxima ou nome do setor
+    public List<Gondola> pesquisar(String pesquisa) {
+
+        String sql = """
+                     SELECT g.id AS gondola_id, g.capacidade_maxima, g.setor_id,
+                            s.id AS setor_id, s.nome, s.categoria_setor
+                     FROM gondolas g
+                     JOIN setores s ON s.id = g.setor_id
+                     WHERE CAST(g.id AS TEXT) ILIKE ?
+                        OR CAST(g.capacidade_maxima AS TEXT) ILIKE ?
+                        OR s.nome ILIKE ?
+                     ORDER BY g.id
+                     """;
+
+        List<Gondola> gondolas = new ArrayList<>();
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            for (int i = 1; i <= 3; i++) {
+                statement.setString(i, pesquisa);
+            }
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                while (rs.next()) {
+
+                    Gondola gondola = new Gondola(
+                            rs.getInt("gondola_id"),
+                            rs.getInt("capacidade_maxima"),
+                            new Setor(
+                                    rs.getInt("setor_id"),
+                                    rs.getString("nome"),
+                                    rs.getString("categoria_setor")
+                            )
+                    );
+
+                    gondolas.add(gondola);
+                }
+
+                return gondolas;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException("Erro ao pesquisar gôndolas", e);
+        }
+    }
+}

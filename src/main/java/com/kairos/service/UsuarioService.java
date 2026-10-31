@@ -1,30 +1,42 @@
 package com.kairos.service;
 
+import com.kairos.dao.EmpresaDAO;
+import com.kairos.dao.HistoricoUsuarioReposicaoDAO;
 import com.kairos.dao.UsuarioDAO;
-import com.kairos.model.TipoUsuario;
+import com.kairos.dao.UsuarioGondolaDAO;
+import com.kairos.model.Gondola;
 import com.kairos.model.Usuario;
-import com.kairos.utils.AuthorizationValidator;
-import com.kairos.utils.exceptions.*;
+import com.kairos.utils.Regex;
+import com.kairos.utils.exceptions.exists.CpfExistsException;
+import com.kairos.utils.exceptions.exists.EmailExistsException;
+import com.kairos.utils.exceptions.regex.InvalidCepRegexException;
+import com.kairos.utils.exceptions.regex.InvalidCpfRegexException;
+import com.kairos.utils.exceptions.regex.InvalidEmailRegexException;
+import com.kairos.utils.exceptions.notfound.EmpresaNotFoundException;
+import com.kairos.utils.exceptions.notfound.UsuarioNotFoundException;
+import com.kairos.utils.exceptions.system.ServiceException;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class UsuarioService {
 
-//    Atributos
-
+    // Atributos
     private final UsuarioDAO usuarioDAO;
+    private final EmpresaDAO empresaDAO;
+    private final UsuarioGondolaDAO usuarioGondolaDAO;
+    private final HistoricoUsuarioReposicaoDAO historicoUsuarioReposicaoDAO;
 
-//    Construtor
-
+    // Construtor
     public UsuarioService() {
         this.usuarioDAO = new UsuarioDAO();
+        this.empresaDAO = new EmpresaDAO();
+        this.usuarioGondolaDAO = new UsuarioGondolaDAO();
+        this.historicoUsuarioReposicaoDAO = new HistoricoUsuarioReposicaoDAO();
     }
 
-//    Metodo que faz as validacoes para o cadastro de usuario
-    public void cadastrar(Usuario usuario) {
-
-//        AuthorizationValidator.validarAdmin(usuarioAtual);
+    // Cadastrar usuário
+    public Usuario cadastrar(Usuario usuario) {
 
         validarCampos(usuario);
 
@@ -36,17 +48,26 @@ public class UsuarioService {
             throw new CpfExistsException("CPF já cadastrado");
         }
 
-        if (usuario.getTipoUsuario() != TipoUsuario.FUNCIONARIO) {
-            throw new ServiceException("Cadastro comum deve ser do tipo FUNCIONARIO");
+        if (!usuario.getCpf().matches(Regex.CPF)) {
+            throw new InvalidCpfRegexException("Formato do CPF inválido");
         }
 
-        usuarioDAO.inserir(usuario);
+        if (!usuario.getCep().matches(Regex.CEP)) {
+            throw new InvalidCepRegexException("Formato do CEP inválido");
+        }
+
+        if (!usuario.getEmail().matches(Regex.EMAIL)) {
+            throw new InvalidEmailRegexException("Formato do Email inválido");
+        }
+
+        usuario.setCpf(usuario.getCpf().replaceAll("[^0-9]", ""));
+        usuario.setCep(usuario.getCep().replaceAll("[^0-9]", ""));
+
+        return usuarioDAO.inserir(usuario);
     }
 
-//    Metodo que faz as validacoes da busca de usuario por id
+    // Buscar usuário por ID
     public Usuario buscarPorId(int id) {
-
-//        AuthorizationValidator.validarAdmin(usuarioAtual);
 
         if (id <= 0) {
             throw new ServiceException("O id deve ser maior que 0");
@@ -57,21 +78,18 @@ public class UsuarioService {
         if (usuario == null) {
             throw new UsuarioNotFoundException("Usuário não encontrado");
         }
+
         return usuario;
     }
 
-//    Metodo que busca listarTodos do DAO (sem validacoes)
-    public List<Usuario> listarTodos(Usuario usuarioAtual) {
-
-        AuthorizationValidator.validarAdmin(usuarioAtual);
+    // Listar usuários
+    public List<Usuario> listarTodos() {
 
         return usuarioDAO.listarTodos();
     }
 
-//    Metodo que faz as validacoes de atualizar usuario
-    public void atualizar(Usuario usuario, Usuario usuarioAtual) {
-
-        AuthorizationValidator.validarAdmin(usuarioAtual);
+    // Atualizar usuário
+    public void atualizar(Usuario usuario) {
 
         validarCampos(usuario);
 
@@ -79,27 +97,36 @@ public class UsuarioService {
             throw new ServiceException("O id deve ser maior que 0");
         }
 
-        if (usuario.getTipoUsuario() != TipoUsuario.FUNCIONARIO) {
-            throw new ServiceException("Tipo usuário comum deve ser FUNCIONARIO");
-        }
-
-        if (usuarioDAO.existePorEmailExcetoId(usuario.getEmail(), usuario.getId())) {
+        if (usuarioDAO.existePorEmailExcetoId(
+                usuario.getEmail(),
+                usuario.getId()
+        )) {
             throw new EmailExistsException("Email já cadastrado");
         }
 
-        if (usuarioDAO.existeCpfExcetoId(usuario.getCpf(), usuario.getId())) {
-            throw new CpfExistsException("CPF já cadastrado");
+        if (!usuario.getCep().matches(Regex.CEP)) {
+            throw new InvalidCepRegexException("Formato do CEP inválido");
         }
+
+        if (!usuario.getEmail().matches(Regex.EMAIL)) {
+            throw new InvalidEmailRegexException("Formato do Email inválido");
+        }
+
+        if (empresaDAO.buscarPorId(usuario.getEmpresa().getId()) == null) {
+            throw new EmpresaNotFoundException("Empresa não encontrada");
+        }
+
+        usuario.setCep(usuario.getCep().replaceAll("[^0-9]", ""));
 
         if (usuarioDAO.atualizar(usuario) == 0) {
             throw new UsuarioNotFoundException("Usuário não encontrado");
         }
+
+        historicoUsuarioReposicaoDAO.atualizarDadosUsuario(usuario.getId());
     }
 
-//    Metodo que faz as validações para deletar usuario por id
+    // Deletar usuário por ID
     public void deletarPorId(int id) {
-
-//        AuthorizationValidator.validarAdmin(usuarioAtual);
 
         if (id <= 0) {
             throw new ServiceException("O id deve ser maior que 0");
@@ -111,26 +138,118 @@ public class UsuarioService {
             throw new UsuarioNotFoundException("Usuário não encontrado");
         }
 
-        if (usuario.getTipoUsuario() == TipoUsuario.ADMIN) {
-            throw new AdminException("Não é permitido deletar o Admin");
-        }
-
         usuarioDAO.deletarPorId(id);
     }
 
-//    Metodo que valida os campos do usuario
+    // Verificar email existente
+    public boolean existePorEmail(String email) {
+
+        if (email == null || email.isBlank()) {
+            throw new ServiceException("Email é obrigatório");
+        }
+
+        if (!email.matches(Regex.EMAIL)) {
+            throw new InvalidEmailRegexException("Formato do Email inválido");
+        }
+
+        return usuarioDAO.existePorEmail(email);
+    }
+
+    // Verificar CPF existente
+    public boolean existePorCpf(String cpf) {
+
+        if (cpf == null || cpf.isBlank()) {
+            throw new ServiceException("O CPF é obrigatório");
+        }
+
+        if (!cpf.matches(Regex.CPF)) {
+            throw new InvalidCpfRegexException("Formato do CPF inválido");
+        }
+
+        cpf = cpf.replaceAll("[^0-9]", "");
+
+        return usuarioDAO.existePorCpf(cpf);
+    }
+
+    // Verificar email existente, exceto ID
+    public boolean existePorEmailExcetoId(String email, int id) {
+
+        if (email == null || email.isBlank()) {
+            throw new ServiceException("Email é obrigatório");
+        }
+
+        if (!email.matches(Regex.EMAIL)) {
+            throw new InvalidEmailRegexException("Formato do Email inválido");
+        }
+
+        if (id <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        return usuarioDAO.existePorEmailExcetoId(email, id);
+    }
+
+    // Verificar CPF existente, exceto ID
+    public boolean existePorCpfExcetoId(String cpf, int id) {
+
+        if (cpf == null || cpf.isBlank()) {
+            throw new ServiceException("CPF é obrigatório");
+        }
+
+        if (id <= 0) {
+            throw new ServiceException("O id deve ser maior que 0");
+        }
+
+        if (!cpf.matches(Regex.CPF)) {
+            throw new InvalidCpfRegexException("Formato do CPF inválido");
+        }
+
+        cpf = cpf.replaceAll("[^0-9]", "");
+
+        return usuarioDAO.existePorCpfExcetoId(cpf, id);
+    }
+
+    // Buscar usuário por email
+    public Usuario buscarPorEmail(String email) {
+
+        if (email == null || email.isBlank()) {
+            throw new ServiceException("Email é obrigatório");
+        }
+
+        if (!email.matches(Regex.EMAIL)) {
+            throw new InvalidEmailRegexException("Formato do Email inválido");
+        }
+
+        Usuario usuario = usuarioDAO.buscarPorEmail(email);
+
+        if (usuario == null) {
+            throw new UsuarioNotFoundException("Usuário não encontrado");
+        }
+
+        return usuario;
+    }
+
+    // Validar campos do usuário
     private void validarCampos(Usuario usuario) {
 
         if (usuario == null) {
             throw new ServiceException("Usuário não pode ser nulo");
         }
 
-        if (usuario.getSenha() == null || usuario.getSenha().length() < 8) {
-            throw new ServiceException("A senha deve ter pelo menos 8 caracteres");
-        }
-
         if (usuario.getNome() == null || usuario.getNome().isBlank()) {
             throw new ServiceException("Nome é obrigatório");
+        }
+
+        if (usuario.getNome().matches(".*\\d.*")) {
+            throw new ServiceException("O nome não pode conter números");
+        }
+
+        if (usuario.getEmpresa() == null) {
+            throw new ServiceException("Empresa não pode ser nula");
+        }
+
+        if (usuario.getSenha() == null || usuario.getSenha().length() < 8) {
+            throw new ServiceException("A senha deve ter pelo menos 8 caracteres");
         }
 
         if (usuario.getSobrenome() == null || usuario.getSobrenome().isBlank()) {
@@ -152,5 +271,17 @@ public class UsuarioService {
         if (usuario.getEmail() == null || usuario.getEmail().isBlank()) {
             throw new ServiceException("Email é obrigatório");
         }
+    }
+
+    // Listar gôndolas do usuário
+    public List<Gondola> listarGondolasPorUsuario(Usuario usuario) {
+
+        return usuarioGondolaDAO.listarGondolasPorUsuario(usuario);
+    }
+
+    // Pesquisar usuários
+    public List<Usuario> pesquisar(String pesquisa) {
+
+        return usuarioDAO.pesquisar(pesquisa);
     }
 }
