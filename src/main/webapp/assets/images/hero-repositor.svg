@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 520">
+  <!-- Fundo verde arredondado -->
+  <path d="M390 30 C490 0 580 60 615 160 C650 260 640 370 585 440 C530 505 420 515 315 495 C205 475 105 420 95 315 C85 215 285 65 390 30Z" fill="#1B4D3E"/>
+  <circle cx="150" cy="95" r="20" fill="#E8B333"/>
+
+  <!-- Sombra no chão -->
+  <ellipse cx="360" cy="492" rx="250" ry="14" fill="#000" opacity=".12"/>
+
+  <!-- ===== Gôndola ===== -->
+  <rect x="140" y="110" width="320" height="380" rx="8" fill="#F4F0E8"/>
+  <rect x="140" y="110" width="320" height="34" rx="8" fill="#E8B333"/>
+  <text x="300" y="133" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="15" font-weight="700" fill="#1B4D3E" letter-spacing="2">CORREDOR 03</text>
+  <rect x="140" y="140" width="10" height="350" fill="#D9D1C2"/>
+  <rect x="450" y="140" width="10" height="350" fill="#D9D1C2"/>
+
+  <!-- Prateleira 1 -->
+  <rect x="160" y="160" width="40" height="58" rx="4" fill="#E05A47"/>
+  <rect x="205" y="160" width="40" height="58" rx="4" fill="#E05A47"/>
+  <rect x="250" y="172" width="34" height="46" rx="4" fill="#8CC860"/>
+  <rect x="289" y="172" width="34" height="46" rx="4" fill="#8CC860"/>
+  <rect x="328" y="166" width="52" height="52" rx="4" fill="#F3D9A4"/>
+  <rect x="385" y="166" width="52" height="52" rx="4" fill="#F3D9A4"/>
+  <rect x="150" y="218" width="300" height="10" fill="#B8AE9C"/>
+
+  <!-- Prateleira 2 (com espaço vazio) -->
+  <rect x="160" y="252" width="30" height="56" rx="12" fill="#2E8B1F"/>
+  <rect x="195" y="252" width="30" height="56" rx="12" fill="#2E8B1F"/>
+  <rect x="230" y="252" width="30" height="56" rx="12" fill="#2E8B1F"/>
+  <rect x="270" y="246" width="96" height="62" rx="6" fill="none" stroke="#E05A47" stroke-width="3" stroke-dasharray="8 6"/>
+  <rect x="376" y="258" width="28" height="50" rx="4" fill="#E8B333"/>
+  <rect x="409" y="258" width="28" height="50" rx="4" fill="#E8B333"/>
+  <rect x="150" y="308" width="300" height="10" fill="#B8AE9C"/>
+
+  <!-- Prateleira 3 -->
+  <rect x="160" y="344" width="48" height="54" rx="4" fill="#F3D9A4"/>
+  <rect x="213" y="344" width="48" height="54" rx="4" fill="#F3D9A4"/>
+  <rect x="266" y="352" width="36" height="46" rx="4" fill="#1B4D3E"/>
+  <rect x="307" y="352" width="36" height="46" rx="4" fill="#1B4D3E"/>
+  <rect x="348" y="340" width="42" height="58" rx="4" fill="#E05A47"/>
+  <rect x="395" y="340" width="42" height="58" rx="4" fill="#E05A47"/>
+  <rect x="150" y="398" width="300" height="10" fill="#B8AE9C"/>
+
+  <!-- Prateleira 4 -->
+  <rect x="160" y="428" width="60" height="52" rx="4" fill="#8CC860"/>
+  <rect x="225" y="428" width="60" height="52" rx="4" fill="#8CC860"/>
+  <rect x="290" y="436" width="44" height="44" rx="4" fill="#E8B333"/>
+  <rect x="339" y="436" width="44" height="44" rx="4" fill="#E8B333"/>
+  <rect x="388" y="428" width="50" height="52" rx="4" fill="#F3D9A4"/>
+  <rect x="150" y="480" width="300" height="10" fill="#B8AE9C"/>
+
+  <!-- ===== Repositor ===== -->
+  <!-- Pernas -->
+  <rect x="488" y="372" width="22" height="110" rx="10" fill="#2B2B3A"/>
+  <rect x="516" y="372" width="22" height="110" rx="10" fill="#2B2B3A"/>
+  <ellipse cx="496" cy="484" rx="18" ry="8" fill="#1A1A1A"/>
+  <ellipse cx="530" cy="484" rx="18" ry="8" fill="#1A1A1A"/>
+
+  <!-- Tronco (camisa amarela + avental verde) -->
+  <path d="M478 270 C478 254 490 246 513 246 C536 246 548 254 548 270 L552 388 L474 388 Z" fill="#E8B333"/>
+  <path d="M490 282 L536 282 L540 388 L486 388 Z" fill="#1B4D3E"/>
+  <rect x="502" y="300" width="22" height="14" rx="3" fill="#2E8B1F"/>
+  <path d="M498 250 L513 268 L528 250" fill="none" stroke="#C9952A" stroke-width="3"/>
+
+  <!-- Pescoço e cabeça -->
+  <rect x="505" y="232" width="16" height="18" rx="4" fill="#C68B65"/>
+  <!-- Orelhas -->
+  <circle cx="487" cy="214" r="6" fill="#B87B57"/>
+  <circle cx="539" cy="214" r="6" fill="#B87B57"/>
+  <!-- Rosto de frente -->
+  <circle cx="513" cy="212" r="26" fill="#C68B65"/>
+  <!-- Cabelo -->
+  <path d="M487 210 C484 184 498 172 513 172 C529 172 542 184 539 210 C537 198 530 190 520 189 C512 194 500 196 490 196 C488 200 487 205 487 210Z" fill="#2B1D16"/>
+  <!-- Sobrancelhas -->
+  <path d="M500 204 L508 203" stroke="#2B1D16" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M518 203 L526 204" stroke="#2B1D16" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Olhos -->
+  <circle cx="504" cy="212" r="2.8" fill="#2B1D16"/>
+  <circle cx="522" cy="212" r="2.8" fill="#2B1D16"/>
+  <!-- Nariz -->
+  <path d="M513 214 L511 221 L515 221" fill="none" stroke="#A86E4C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Sorriso -->
+  <path d="M504 226 Q513 234 522 226" fill="none" stroke="#7A4A33" stroke-width="2.4" stroke-linecap="round"/>
+
+  <!-- Braços segurando a caixa -->
+  <path d="M484 270 C470 284 462 298 458 312" fill="none" stroke="#E8B333" stroke-width="20" stroke-linecap="round"/>
+  <path d="M542 272 C540 298 520 314 498 318" fill="none" stroke="#E8B333" stroke-width="20" stroke-linecap="round"/>
+
+  <!-- Caixa sendo reposta -->
+  <rect x="380" y="276" width="96" height="58" rx="5" fill="#C9A27A"/>
+  <rect x="380" y="276" width="96" height="14" rx="5" fill="#B48B62"/>
+  <rect x="418" y="276" width="20" height="58" fill="#E3C79F" opacity=".7"/>
+
+  <!-- Mãos -->
+  <circle cx="456" cy="314" r="10" fill="#C68B65"/>
+  <circle cx="494" cy="318" r="10" fill="#C68B65"/>
+</svg>

@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/cadastro-page2")
@@ -56,13 +58,31 @@ public class CadastroPage2Servlet extends HttpServlet {
 
         // Converte a data de nascimento
         LocalDate dataNascimento = null;
+        List<String> erros = new ArrayList<>();
+        boolean dataInvalida = false;
 
-        if (dataNascimentoParam != null && !dataNascimentoParam.isBlank()) {
-            dataNascimento = LocalDate.parse(dataNascimentoParam);
+        try {
+            if (dataNascimentoParam != null && !dataNascimentoParam.isBlank()) {
+                dataNascimento = LocalDate.parse(dataNascimentoParam);
+            }
+        } catch (DateTimeParseException e) {
+            dataInvalida = true;
+            erros.add("Data de nascimento inválida");
         }
 
         // Valida os dados informados
-        List<String> erros = cadastroService.validarCadastro2(dataNascimento, cpf, cep);
+        List<String> errosValidacao = new ArrayList<>(
+                cadastroService.validarCadastro2(dataNascimento, cpf, cep)
+        );
+
+        // Evita mensagens duplicadas para a data
+        if (dataInvalida) {
+            errosValidacao.removeIf(erro ->
+                    erro.toLowerCase().contains("data de nascimento")
+            );
+        }
+
+        erros.addAll(errosValidacao);
 
         if (!erros.isEmpty()) {
             request.setAttribute("erros", erros);

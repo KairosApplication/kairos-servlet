@@ -10,24 +10,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kairos - Gôndolas</title>
+
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/images/favicon.png">
+
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/gondolas.css">
 
-    <style>
-        .gondolas-table td.empty-message,
-        .details-table td.empty-message {
-            text-align: center;
-            vertical-align: middle;
-            padding: 12px;
-            color: #6f8496 !important;
-            font-size: 14px;
-            font-weight: 400;
-        }
-
-        .gondolas-table.table-empty thead th,
-        .details-table.table-empty thead th {
-            color: var(--green);
-        }
-    </style>
 </head>
 
 <body>
