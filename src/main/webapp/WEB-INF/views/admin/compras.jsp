@@ -258,7 +258,8 @@
                                 items="${compras}"
                         >
 
-                            <tr class="compra-row">
+                            <tr class="compra-row" data-compra-id="${compra.id}"
+                                data-compra-date="${fn:escapeXml(compra.dataCompra)}">
 
                                 <td>
                                         ${compra.id}
@@ -395,7 +396,8 @@
                                                             items="${produtosPorCompra[compra.id]}"
                                                     >
 
-                                                        <tr>
+                                                        <tr data-product-id="${not empty compraProduto.historicoCompraProduto ? compraProduto.historicoCompraProduto.produtoId : compraProduto.produto.id}"
+                                                            data-quantity="${compraProduto.quantidadeItem}">
 
                                                             <td>
                                                                 ID do produto
