@@ -136,7 +136,7 @@ docker @dc run --rm --no-deps --entrypoint python -e RPA_INTEGRATION_TESTS=true 
 
 Nove testes de banco cobrem mapa ausente, recuperacao, erro SQL depois do primeiro item, perda real da conexao apos cabecalho, cliente/produto de outra empresa, concorrencia, alteracao da origem, integridade, indisponibilidade dos dois bancos e recusa de destinos nao autorizados. Os casos sao criados pelo mesmo Playwright. Uma repeticao dos testes conserva os dados; casos ja importados verificam replay em vez de executar novamente a injecao de falha.
 
-Para os testes anteriores, `python -m unittest discover -s rpa -v` continua funcionando na venv. Os E2E antigos so devem ser habilitados com `RPA_E2E=true` na instancia da porta 8088 destinada a eles; nao aponta-los a um ambiente compartilhado por engano. Resultado efetivamente executado em [TEST_RESULTS.md](TEST_RESULTS.md).
+Para os testes anteriores, `python -m unittest discover -s rpa -v` continua funcionando na venv. Habilite os E2E com `RPA_E2E=true` e configure `RPA_TEST_BASE_URL` e `RPA_TEST_OUTPUT` para uma instancia/diario exclusivos. Sem essas duas variaveis, os defaults continuam sendo porta 8088 e `rpa/output`; nao aponta-los a um ambiente compartilhado por engano. A auditoria final executou os oito testes originais sem ignorados: veja [FINAL_REVIEW.md](FINAL_REVIEW.md). Os resultados da implementacao inicial permanecem em [TEST_RESULTS.md](TEST_RESULTS.md).
 
 ## Roteiro de 2–3 minutos
 

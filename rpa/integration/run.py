@@ -85,7 +85,8 @@ def main():
                   '--base-url', base, '--run-id', run_id]
         try:
             run(compose + ['run', '--rm', '--no-deps', 'integration', '--check-only',
-                           '--run-id', run_id, '--report', relative(ready_path)], env)
+                           '--mapping', mapping_path, '--run-id', run_id,
+                           '--report', relative(ready_path)], env)
         finally:
             if ready_path.exists():
                 report['phases']['availability'] = json.loads(ready_path.read_text(encoding='utf-8'))
