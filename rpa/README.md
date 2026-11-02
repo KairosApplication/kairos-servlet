@@ -6,7 +6,7 @@ O robo Python/Playwright faz login, abre Compras, cadastra as compras do CSV e u
 
 ## Executar no Windows / PowerShell
 
-Pre-requisitos: Docker Desktop ligado (containers Linux), Git, Python 3.10+ e internet para baixar as dependencias na primeira execucao. A compilacao usa Java 21/Maven dentro do Docker; nao precisa instalar Java/Tomcat na maquina. Execute na raiz do repositorio `kairos-servlet`, na branch `codex/rpa-compras-demo`.
+Pre-requisitos: Docker Desktop ligado (containers Linux), Git, Python 3.10+ e internet para baixar as dependencias na primeira execucao. A compilacao usa Java 21/Maven dentro do Docker; nao precisa instalar Java/Tomcat na maquina. Execute na raiz do repositorio `kairos-servlet`, na branch `feat/rpa-compras-demo`.
 
 1. Crie credenciais **novas e exclusivas para a demo** na sessao PowerShell. Nao use senha Aiven ou de conta real:
 
