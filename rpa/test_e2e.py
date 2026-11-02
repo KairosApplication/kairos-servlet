@@ -12,6 +12,8 @@ from pathlib import Path
 from robot import Robot, load_plan, save_json
 
 ROOT = Path(__file__).resolve().parent
+TEST_BASE_URL = os.environ.get('RPA_TEST_BASE_URL', 'http://127.0.0.1:8088')
+TEST_OUTPUT = Path(os.environ.get('RPA_TEST_OUTPUT', str(ROOT / 'output')))
 
 
 @unittest.skipUnless(os.environ.get('RPA_E2E') == 'true', 'Defina RPA_E2E=true e inicie o compose demo')
@@ -20,14 +22,14 @@ class BrowserTests(unittest.TestCase):
         command = [sys.executable, str(ROOT / 'robot.py'), '--output', str(output)]
         if csv:
             command += ['--csv', str(csv)]
-        if base:
-            command += ['--base-url', base]
-        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=90)
+        command += ['--base-url', base or TEST_BASE_URL]
+        result = subprocess.run(command, env=env, capture_output=True, text=True,
+                                encoding='utf-8', errors='replace', timeout=90)
         reports = sorted(output.glob('report-*.json'))
         return result.returncode, json.loads(reports[-1].read_text(encoding='utf-8'))
 
     def test_replay_and_changed_csv(self):
-        output = ROOT / 'output'  # Keep the same durable journal across replays.
+        output = TEST_OUTPUT  # Keep the same durable journal across replays.
         self.assertEqual(self.run_robot(output)[0], 0)
         before = json.loads((output / 'state.json').read_text())
         code, report = self.run_robot(output)
@@ -86,7 +88,7 @@ class BrowserTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory)
             csv = output / 'resume.csv'
-            state = {'target': 'http://127.0.0.1:8088', 'database': 'kairos_servlet_demo', 'purchases': {}}
+            state = {'target': TEST_BASE_URL, 'database': 'kairos_servlet_demo', 'purchases': {}}
             save = lambda: save_json(output / 'state.json', state)
             with sync_playwright() as pw:
                 browser = pw.chromium.launch()

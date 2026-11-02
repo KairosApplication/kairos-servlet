@@ -100,13 +100,17 @@ class RealDatabaseTests(unittest.TestCase):
         self.transfer('CUSTOMER')
 
     def test_e_concurrent_replay_has_one_persistent_link(self):
+        existed = self.target.execute('''SELECT 1 FROM rpa_integration.purchases
+            WHERE source_instance=%s AND legacy_purchase_id=%s''',
+            (self.source_id, self.cases['CONCURRENT']['id'])).fetchone()
         def task():
             with connect_checked('TARGET') as connection:
                 return import_purchase(connection, self.source_id, self.cases['CONCURRENT'], self.config,
                                        uuid.uuid4())['result']
         with ThreadPoolExecutor(max_workers=2) as pool:
             results = list(pool.map(lambda _: task(), range(2)))
-        self.assertLessEqual(results.count('imported'), 1)
+        self.assertEqual(sorted(results), ['already_imported', 'already_imported'] if existed
+                         else ['already_imported', 'imported'])
         rows = self.target.execute('''SELECT count(*) AS n FROM rpa_integration.purchases
             WHERE source_instance=%s AND legacy_purchase_id=%s''',
             (self.source_id, self.cases['CONCURRENT']['id'])).fetchone()

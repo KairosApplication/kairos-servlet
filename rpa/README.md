@@ -102,6 +102,8 @@ $env:RPA_E2E='true'
 Remove-Item Env:RPA_E2E
 ```
 
+Para executar os E2E em outra instancia local sem afetar o diario da demonstracao, defina tambem `RPA_TEST_BASE_URL` (ex.: `http://127.0.0.1:8109`) e `RPA_TEST_OUTPUT` (ex.: `rpa/output/regression-isolated`). A instancia precisa estar iniciada nessa porta, com as credenciais demo de `RPA_EMAIL`/`RPA_PASSWORD`. Os defaults anteriores continuam disponiveis quando essas variaveis nao sao definidas.
+
 Testes E2E usam o navegador real e deixam uma compra adicional de retomada na instancia descartavel. Nao executam exclusoes. O diario do CSV exemplo permanece em `rpa/output`. Resultados efetivamente executados em [TEST_RESULTS.md](TEST_RESULTS.md).
 
 ## Problemas comuns
