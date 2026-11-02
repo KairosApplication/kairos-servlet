@@ -37,8 +37,15 @@ public class LoginServlet extends HttpServlet {
             // Autentica o administrador
             Admin admin = loginService.autenticar(email, senha);
 
+            if (request.getSession(false) != null) {
+                request.getSession(false).invalidate();
+            }
+            request.getSession(true).setAttribute("authenticatedAdminId", admin.getId());
+
             // Redireciona para a página de usuários
-            response.sendRedirect(request.getContextPath() + "/admin/usuarios");
+            response.sendRedirect(request.getContextPath()
+                    + (com.kairos.utils.connection.ConnectionFactory.isRpaDemo()
+                    ? "/admin/compras" : "/admin/usuarios"));
 
         } catch (AdminException e) {
 

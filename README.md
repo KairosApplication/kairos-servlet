@@ -1,5 +1,7 @@
 # ⏳ Kairos
 
+RPA de compras para a feira: veja [rpa/README.md](rpa/README.md) para iniciar uma demonstracao local isolada e executar o robo Python/Playwright pelos formularios existentes.
+
 ### Sistema de Gerenciamento de Estoque e Reposição de Produtos
 
 O **Kairos** é uma aplicação web desenvolvida para auxiliar empresas no gerenciamento de estoques, na organização de produtos e no acompanhamento de processos de reposição.

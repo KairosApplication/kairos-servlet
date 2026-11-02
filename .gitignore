@@ -30,3 +30,9 @@ target/
 # Configurações locais do IntelliJ
 .idea/
 *.iml
+
+# Local RPA credentials, browser artifacts and idempotency journal
+.venv/
+__pycache__/
+rpa/output/
+rpa/.env

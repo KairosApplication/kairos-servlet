@@ -1,0 +1,7 @@
+.git
+.env
+*.env
+target
+.venv
+rpa/output
+__pycache__

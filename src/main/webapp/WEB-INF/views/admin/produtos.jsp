@@ -245,7 +245,7 @@
                                 items="${produtos}"
                         >
 
-                            <tr class="user-row">
+                            <tr class="user-row" data-produto-id="${produto.id}">
 
                                 <td>
                                         ${produto.id}
