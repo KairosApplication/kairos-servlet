@@ -1,0 +1,52 @@
+# Overlay; run together with compose.yml. No database ports are published.
+services:
+  web:
+    ports: !override
+      - "127.0.0.1:${RPA_WEB_PORT:-8088}:8080"
+  normalized:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: kairos_normalized_demo
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: ${DEMO_TARGET_PASSWORD:?Defina DEMO_TARGET_PASSWORD}
+      TZ: America/Sao_Paulo
+    volumes:
+      - normalized-data:/var/lib/postgresql/data
+      - type: bind
+        source: ${KAIROS_DATA_PATH:?Defina KAIROS_DATA_PATH}/postgres
+        target: /kairos-data
+        read_only: true
+      - ../integration/init-normalized.sh:/docker-entrypoint-initdb.d/01-normalized.sh:ro
+      - ../integration/target.sql:/integration/target.sql:ro
+      - ../integration/validation.sql:/integration/validation.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "psql -U demo -d kairos_normalized_demo -tAc 'SELECT count(*) FROM rpa_integration.environment' | grep -qx 1"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+  integration:
+    profiles: [tools]
+    build:
+      context: ../..
+      dockerfile: rpa/integration/Dockerfile
+    environment:
+      SOURCE_HOST: db
+      SOURCE_DATABASE: kairos_servlet_demo
+      SOURCE_USER: demo
+      SOURCE_PASSWORD: ${DEMO_DB_PASSWORD:?Defina DEMO_DB_PASSWORD}
+      TARGET_HOST: normalized
+      TARGET_DATABASE: kairos_normalized_demo
+      TARGET_USER: demo
+      TARGET_PASSWORD: ${DEMO_TARGET_PASSWORD:?Defina DEMO_TARGET_PASSWORD}
+      RPA_AUTHORIZE_TARGET: kairos_normalized_demo
+      TZ: America/Sao_Paulo
+    volumes:
+      - ..:/work:ro
+      - ../output:/work/output
+    depends_on:
+      db:
+        condition: service_healthy
+      normalized:
+        condition: service_healthy
+volumes:
+  normalized-data:

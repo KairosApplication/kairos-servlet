@@ -1,5 +1,7 @@
 # RPA Kairos Servlet — demonstracao da feira
 
+**Fluxo interdisciplinar completo (1o → 2o ano):** siga [integration/README.md](integration/README.md). Ele coordena este mesmo robo com a transferencia transacional para outro PostgreSQL local, criado com o schema real do `kairos-data`. O procedimento abaixo continua valido para demonstrar somente o legado.
+
 O robo Python/Playwright faz login, abre Compras, cadastra as compras do CSV e usa o formulario Vincular para associar cada produto. Confere o resultado por uma nova leitura da tela, que passa pelo Servlet/Service/DAO, e gera relatorio JSON. O robo nao executa SQL nem chama endpoints de gravacao diretamente.
 
 **Este projeto usa schema em portugues (`compras`, `produtos`, `compras_produtos`), diferente do Kairos Spring/PostgreSQL (`purchases`, `products`). Nao conectar ao `kairosdb` nem ao `kairos_demo` preparado para o BI.** O caminho abaixo cria outro banco, `kairos_servlet_demo`, totalmente local. Nao precisa de Aiven, backup ou pgAdmin.

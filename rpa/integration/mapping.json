@@ -1,0 +1,10 @@
+{
+  "company_id": 101,
+  "customer_id": 501,
+  "status_policy": "IN_PROGRESS",
+  "price_policy": "current_demo_price",
+  "products": {
+    "1": {"target_id": 10001, "source_name": "Arroz ficticio", "target_name": "Arroz demonstracao"},
+    "2": {"target_id": 10002, "source_name": "Feijao ficticio", "target_name": "Feijao demonstracao"}
+  }
+}
